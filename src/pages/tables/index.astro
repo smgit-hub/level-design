@@ -1,0 +1,51 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import TablesFilter from '../../components/TablesFilter';
+import { allProducts } from '../../data/products';
+---
+
+<Layout title="Tables" description="Every design is handcrafted, proportioned for real homes, and finished to age beautifully.">
+  <div class="pt-16">
+
+    <!-- Hero -->
+    <section class="relative bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white py-20 overflow-hidden">
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-[#c8956a] rounded-full blur-3xl"></div>
+      </div>
+      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl">
+          <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">Signature Collection</p>
+          <h1 class="hero-in text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Find the Table That Fits Your Space</h1>
+          <p class="hero-in text-xl text-[#e8dcc8] mb-8" style="--delay: 0.6s">
+            Every design is handcrafted, proportioned for real homes, and finished to age beautifully.
+          </p>
+          <div class="hero-in flex flex-wrap gap-4" style="--delay: 0.8s">
+            <div class="px-4 py-2 bg-[#2d3f37] rounded-full text-sm">8 core designs</div>
+            <div class="px-4 py-2 bg-[#2d3f37] rounded-full text-sm">Custom sizing available</div>
+            <div class="px-4 py-2 bg-[#2d3f37] rounded-full text-sm">Sustainably sourced timber</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter + Grid (React island) -->
+    <TablesFilter products={allProducts} client:load />
+
+    <!-- Custom CTA -->
+    <section class="py-20 bg-[#f5f1e8]">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="reveal bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] rounded-3xl p-12 text-white">
+          <p class="text-sm uppercase tracking-wider text-[#c8956a] mb-4">Need a Specific Size?</p>
+          <h2 class="text-3xl md:text-4xl font-serif mb-4">We Can Tailor Any Design to Suit Your Room</h2>
+          <p class="text-[#e8dcc8] mb-8 max-w-2xl mx-auto">
+            Tell us your dimensions and preferred style, and we'll work with you to create the perfect table for your space.
+          </p>
+          <a href="/custom" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 shadow-lg hover:shadow-xl">
+            Explore Custom Tables
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</Layout>

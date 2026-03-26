@@ -1,0 +1,74 @@
+---
+import Navigation from '../components/Navigation';
+import Footer from '../components/Footer.astro';
+import { ViewTransitions } from 'astro:transitions';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Level Design',
+  description = 'Design-led timber tables made for everyday living, hosting, and lasting use.',
+} = Astro.props;
+
+const currentPath = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title} — Level Design</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <ViewTransitions />
+  </head>
+  <body class="bg-[#f5f1e8] text-[#3d4f47]">
+    <Navigation client:load currentPath={currentPath} transition:persist />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<script>
+  // Intersection Observer for scroll-reveal animations
+  function initReveal() {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach((el) => {
+      observer.observe(el);
+    });
+  }
+  document.addEventListener('astro:page-load', initReveal);
+
+  // Hero parallax: fade + scale out as user scrolls past
+  let heroScrollHandler: (() => void) | null = null;
+  function initHeroParallax() {
+    if (heroScrollHandler) window.removeEventListener('scroll', heroScrollHandler);
+    const hero = document.querySelector<HTMLElement>('.hero-parallax');
+    if (!hero) return;
+    heroScrollHandler = () => {
+      const progress = Math.max(0, Math.min(1, -hero!.getBoundingClientRect().top / hero!.offsetHeight));
+      hero!.style.opacity = String(1 - progress);
+      hero!.style.transform = `scale(${1 - progress * 0.2})`;
+    };
+    window.addEventListener('scroll', heroScrollHandler, { passive: true });
+    heroScrollHandler();
+  }
+  document.addEventListener('astro:page-load', initHeroParallax);
+</script>

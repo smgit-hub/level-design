@@ -1,0 +1,163 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="About" description="Australian made tables, designed with purpose. Over 10 years of designing tables that feel grounded, practical, and right for the spaces they inhabit.">
+  <div class="pt-16">
+
+    <!-- Hero -->
+    <section class="relative py-20 bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white overflow-hidden">
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-[#c8956a] rounded-full blur-3xl"></div>
+      </div>
+      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl">
+          <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">About Level Design</p>
+          <h1 class="hero-in text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Australian Made Tables, Designed with Purpose</h1>
+          <p class="hero-in text-xl text-[#e8dcc8] leading-relaxed" style="--delay: 0.6s">
+            For more than 10 years, we have focused on designing tables that feel grounded, practical, and right for the spaces they inhabit.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Story -->
+    <section class="py-24 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div class="reveal-left">
+            <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">What We Do</p>
+            <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">
+              We Design Tables and Work with Local Makers to Bring Them to Life
+            </h2>
+            <div class="space-y-6 text-[#7d8f87] text-lg">
+              <p>Level Design creates Australian timber tables with a strong focus on materiality, making warmth, and everyday use. Our tables work with a design-led approach and a close relationship with local makers.</p>
+              <p>Alongside private tables, we regularly work with interior designers and architects to deliver custom pieces for their projects.</p>
+              <p>Unlike mass-produced furniture, we believe every space deserves furniture that feels considered and intentional — from the timber selection to the final finish.</p>
+            </div>
+          </div>
+          <div class="reveal-right relative">
+            <div class="relative z-10 aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-[#3d4f47] to-[#2d3f37] flex items-center justify-center">
+              <span class="text-white/20 font-serif text-3xl text-center px-8">Crafting process</span>
+            </div>
+            <div class="absolute -bottom-8 -left-8 w-32 h-32 bg-[#c8956a] rounded-2xl"></div>
+            <div class="absolute -top-8 -right-8 w-32 h-32 bg-[#e8dcc8] rounded-2xl"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Values -->
+    <section class="py-24 bg-[#f5f1e8]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal text-center mb-16">
+          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Our Approach</p>
+          <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47]">What Guides Our Work</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[
+            {
+              title: "Thoughtful Design",
+              desc: "Every piece is designed with intention, balancing aesthetics with functionality for real-world use.",
+              svg: `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>`,
+            },
+            {
+              title: "Local Production",
+              desc: "Working with skilled Australian makers means close collaboration and supporting our community.",
+              svg: `<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>`,
+            },
+            {
+              title: "Quality First",
+              desc: "We use premium materials and traditional techniques to create tables that last generations.",
+              svg: `<circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>`,
+            },
+          ].map((v, i) => (
+            <div class="reveal p-8 rounded-2xl bg-white hover:shadow-xl transition-shadow duration-300 group" style={`--delay: ${i * 0.1}s`}>
+              <div class="w-16 h-16 rounded-2xl bg-[#3d4f47] flex items-center justify-center mb-6 group-hover:bg-[#c8956a] transition-colors duration-300">
+                <svg class="text-white w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" set:html={v.svg} />
+              </div>
+              <h3 class="text-2xl font-semibold text-[#3d4f47] mb-4">{v.title}</h3>
+              <p class="text-[#7d8f87]">{v.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <section class="py-24 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal text-center mb-16">
+          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">History</p>
+          <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">10 Years of Designing and Locally Making Tables</h2>
+          <p class="text-xl text-[#7d8f87] max-w-3xl mx-auto">A steady commitment to well-resolved furniture, close collaborations with makers, and an understanding of how tables are actually used every day.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[
+            { year: "10+", title: "Years of Designing", desc: "Over a decade perfecting our craft and understanding what makes a great table." },
+            { year: "Local", title: "Australian Makers", desc: "Partnering with the finest timber craftspeople in Australia." },
+            { year: "Design-led", title: "Approach", desc: "Every table is shaped around real materials and customer needs." },
+          ].map((item, i) => (
+            <div class="reveal text-center p-8 rounded-2xl bg-[#f5f1e8] hover:bg-[#e8dcc8] transition-colors duration-300" style={`--delay: ${i * 0.1}s`}>
+              <div class="text-6xl font-serif text-[#c8956a] mb-4">{item.year}</div>
+              <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{item.title}</h3>
+              <p class="text-[#7d8f87]">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Magazine -->
+    <section class="py-24 bg-[#f5f1e8]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div class="reveal-left order-2 lg:order-1">
+            <div class="aspect-video rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-[#3d4f47] to-[#2d3f37] flex items-center justify-center">
+              <span class="text-white/20 font-serif text-2xl text-center px-8">Tables in beautiful homes</span>
+            </div>
+          </div>
+          <div class="reveal-right order-1 lg:order-2">
+            <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Magazine Features</p>
+            <h2 class="text-4xl font-serif text-[#3d4f47] mb-6">Tables That Photograph Well Because They Live Well</h2>
+            <p class="text-[#7d8f87] text-lg mb-6">Our work has appeared in magazines that highlight thoughtful Australian design and interiors. But for us, the real measure of success is seeing our tables become part of daily life in the homes they inhabit.</p>
+            <p class="text-[#7d8f87] text-lg">Open form, honest materials, and craftsmanship that stays beautiful over years of use.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trade CTA -->
+    <section class="py-24 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] rounded-3xl p-12 text-white">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="reveal">
+              <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Trade & Collaboration</p>
+              <h2 class="text-3xl md:text-4xl font-serif mb-4">Built to Support Designers and Architects</h2>
+              <p class="text-[#e8dcc8] mb-6">We collaborate with interior designers and architects on custom and collective projects, helping bring their vision to life with bespoke furniture.</p>
+              <div class="space-y-3">
+                {["Flexible dimensions", "Timber guidance", "Close specification support"].map((item) => (
+                  <div class="flex items-center gap-3">
+                    <svg class="text-[#c8956a] w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div class="reveal bg-white/10 backdrop-blur-sm rounded-2xl p-8" style="--delay: 0.2s">
+              <h3 class="text-2xl font-semibold mb-6">Get in Touch</h3>
+              <form class="space-y-4">
+                <input type="text" placeholder="Your name" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:border-[#c8956a] focus:outline-none transition-colors" />
+                <input type="email" placeholder="Email address" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:border-[#c8956a] focus:outline-none transition-colors" />
+                <textarea rows="4" placeholder="Tell us about your project" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:border-[#c8956a] focus:outline-none transition-colors resize-none"></textarea>
+                <button type="submit" class="w-full px-6 py-3 bg-[#c8956a] text-white rounded-lg hover:bg-[#b8856a] transition-colors">Start Conversation</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</Layout>

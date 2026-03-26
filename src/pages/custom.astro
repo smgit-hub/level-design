@@ -1,0 +1,102 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CustomForm from '../components/CustomForm';
+---
+
+<Layout title="Custom Tables" description="Custom tables designed around you. From dimensions to materials, we collaborate to create a piece that feels intentional in your home.">
+  <div class="pt-16">
+
+    <!-- Hero -->
+    <section class="relative bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white py-20 overflow-hidden">
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-0 left-0 w-96 h-96 bg-[#c8956a] rounded-full blur-3xl"></div>
+      </div>
+      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl">
+          <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">Built for Your Space</p>
+          <h1 class="hero-in text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Custom Tables, Designed Around You</h1>
+          <p class="hero-in text-xl text-[#e8dcc8] mb-8" style="--delay: 0.6s">
+            From dimensions to materials, we collaborate with you to create a piece that feels intentional in your home.
+          </p>
+          <div class="hero-in flex flex-wrap gap-4" style="--delay: 0.8s">
+            {["10 years of design & making", "Magazine-worthy results", "Built to last lifetimes"].map((item) => (
+              <div class="px-4 py-2 bg-[#2d3f37] rounded-full text-sm flex items-center gap-2">
+                <svg class="w-4 h-4 text-[#c8956a]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                {item}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Custom Includes -->
+    <section class="py-24 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div class="reveal-left relative">
+            <div class="relative z-10 aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-[#3d4f47] to-[#2d3f37] flex items-center justify-center">
+              <span class="text-white/20 font-serif text-2xl text-center px-8">Custom design process</span>
+            </div>
+            <div class="absolute -top-8 -left-8 w-32 h-32 bg-[#c8956a] rounded-2xl"></div>
+            <div class="absolute -bottom-8 -right-8 w-32 h-32 bg-[#e8dcc8] rounded-2xl"></div>
+          </div>
+          <div class="reveal-right">
+            <div class="bg-white rounded-2xl p-8 border border-[#e8dcc8]">
+              <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Custom Includes</p>
+              <h2 class="text-3xl font-serif text-[#3d4f47] mb-6">What's Included in Your Custom Design</h2>
+              <ul class="space-y-4">
+                {[
+                  "Tabletop shape and edge profile",
+                  "Base style and leg geometry",
+                  "Timber species and grain tone",
+                  "Protective finish for daily use",
+                ].map((item, i) => (
+                  <li class="reveal flex items-start gap-3" style={`--delay: ${i * 0.1}s`}>
+                    <svg class="text-[#c8956a] mt-1 flex-shrink-0 w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    <span class="text-[#3d4f47]">{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <div class="mt-8 pt-8 border-t border-[#e8dcc8]">
+                <p class="text-sm text-[#7d8f87] mb-4">Every custom table starts with understanding your space and how you'll use it.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Process -->
+    <section class="py-24 bg-[#f5f1e8]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal text-center mb-16">
+          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Our Process</p>
+          <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">Clear Steps, No Guesswork</h2>
+          <p class="text-xl text-[#7d8f87] max-w-2xl mx-auto">From initial concept to final delivery, we guide you through every step with clarity and care.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {[
+            { svg: `<path d="M21 6H3"/><path d="M10 12H3"/><path d="M10 18H3"/><circle cx="17" cy="15" r="3"/><path d="m21 18-1.9-1.9"/>`, number: "01", title: "Tailored Dimensions", desc: "Share your space measurements and seating needs. We'll recommend proportions that work." },
+            { svg: `<circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>`, number: "02", title: "Timber & Finish Guidance", desc: "Choose from sustainable Australian timbers. We guide you through options for tone and durability." },
+            { svg: `<path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" x2="12" y1="22" y2="12"/>`, number: "03", title: "Design and Refine", desc: "Collaborate on the design until it feels right. We provide renders and material samples." },
+            { svg: `<path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/><rect width="13" height="8" x="9" y="13" rx="1"/><path d="M16 13v-2a4 4 0 0 0-8 0v2"/><circle cx="11.5" cy="17.5" r=".5" fill="currentColor"/><circle cx="20.5" cy="17.5" r=".5" fill="currentColor"/>`, number: "04", title: "Craft and Deliver", desc: "Your table is handcrafted by skilled makers, then delivered and installed with care." },
+          ].map((step, i) => (
+            <div class="reveal relative bg-white rounded-2xl p-8 hover:shadow-xl transition-shadow duration-300 group" style={`--delay: ${i * 0.1}s`}>
+              <div class="w-16 h-16 rounded-2xl bg-[#3d4f47] flex items-center justify-center mb-6 group-hover:bg-[#c8956a] transition-colors duration-300">
+                <svg class="text-white w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" set:html={step.svg} />
+              </div>
+              <div class="text-sm text-[#c8956a] font-medium mb-2">{step.number}</div>
+              <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{step.title}</h3>
+              <p class="text-[#7d8f87]">{step.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Form + FAQ (React island) -->
+    <CustomForm client:load />
+
+  </div>
+</Layout>
