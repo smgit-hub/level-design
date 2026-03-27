@@ -21,7 +21,7 @@ const faqs = [
   },
   {
     question: "What timbers do you work with?",
-    answer: "We primarily use Australian hardwoods like Blackbutt, Spotted Gum, Victorian Ash, and American Oak. All sustainably sourced.",
+    answer: "We work primarily with hardwoods — American Oak, American Ash, and American Walnut, as well as Tasmanian Oak and Australian timbers including Blackbutt, Spotted Gum, and Victorian Ash. All sustainably sourced.",
   },
   {
     question: "Can you match existing furniture?",
@@ -29,22 +29,32 @@ const faqs = [
   },
   {
     question: "Do you ship nationally?",
-    answer: "We deliver throughout Australia with white-glove service. Interstate delivery is coordinated carefully to ensure safe arrival.",
+    answer: "We deliver Melbourne-wide. For anywhere else in Australia, reach out and we'll work out the details with you.",
   },
 ];
 
+const encode = (data: Record<string, string>) =>
+  Object.keys(data)
+    .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key] || ""))
+    .join("&");
+
 export default function CustomForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
-  const onSubmit = (data: FormData) => {
-    const subject = encodeURIComponent("Custom Table Enquiry");
-    const body = encodeURIComponent(
-      `Name: ${data.name}\nEmail: ${data.email}\nPhone: ${data.phone}\n\nProject Details:\n${data.projectDetails}\n\nDimensions:\n${data.dimensions}\n\nTimber Preference:\n${data.timberPreference}\n\nBudget Range:\n${data.budgetRange}\n\nTimeline:\n${data.timeline}`
-    );
-    window.location.href = `mailto:hello@leveldesign.com.au?subject=${subject}&body=${body}`;
-    setIsSubmitted(true);
+  const onSubmit = async (data: FormData) => {
+    try {
+      await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encode({ "form-name": "custom-brief", ...data }),
+      });
+      setIsSubmitted(true);
+    } catch {
+      setIsError(true);
+    }
   };
 
   return (
@@ -61,7 +71,7 @@ export default function CustomForm() {
           >
             <p className="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Get Started</p>
             <h2 className="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">Start Your Custom Brief</h2>
-            <p className="text-xl text-[#7d8f87]">
+            <p className="text-xl text-[#5a6b64]">
               Tell us about your space and vision. We'll respond within 48 hours with initial thoughts and next steps.
             </p>
           </motion.div>
@@ -74,7 +84,8 @@ export default function CustomForm() {
             className="bg-[#f5f1e8] rounded-3xl p-8 md:p-12"
           >
             {!isSubmitted ? (
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <form name="custom-brief" data-netlify="true" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                <input type="hidden" name="form-name" value="custom-brief" />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-[#3d4f47] mb-2">Name *</label>
@@ -126,7 +137,7 @@ export default function CustomForm() {
 
                 <div>
                   <label className="block text-sm font-medium text-[#3d4f47] mb-2">Timber Preference</label>
-                  <input {...register("timberPreference")} type="text" placeholder="e.g. Blackbutt, Spotted Gum"
+                  <input {...register("timberPreference")} type="text" placeholder="e.g. American Oak, American Ash"
                     className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors" />
                 </div>
 
@@ -154,7 +165,8 @@ export default function CustomForm() {
                     Send Enquiry
                     <ArrowRight size={20} />
                   </button>
-                  <p className="text-sm text-[#7d8f87] text-center mt-4">We'll only use this to contact you about your table.</p>
+                  <p className="text-sm text-[#5a6b64] text-center mt-4">We'll only use this to contact you about your table.</p>
+                  {isError && <p className="text-sm text-red-600 text-center mt-2">Something went wrong — please try again or email us directly at hello@leveldesign.com.au</p>}
                 </div>
               </form>
             ) : (
@@ -163,7 +175,7 @@ export default function CustomForm() {
                   <CheckCircle className="text-white" size={40} />
                 </div>
                 <h3 className="text-3xl font-serif text-[#3d4f47] mb-4">Thank You!</h3>
-                <p className="text-xl text-[#7d8f87] mb-8">We've received your enquiry and will get back to you within 48 hours.</p>
+                <p className="text-xl text-[#5a6b64] mb-8">We've received your enquiry and will get back to you within 48 hours.</p>
                 <button onClick={() => setIsSubmitted(false)} className="text-[#c8956a] hover:underline">
                   Submit another enquiry
                 </button>
@@ -216,7 +228,7 @@ export default function CustomForm() {
                   transition={{ duration: 0.3 }}
                   className="overflow-hidden"
                 >
-                  <div className="px-6 pb-5 text-[#7d8f87]">{faq.answer}</div>
+                  <div className="px-6 pb-5 text-[#5a6b64]">{faq.answer}</div>
                 </motion.div>
               </motion.div>
             ))}

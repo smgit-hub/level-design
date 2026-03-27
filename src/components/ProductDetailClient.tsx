@@ -1,80 +1,99 @@
 import { motion } from "motion/react";
 import { useState } from "react";
-import { ArrowLeft, CheckCircle, Ruler, Truck, Shield, Star } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle, Ruler, Truck, Shield } from "lucide-react";
 import { useForm } from "react-hook-form";
 import type { Product } from "../data/products";
 
 interface Props {
   product: Product;
+  prev: { id: string; name: string };
+  next: { id: string; name: string };
 }
 
 type FormData = {
   name: string;
   email: string;
   phone: string;
+  dimensions: string;
   projectDetails: string;
+  timberPreference: string;
+  budgetRange: string;
+  timeline: string;
 };
 
-const reviews = [
-  {
-    name: "Sarah Mitchell",
-    rating: 5,
-    date: "2 months ago",
-    content: "The craftsmanship is incredible and it's become the heart of our home.",
-  },
-  {
-    name: "David Chen",
-    rating: 5,
-    date: "3 months ago",
-    content: "Beautiful piece of furniture. The team was amazing to work with and the delivery was seamless.",
-  },
-  {
-    name: "Emma Thompson",
-    rating: 5,
-    date: "5 months ago",
-    content: "Worth every penny. This table will be in our family for generations.",
-  },
-];
 
-export default function ProductDetailClient({ product }: Props) {
+const encode = (data: Record<string, string>) =>
+  Object.keys(data)
+    .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key] || ""))
+    .join("&");
+
+export default function ProductDetailClient({ product, prev, next }: Props) {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const allImages = (product: Props["product"]) => [product.images.main, ...product.images.gallery];
+  const [selectedImage, setSelectedImage] = useState<string>(product.images.main);
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
-  const onSubmit = (data: FormData) => {
-    const subject = encodeURIComponent(`Enquiry: ${product.name}`);
-    const body = encodeURIComponent(
-      `Name: ${data.name}\nEmail: ${data.email}\nPhone: ${data.phone}\n\nMessage:\n${data.projectDetails}\n\n---\nProduct: ${product.name}`
-    );
-    window.location.href = `mailto:hello@leveldesign.com.au?subject=${subject}&body=${body}`;
-    setIsSubmitted(true);
+  const onSubmit = async (data: FormData) => {
+    try {
+      await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encode({ "form-name": "table-enquiry", "table": product.name, ...data }),
+      });
+      setIsSubmitted(true);
+    } catch {
+      setIsError(true);
+    }
   };
 
   return (
-    <div className="bg-[#faf8f5]">
-      {/* Breadcrumb */}
-      <div className="bg-white border-b border-[#e8dcc8]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <a href="/tables" className="inline-flex items-center gap-2 text-[#7d8f87] hover:text-[#3d4f47] transition-colors">
-            <ArrowLeft size={20} />
-            Back to Collection
-          </a>
-        </div>
-      </div>
-
+    <div className="bg-[#faf8f5] pt-16">
       {/* Product header */}
-      <section className="py-12">
+      <section className="pt-6 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Table nav */}
+          <div className="flex items-center justify-between text-xs text-[#8a9b94] mb-8 mt-2">
+            <a href={`/tables/${prev.id}`} className="inline-flex items-center gap-1.5 hover:text-[#3d4f47] transition-colors">
+              <ArrowLeft size={12} />
+              {prev.name}
+            </a>
+            <a href={`/tables/${next.id}`} className="inline-flex items-center gap-1.5 hover:text-[#3d4f47] transition-colors">
+              {next.name}
+              <ArrowRight size={12} />
+            </a>
+          </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
 
-            {/* Visual placeholder */}
+            {/* Image gallery */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
               <div className="sticky top-24">
-                <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-[#3d4f47] to-[#2d3f37] flex items-center justify-center shadow-lg">
-                  <span className="text-white/30 font-serif text-4xl text-center px-8">{product.name}</span>
+                {/* Main image */}
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-4">
+                  <img
+                    src={selectedImage}
+                    alt={product.name}
+                    className="w-full h-full object-cover transition-opacity duration-300"
+                  />
+                </div>
+                {/* Thumbnails — always 3, showing the non-selected images */}
+                <div className="grid grid-cols-3 gap-3">
+                  {allImages(product)
+                    .filter((img) => img !== selectedImage)
+                    .slice(0, 3)
+                    .map((img, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setSelectedImage(img)}
+                        className="aspect-[4/3] rounded-xl overflow-hidden border-2 border-transparent hover:border-[#c8956a] transition-all duration-200"
+                      >
+                        <img src={img} alt={`${product.name} view ${i + 1}`} loading="lazy" className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                      </button>
+                    ))}
                 </div>
               </div>
             </motion.div>
@@ -86,31 +105,20 @@ export default function ProductDetailClient({ product }: Props) {
               transition={{ duration: 0.6 }}
             >
               <div className="mb-6">
-                <p className="text-[#c8956a] font-medium mb-2 tracking-wider uppercase text-sm">
-                  {product.category} Collection
-                </p>
-                <h1 className="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-4">{product.name}</h1>
-                <p className="text-xl text-[#7d8f87] mb-6">{product.tagline}</p>
+                <h1 className="text-4xl md:text-5xl font-serif text-[#c8956a] mb-4">{product.name}</h1>
+                <p className="text-xl text-[#5a6b64] mb-6">{product.tagline}</p>
 
-                <div className="flex items-center gap-2 mb-6">
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} size={18} className="fill-[#c8956a] text-[#c8956a]" />
-                    ))}
-                  </div>
-                  <span className="text-sm text-[#7d8f87]">(12 reviews)</span>
-                </div>
 
                 <p className="text-[#3d4f47] leading-relaxed mb-8">{product.description}</p>
 
                 {/* Features */}
                 <div className="bg-white rounded-2xl p-6 mb-8 shadow-sm">
-                  <h3 className="font-semibold text-[#3d4f47] mb-4">Key Features</h3>
+                  <h2 className="font-semibold text-[#3d4f47] mb-4">Key Features</h2>
                   <ul className="space-y-3">
                     {product.features.map((feature, i) => (
                       <li key={i} className="flex items-start gap-3">
                         <CheckCircle className="text-[#c8956a] mt-0.5 flex-shrink-0" size={18} />
-                        <span className="text-[#7d8f87]">{feature}</span>
+                        <span className="text-[#5a6b64]">{feature}</span>
                       </li>
                     ))}
                   </ul>
@@ -125,7 +133,7 @@ export default function ProductDetailClient({ product }: Props) {
                   ].map(({ icon: Icon, label }) => (
                     <div key={label} className="text-center p-4 bg-white rounded-xl">
                       <Icon className="text-[#c8956a] mx-auto mb-2" size={24} />
-                      <div className="text-xs text-[#7d8f87]">{label}</div>
+                      <div className="text-xs text-[#5a6b64]">{label}</div>
                     </div>
                   ))}
                 </div>
@@ -172,50 +180,30 @@ export default function ProductDetailClient({ product }: Props) {
                   className="flex justify-between items-start p-4 bg-[#f5f1e8] rounded-xl"
                 >
                   <span className="font-medium text-[#3d4f47]">{key}</span>
-                  <span className="text-[#7d8f87] text-right">{value}</span>
+                  <span className="text-[#5a6b64] text-right">{value}</span>
                 </motion.div>
               ))}
             </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="mt-8 text-center"
+            >
+              <div className="inline-flex items-center gap-3 px-6 py-4 bg-[#3d4f47] rounded-2xl">
+                <svg className="w-5 h-5 text-[#c8956a] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                </svg>
+                <p className="text-[#e8dcc8] text-sm font-medium">
+                  Every specification above can be customised — dimensions, timber, and finish are all tailored to your space.
+                </p>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* Reviews */}
-      <section className="py-16 bg-[#f5f1e8]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl font-serif text-[#3d4f47] mb-8">Customer Reviews</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {reviews.map((review, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: i * 0.1 }}
-                  viewport={{ once: true }}
-                  className="bg-white rounded-2xl p-6 shadow-sm"
-                >
-                  <div className="flex gap-1 mb-3">
-                    {[...Array(review.rating)].map((_, j) => (
-                      <Star key={j} size={16} className="fill-[#c8956a] text-[#c8956a]" />
-                    ))}
-                  </div>
-                  <p className="text-[#3d4f47] mb-4 italic">"{review.content}"</p>
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium text-[#3d4f47]">{review.name}</span>
-                    <span className="text-xs text-[#7d8f87]">{review.date}</span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
       {/* Enquiry form */}
       <section id="enquiry-form" className="py-16 bg-white">
@@ -230,8 +218,8 @@ export default function ProductDetailClient({ product }: Props) {
             <h2 className="text-3xl md:text-4xl font-serif text-[#3d4f47] mb-4">
               Enquire About {product.name}
             </h2>
-            <p className="text-[#7d8f87]">
-              Tell us your preferred size, finish, and timeframe. We'll confirm availability and send a tailored quote.
+            <p className="text-[#5a6b64]">
+              Tell us your preferred size, finish, and timeframe. We'll confirm and send a tailored quote.
             </p>
           </motion.div>
 
@@ -240,10 +228,12 @@ export default function ProductDetailClient({ product }: Props) {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
-            className="bg-[#f5f1e8] rounded-3xl p-8"
+            className="bg-[#f5f1e8] rounded-3xl p-8 md:p-12"
           >
             {!isSubmitted ? (
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <form name="table-enquiry" data-netlify="true" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                <input type="hidden" name="form-name" value="table-enquiry" />
+                <input type="hidden" name="table" value={product.name} />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-[#3d4f47] mb-2">Name *</label>
@@ -271,39 +261,65 @@ export default function ProductDetailClient({ product }: Props) {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-[#3d4f47] mb-2">Phone (optional)</label>
-                  <input
-                    {...register("phone")}
-                    type="tel"
-                    placeholder="Your phone number"
-                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors"
-                  />
+                  <input {...register("phone")} type="tel" placeholder="Your phone number"
+                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#3d4f47] mb-2">Dimensions & Space Details</label>
+                  <input {...register("dimensions")} type="text" placeholder="e.g. 2400mm × 1000mm, seats 8"
+                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-[#3d4f47] mb-2">Project Details *</label>
                   <textarea
-                    {...register("projectDetails", { required: "Please provide details" })}
-                    rows={5}
-                    placeholder="Size, finish, seating count, delivery suburb..."
+                    {...register("projectDetails", { required: "Please tell us about your project" })}
+                    rows={6}
+                    placeholder="Tell us about your space, style preferences, timber choices, and any inspiration..."
                     className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors resize-none"
                   />
                   {errors.projectDetails && <p className="mt-1 text-sm text-red-600">{errors.projectDetails.message}</p>}
                 </div>
-                <button
-                  type="submit"
-                  className="w-full px-8 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl font-medium"
-                >
-                  Send Enquiry
-                </button>
-                <p className="text-sm text-[#7d8f87] text-center">We'll only use this to contact you about your table.</p>
+                <div>
+                  <label className="block text-sm font-medium text-[#3d4f47] mb-2">Timber Preference</label>
+                  <input {...register("timberPreference")} type="text" placeholder="e.g. American Oak, American Ash"
+                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#3d4f47] mb-2">Budget Range</label>
+                  <input {...register("budgetRange")} type="text" placeholder="e.g. $5000 – $10000"
+                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#3d4f47] mb-2">Timeline</label>
+                  <select {...register("timeline")}
+                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors">
+                    <option value="">Select timeframe</option>
+                    <option value="urgent">Urgent (within 6 weeks)</option>
+                    <option value="standard">Standard (2–3 months)</option>
+                    <option value="flexible">Flexible (3+ months)</option>
+                    <option value="planning">Just planning</option>
+                  </select>
+                </div>
+                <div className="pt-4">
+                  <button type="submit"
+                    className="w-full px-8 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center justify-center gap-2">
+                    Send Enquiry
+                    <ArrowRight size={20} />
+                  </button>
+                  <p className="text-sm text-[#5a6b64] text-center mt-4">We'll only use this to contact you about your table.</p>
+                  {isError && <p className="text-sm text-red-600 text-center mt-2">Something went wrong — please try again or email us directly at hello@leveldesign.com.au</p>}
+                </div>
               </form>
             ) : (
-              <div className="text-center py-8">
-                <div className="w-16 h-16 rounded-full bg-[#c8956a] flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="text-white" size={32} />
+              <div className="text-center py-12">
+                <div className="w-20 h-20 rounded-full bg-[#c8956a] flex items-center justify-center mx-auto mb-6">
+                  <CheckCircle className="text-white" size={40} />
                 </div>
-                <h3 className="text-2xl font-serif text-[#3d4f47] mb-3">Thank You!</h3>
-                <p className="text-[#7d8f87] mb-6">We've received your enquiry and will be in touch within 48 hours.</p>
-                <a href="/tables" className="text-[#c8956a] hover:underline">Continue browsing</a>
+                <h3 className="text-3xl font-serif text-[#3d4f47] mb-4">Thank You!</h3>
+                <p className="text-xl text-[#5a6b64] mb-8">We've received your enquiry and will get back to you within 48 hours.</p>
+                <button onClick={() => setIsSubmitted(false)} className="text-[#c8956a] hover:underline">
+                  Submit another enquiry
+                </button>
               </div>
             )}
           </motion.div>

@@ -1,12 +1,16 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import aboutImg from '../assets/images/about/level-design-about-image.webp';
+import belleImg from '../assets/images/about/level-design-belle-magazine-custom-table.webp';
+import houzzImg from '../assets/images/about/level-design-houzz-magazine-coffee-table.webp';
 ---
 
 <Layout title="About" description="Australian made tables, designed with purpose. Over 10 years of designing tables that feel grounded, practical, and right for the spaces they inhabit.">
   <div class="pt-16">
 
     <!-- Hero -->
-    <section class="relative py-20 bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white overflow-hidden">
+    <section class="relative py-20 min-h-[30rem] flex items-center bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white overflow-hidden">
       <div class="absolute inset-0 opacity-10">
         <div class="absolute -top-24 -right-24 w-96 h-96 bg-[#c8956a] rounded-full blur-3xl"></div>
       </div>
@@ -14,9 +18,17 @@ import Layout from '../layouts/Layout.astro';
         <div class="max-w-3xl">
           <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">About Level Design</p>
           <h1 class="hero-in text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Australian Made Tables, Designed with Purpose</h1>
-          <p class="hero-in text-xl text-[#e8dcc8] leading-relaxed" style="--delay: 0.6s">
+          <p class="hero-in text-xl text-[#e8dcc8] leading-relaxed mb-8" style="--delay: 0.6s">
             For more than 10 years, we have focused on designing tables that feel grounded, practical, and right for the spaces they inhabit.
           </p>
+          <div class="hero-in flex flex-wrap gap-4" style="--delay: 0.8s">
+            {["10+ years of craftsmanship", "Australian made", "Magazine featured"].map((item) => (
+              <div class="px-4 py-2 bg-[#2d3f37] rounded-full text-sm flex items-center gap-2">
+                <svg class="w-4 h-4 text-[#c8956a]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                {item}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -30,15 +42,15 @@ import Layout from '../layouts/Layout.astro';
             <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">
               We Design Tables and Work with Local Makers to Bring Them to Life
             </h2>
-            <div class="space-y-6 text-[#7d8f87] text-lg">
+            <div class="space-y-6 text-[#5a6b64] text-lg">
               <p>Level Design creates Australian timber tables with a strong focus on materiality, making warmth, and everyday use. Our tables work with a design-led approach and a close relationship with local makers.</p>
               <p>Alongside private tables, we regularly work with interior designers and architects to deliver custom pieces for their projects.</p>
               <p>Unlike mass-produced furniture, we believe every space deserves furniture that feels considered and intentional — from the timber selection to the final finish.</p>
             </div>
           </div>
           <div class="reveal-right relative">
-            <div class="relative z-10 aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-[#3d4f47] to-[#2d3f37] flex items-center justify-center">
-              <span class="text-white/20 font-serif text-3xl text-center px-8">Crafting process</span>
+            <div class="relative z-10 aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl">
+              <Image src={aboutImg} alt="Level Design table in a beautifully designed interior" loading="lazy" class="w-full h-full object-cover" />
             </div>
             <div class="absolute -bottom-8 -left-8 w-32 h-32 bg-[#c8956a] rounded-2xl"></div>
             <div class="absolute -top-8 -right-8 w-32 h-32 bg-[#e8dcc8] rounded-2xl"></div>
@@ -77,7 +89,7 @@ import Layout from '../layouts/Layout.astro';
                 <svg class="text-white w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" set:html={v.svg} />
               </div>
               <h3 class="text-2xl font-semibold text-[#3d4f47] mb-4">{v.title}</h3>
-              <p class="text-[#7d8f87]">{v.desc}</p>
+              <p class="text-[#5a6b64]">{v.desc}</p>
             </div>
           ))}
         </div>
@@ -90,7 +102,7 @@ import Layout from '../layouts/Layout.astro';
         <div class="reveal text-center mb-16">
           <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">History</p>
           <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">10 Years of Designing and Locally Making Tables</h2>
-          <p class="text-xl text-[#7d8f87] max-w-3xl mx-auto">A steady commitment to well-resolved furniture, close collaborations with makers, and an understanding of how tables are actually used every day.</p>
+          <p class="text-xl text-[#5a6b64] max-w-3xl mx-auto">A steady commitment to well-resolved furniture, close collaborations with makers, and an understanding of how tables are actually used every day.</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
@@ -101,7 +113,7 @@ import Layout from '../layouts/Layout.astro';
             <div class="reveal text-center p-8 rounded-2xl bg-[#f5f1e8] hover:bg-[#e8dcc8] transition-colors duration-300" style={`--delay: ${i * 0.1}s`}>
               <div class="text-6xl font-serif text-[#c8956a] mb-4">{item.year}</div>
               <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{item.title}</h3>
-              <p class="text-[#7d8f87]">{item.desc}</p>
+              <p class="text-[#5a6b64]">{item.desc}</p>
             </div>
           ))}
         </div>
@@ -113,15 +125,26 @@ import Layout from '../layouts/Layout.astro';
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div class="reveal-left order-2 lg:order-1">
-            <div class="aspect-video rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-[#3d4f47] to-[#2d3f37] flex items-center justify-center">
-              <span class="text-white/20 font-serif text-2xl text-center px-8">Tables in beautiful homes</span>
+            <div class="relative h-[30rem]">
+              <!-- Belle landscape, bottom-left -->
+              <div class="absolute bottom-0 left-0 w-80 rounded-xl overflow-hidden shadow-xl z-10">
+                <div class="aspect-[4/3]">
+                  <Image src={belleImg} alt="Level Design table featured in Belle magazine" loading="lazy" class="w-full h-full object-cover" />
+                </div>
+              </div>
+              <!-- Houzz portrait, slightly overlapping belle -->
+              <div class="absolute top-0 left-[296px] w-72 rounded-xl overflow-hidden shadow-xl z-20">
+                <div class="aspect-[3/4]">
+                  <Image src={houzzImg} alt="Level Design table featured in Houzz" loading="lazy" class="w-full h-full object-cover" />
+                </div>
+              </div>
             </div>
           </div>
           <div class="reveal-right order-1 lg:order-2">
             <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Magazine Features</p>
             <h2 class="text-4xl font-serif text-[#3d4f47] mb-6">Tables That Photograph Well Because They Live Well</h2>
-            <p class="text-[#7d8f87] text-lg mb-6">Our work has appeared in magazines that highlight thoughtful Australian design and interiors. But for us, the real measure of success is seeing our tables become part of daily life in the homes they inhabit.</p>
-            <p class="text-[#7d8f87] text-lg">Open form, honest materials, and craftsmanship that stays beautiful over years of use.</p>
+            <p class="text-[#5a6b64] text-lg mb-6">Our work has appeared in magazines that highlight thoughtful Australian design and interiors. But for us, the real measure of success is seeing our tables become part of daily life in the homes they inhabit.</p>
+            <p class="text-[#5a6b64] text-lg">Open form, honest materials, and craftsmanship that stays beautiful over years of use.</p>
           </div>
         </div>
       </div>

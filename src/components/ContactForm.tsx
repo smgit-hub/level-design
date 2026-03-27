@@ -8,25 +8,40 @@ type FormData = {
   email: string;
   phone: string;
   preferredTable: string;
+  dimensions: string;
   projectDetails: string;
+  timberPreference: string;
+  budgetRange: string;
+  timeline: string;
 };
 
 const tableOptions = [
-  "Pillar Table", "Luna Table", "Cort Table", "Bruno Table",
-  "Yama Table", "Custom Design", "Not sure yet",
+  "Pillar Table", "Luna Table", "Yama Table", "Venn Table",
+  "Cort Table", "Morgan Table", "Bruno Table", "Helm Table", "Nina Table",
+  "Custom Design", "Not sure yet",
 ];
+
+const encode = (data: Record<string, string>) =>
+  Object.keys(data)
+    .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key] || ""))
+    .join("&");
 
 export default function ContactForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isError, setIsError] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
-  const onSubmit = (data: FormData) => {
-    const subject = encodeURIComponent("Table Project Enquiry");
-    const body = encodeURIComponent(
-      `Name: ${data.name}\nEmail: ${data.email}\nPhone: ${data.phone || "Not provided"}\nPreferred Table: ${data.preferredTable || "Not specified"}\n\nProject Details:\n${data.projectDetails}`
-    );
-    window.location.href = `mailto:hello@leveldesign.com.au?subject=${subject}&body=${body}`;
-    setIsSubmitted(true);
+  const onSubmit = async (data: FormData) => {
+    try {
+      await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encode({ "form-name": "contact-enquiry", ...data }),
+      });
+      setIsSubmitted(true);
+    } catch {
+      setIsError(true);
+    }
   };
 
   return (
@@ -35,10 +50,11 @@ export default function ContactForm() {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.2 }}
       viewport={{ once: true }}
-      className="bg-white rounded-3xl p-8 md:p-12 shadow-xl"
+      className="bg-[#f5f1e8] rounded-3xl p-8 md:p-12"
     >
       {!isSubmitted ? (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form name="contact-enquiry" data-netlify="true" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <input type="hidden" name="form-name" value="contact-enquiry" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-[#3d4f47] mb-2">Name *</label>
@@ -72,7 +88,7 @@ export default function ContactForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#3d4f47] mb-2">Preferred table (optional)</label>
+            <label className="block text-sm font-medium text-[#3d4f47] mb-2">Preferred Table (optional)</label>
             <select {...register("preferredTable")}
               className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors">
               <option value="">Select a table...</option>
@@ -81,15 +97,44 @@ export default function ContactForm() {
           </div>
 
           <div>
+            <label className="block text-sm font-medium text-[#3d4f47] mb-2">Dimensions & Space Details</label>
+            <input {...register("dimensions")} type="text" placeholder="e.g. 2400mm × 1000mm, seats 8"
+              className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors" />
+          </div>
+
+          <div>
             <label className="block text-sm font-medium text-[#3d4f47] mb-2">Project Details *</label>
-            <p className="text-sm text-[#7d8f87] mb-2">Tell us about your space, style preferences, size, finish, seating count, delivery suburb…</p>
             <textarea
               {...register("projectDetails", { required: "Please tell us about your project" })}
               rows={6}
-              placeholder="Share your vision, space details, and any inspiration you have..."
+              placeholder="Tell us about your space, style preferences, timber choices, and any inspiration..."
               className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors resize-none"
             />
             {errors.projectDetails && <p className="mt-1 text-sm text-red-600">{errors.projectDetails.message}</p>}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-[#3d4f47] mb-2">Timber Preference</label>
+            <input {...register("timberPreference")} type="text" placeholder="e.g. American Oak, American Ash"
+              className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors" />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-[#3d4f47] mb-2">Budget Range</label>
+            <input {...register("budgetRange")} type="text" placeholder="e.g. $5000 – $10000"
+              className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors" />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-[#3d4f47] mb-2">Timeline</label>
+            <select {...register("timeline")}
+              className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors">
+              <option value="">Select timeframe</option>
+              <option value="urgent">Urgent (within 6 weeks)</option>
+              <option value="standard">Standard (2–3 months)</option>
+              <option value="flexible">Flexible (3+ months)</option>
+              <option value="planning">Just planning</option>
+            </select>
           </div>
 
           <div className="pt-4">
@@ -98,7 +143,8 @@ export default function ContactForm() {
               Send Enquiry
               <ArrowRight size={20} />
             </button>
-            <p className="text-sm text-[#7d8f87] text-center mt-4">We'll only use this to contact you about your table.</p>
+            <p className="text-sm text-[#5a6b64] text-center mt-4">We'll only use this to contact you about your table.</p>
+          {isError && <p className="text-sm text-red-600 text-center mt-2">Something went wrong — please try again or email us directly at hello@leveldesign.com.au</p>}
           </div>
         </form>
       ) : (
@@ -107,7 +153,7 @@ export default function ContactForm() {
             <CheckCircle className="text-white" size={40} />
           </div>
           <h3 className="text-3xl font-serif text-[#3d4f47] mb-4">Thank You!</h3>
-          <p className="text-xl text-[#7d8f87] mb-8">We've received your enquiry and will get back to you within 2 business days.</p>
+          <p className="text-xl text-[#5a6b64] mb-8">We've received your enquiry and will get back to you within 2 business days.</p>
           <button onClick={() => setIsSubmitted(false)} className="text-[#c8956a] hover:underline">
             Submit another enquiry
           </button>

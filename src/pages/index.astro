@@ -1,16 +1,26 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { products } from '../data/products';
+import { Image } from 'astro:assets';
+import review1 from '../assets/images/home/level-design-customer-review-1.webp';
+import review2 from '../assets/images/home/level-design-customer-review-2.webp';
+import review3 from '../assets/images/home/level-design-customer-review-3.webp';
 ---
 
-<Layout title="Home" description="Design-led timber tables made for everyday living, hosting, and lasting use.">
+<Layout title="Home" description="Design-led timber tables made for everyday living, hosting, and lasting use." preloadImage="/images/home/level-design-handcrafted-furniture-hero.webp">
   <div class="pt-16">
 
     <!-- Hero -->
-    <section class="hero-parallax relative h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#2d3f37] via-[#3d4f47] to-[#4d6057]">
-      <div class="absolute inset-0 opacity-10">
-        <div class="absolute top-0 left-0 w-96 h-96 bg-[#c8956a] rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 right-0 w-96 h-96 bg-[#c8956a] rounded-full blur-3xl"></div>
-      </div>
+    <section class="hero-parallax relative h-[calc(100vh-4rem)] flex items-start justify-center overflow-hidden pt-28">
+      <picture class="absolute inset-0 w-full h-full">
+        <source media="(max-width: 767px)" srcset="/images/home/level-design-handcrafted-furniture-hero-mobile.webp" />
+        <img
+          src="/images/home/level-design-handcrafted-furniture-hero.webp"
+          alt="Level Design handcrafted timber table"
+          class="w-full h-full object-cover object-[center_70%]"
+        />
+      </picture>
+      <div class="absolute inset-0 bg-[#2d3f37]/40"></div>
 
       <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
         <div class="max-w-3xl">
@@ -21,23 +31,25 @@ import Layout from '../layouts/Layout.astro';
             Modern Tables Built Around Real Life
           </h1>
           <p class="hero-in text-xl md:text-2xl text-[#e8dcc8] mb-8 leading-relaxed drop-shadow-lg" style="--delay: 0.7s">
-            Join over 250 families who've chosen quality craft. Made to measure, designed for your space, built to last generations.
+            Over 250+ pieces crafted with precision. Made to measure, designed for your space, built to last generations.
           </p>
           <div class="hero-in flex flex-col sm:flex-row gap-4" style="--delay: 0.9s">
             <a href="/custom" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 shadow-lg hover:shadow-xl">
               Design Yours →
             </a>
             <a href="/tables" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-white/90 backdrop-blur-sm border-2 border-white text-[#3d4f47] rounded-full hover:bg-white transition-all duration-300 shadow-lg">
-              Explore Gallery
+              View the Collection
             </a>
           </div>
         </div>
       </div>
 
       <!-- Scroll indicator -->
-      <div class="scroll-bounce absolute bottom-8 left-1/2">
-        <div class="w-6 h-10 rounded-full border-2 border-white/50 flex items-start justify-center p-2">
-          <div class="w-1 h-2 bg-white/50 rounded-full"></div>
+      <div class="absolute bottom-8 left-1/2 -translate-x-1/2">
+        <div class="scroll-bounce">
+          <div class="w-6 h-10 rounded-full border-2 border-white/50 flex items-start justify-center p-2">
+            <div class="w-1 h-2 bg-white/50 rounded-full"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -47,14 +59,14 @@ import Layout from '../layouts/Layout.astro';
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
-            { value: "250+", label: "Tables Crafted", desc: "Handcrafted with precision" },
+            { value: "250+", label: "Pieces Crafted", desc: "Handcrafted with precision" },
             { value: "Local", label: "Australian Made", desc: "Supporting local makers" },
             { value: "1:1", label: "Personal Service", desc: "Direct collaboration" },
           ].map((stat, i) => (
             <div class="reveal text-center p-8 rounded-2xl bg-white shadow-sm hover:shadow-xl transition-shadow duration-300" style={`--delay: ${i * 0.1}s`}>
               <div class="text-5xl font-serif text-[#3d4f47] mb-2">{stat.value}</div>
               <div class="text-xl font-semibold text-[#3d4f47] mb-2">{stat.label}</div>
-              <div class="text-sm text-[#7d8f87]">{stat.desc}</div>
+              <div class="text-sm text-[#5a6b64]">{stat.desc}</div>
             </div>
           ))}
         </div>
@@ -64,33 +76,48 @@ import Layout from '../layouts/Layout.astro';
     <!-- Featured Tables -->
     <section class="py-24 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="reveal text-center mb-16">
+        <div class="reveal text-center mb-12">
           <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Explore Our Collection</p>
           <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">Find the Right Table for Your Room</h2>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          {[
-            { id: "pillar", name: "Pillar Table", desc: "Statement base and generous top for entertaining at scale." },
-            { id: "luna", name: "Luna Table", desc: "Elegant curves meet modern functionality." },
-            { id: "yama", name: "Yama Table", desc: "Clean lines with natural warmth." },
-          ].map((table, i) => (
-            <div class="reveal" style={`--delay: ${i * 0.1}s`}>
-              <a href={`/tables/${table.id}`} class="group block rounded-2xl overflow-hidden bg-[#f5f1e8] shadow-sm hover:shadow-2xl transition-all duration-500">
-                <div class="aspect-[4/3] overflow-hidden bg-gradient-to-br from-[#3d4f47] to-[#2d3f37] flex items-end p-6">
-                  <span class="text-white/30 font-serif text-2xl">{table.name}</span>
-                </div>
-                <div class="p-6">
-                  <h3 class="text-2xl font-semibold text-[#3d4f47] mb-2 group-hover:text-[#c8956a] transition-colors">{table.name}</h3>
-                  <p class="text-[#7d8f87] mb-4">{table.desc}</p>
-                  <div class="flex items-center gap-2 text-[#c8956a] font-medium">
-                    Learn more
-                    <span class="group-hover:translate-x-2 transition-transform duration-300 inline-block">→</span>
-                  </div>
-                </div>
-              </a>
+        <!-- Editorial bento grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-4 md:h-[620px] mb-12">
+
+          <!-- Large feature card: Pillar Table -->
+          <a href="/tables/pillar" class="reveal group relative md:col-span-2 md:row-span-2 rounded-2xl overflow-hidden min-h-[400px]">
+            <img src={products.pillar.images.main} alt="Pillar Table" loading="lazy" width="1536" height="1413" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#1a2820]/90 via-[#1a2820]/20 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-8 md:p-10">
+              <p class="text-[#c8956a] text-xs font-semibold tracking-widest uppercase mb-2">Featured Design</p>
+              <h3 class="text-3xl md:text-4xl font-serif text-white mb-2">Pillar Table</h3>
+              <p class="text-[#e8dcc8] text-sm md:text-base mb-5 max-w-sm">Statement base and generous top for entertaining at scale.</p>
+              <span class="inline-flex items-center gap-2 text-white text-sm font-medium border-b border-white/40 pb-0.5 group-hover:border-white transition-colors duration-300">View Table →</span>
             </div>
-          ))}
+          </a>
+
+          <!-- Luna Table -->
+          <a href="/tables/luna" class="reveal group relative rounded-2xl overflow-hidden min-h-[290px]" style="--delay: 0.1s">
+            <img src={products.luna.images.main} alt="Luna Table" loading="lazy" width="788" height="786" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#1a2820]/85 via-transparent to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-6">
+              <h3 class="text-xl font-serif text-white mb-1">Luna Table</h3>
+              <p class="text-[#e8dcc8] text-xs mb-3">Elegant curves meet modern functionality.</p>
+              <span class="inline-flex items-center gap-1 text-white text-xs font-medium border-b border-white/40 pb-0.5 group-hover:border-white transition-colors duration-300">View →</span>
+            </div>
+          </a>
+
+          <!-- Yama Table -->
+          <a href="/tables/yama" class="reveal group relative rounded-2xl overflow-hidden min-h-[290px]" style="--delay: 0.2s">
+            <img src={products.yama.images.main} alt="Yama Table" loading="lazy" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#1a2820]/85 via-transparent to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-6">
+              <h3 class="text-xl font-serif text-white mb-1">Yama Table</h3>
+              <p class="text-[#e8dcc8] text-xs mb-3">Clean lines with natural warmth.</p>
+              <span class="inline-flex items-center gap-1 text-white text-xs font-medium border-b border-white/40 pb-0.5 group-hover:border-white transition-colors duration-300">View →</span>
+            </div>
+          </a>
+
         </div>
 
         <div class="reveal text-center">
@@ -107,7 +134,7 @@ import Layout from '../layouts/Layout.astro';
         <div class="reveal text-center mb-16">
           <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Our Approach</p>
           <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">Why People Choose Level Design</h2>
-          <p class="text-xl text-[#7d8f87] max-w-2xl mx-auto">Thoughtful design, local production, and person-to-person care set us apart.</p>
+          <p class="text-xl text-[#5a6b64] max-w-2xl mx-auto">Thoughtful design, local production, and person-to-person care set us apart.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -121,7 +148,7 @@ import Layout from '../layouts/Layout.astro';
                 <svg class="text-white w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" set:html={item.svg} />
               </div>
               <h3 class="text-2xl font-semibold text-[#3d4f47] mb-4">{item.title}</h3>
-              <p class="text-[#7d8f87]">{item.desc}</p>
+              <p class="text-[#5a6b64]">{item.desc}</p>
             </div>
           ))}
         </div>
@@ -134,7 +161,7 @@ import Layout from '../layouts/Layout.astro';
         <div class="reveal text-center mb-16">
           <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">How It Works</p>
           <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">A Simple Process from Idea to Delivery</h2>
-          <p class="text-xl text-[#7d8f87] max-w-2xl mx-auto">From idea to delivery, we guide you through a streamlined process that puts you in control.</p>
+          <p class="text-xl text-[#5a6b64] max-w-2xl mx-auto">From idea to delivery, we guide you through a streamlined process that puts you in control.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -147,7 +174,7 @@ import Layout from '../layouts/Layout.astro';
             <div class="reveal relative" style={`--delay: ${i * 0.1}s`}>
               <div class="text-7xl font-serif text-[#e8dcc8] mb-4">{step.number}</div>
               <h3 class="text-2xl font-semibold text-[#3d4f47] mb-4">{step.title}</h3>
-              <p class="text-[#7d8f87]">{step.desc}</p>
+              <p class="text-[#5a6b64]">{step.desc}</p>
               {i < 3 && <div class="hidden lg:block absolute top-12 -right-4 w-8 h-0.5 bg-[#e8dcc8]"></div>}
             </div>
           ))}
@@ -165,22 +192,28 @@ import Layout from '../layouts/Layout.astro';
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
-            { name: "Sarah Mitchell", role: "Interior Designer", content: "The craftsmanship is exceptional. Our Pillar Table has become the centrepiece of our dining room.", rating: 5 },
-            { name: "James Chen", role: "Homeowner", content: "Working with Level Design was a dream. They understood our vision and delivered beyond expectations.", rating: 5 },
-            { name: "Emma Thompson", role: "Architect", content: "I recommend Level Design to all my clients. Their attention to detail and quality is unmatched.", rating: 5 },
+            { name: "Sarah Mitchell", role: "Interior Designer", content: "The craftsmanship is exceptional. Our Pillar Table has become the centrepiece of our dining room.", tableLabel: "Pillar Table", tableId: "pillar", img: review1, pos: "object-center" },
+            { name: "Emma Thompson", role: "Architect", content: "I recommend Level Design to all my clients. Their attention to detail and quality is unmatched.", tableLabel: "Venn Table", tableId: "venn", img: review3, pos: "object-bottom" },
+            { name: "James Chen", role: "Homeowner", content: "Working with Level Design was a dream. They understood our vision and delivered beyond expectations.", tableLabel: "Luna Table", tableId: "luna", img: review2, pos: "object-center" },
           ].map((t, i) => (
-            <div class="reveal p-8 rounded-2xl bg-white shadow-sm hover:shadow-xl transition-shadow duration-300" style={`--delay: ${i * 0.1}s`}>
-              <div class="flex gap-1 mb-4">
-                {Array.from({ length: t.rating }).map((_, j) => (
-                  <svg key={j} class="w-5 h-5 fill-[#c8956a] text-[#c8956a]" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                ))}
+            <a href={`/tables/${t.tableId}`} class="reveal group rounded-2xl bg-white shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden block border border-transparent hover:border-[#e8dcc8]" style={`--delay: ${i * 0.1}s`}>
+              <div class="aspect-[4/3] overflow-hidden">
+                <Image src={t.img} alt={`${t.name}'s dining space`} loading="lazy" class={`w-full h-full object-cover ${t.pos} group-hover:scale-105 transition-transform duration-500`} />
               </div>
-              <p class="text-[#3d4f47] mb-6 text-lg italic">"{t.content}"</p>
-              <div>
-                <div class="font-semibold text-[#3d4f47]">{t.name}</div>
-                <div class="text-sm text-[#7d8f87]">{t.role}</div>
+              <div class="p-8 relative">
+                <!-- Decorative quote mark -->
+                <span class="absolute top-4 right-6 text-7xl font-serif text-[#e8dcc8] leading-none select-none">"</span>
+                <p class="text-xs font-semibold tracking-widest uppercase text-[#c8956a] mb-3">{t.tableLabel}</p>
+                <p class="text-[#3d4f47] text-base italic leading-relaxed mb-6 relative z-10">{t.content}</p>
+                <div class="border-t border-[#e8dcc8] pt-4 flex items-center justify-between">
+                  <div>
+                    <div class="font-semibold text-[#3d4f47] text-sm">{t.name}</div>
+                    <div class="text-xs text-[#5a6b64] mt-0.5">{t.role}</div>
+                  </div>
+                  <span class="text-[#c8956a] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 text-lg">→</span>
+                </div>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>

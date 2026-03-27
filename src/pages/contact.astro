@@ -4,13 +4,21 @@ import ContactForm from '../components/ContactForm';
 ---
 
 <Layout title="Contact" description="Start your table project. Share your space, style, and timeline and we will come back with the right direction and a tailored quote.">
+  <!-- Hidden form for Netlify detection -->
+  <form name="contact-enquiry" netlify netlify-honeypot="bot-field" hidden>
+    <input name="name" /><input name="email" /><input name="phone" />
+    <input name="preferredTable" /><input name="dimensions" />
+    <textarea name="projectDetails"></textarea>
+    <input name="timberPreference" /><input name="budgetRange" /><input name="timeline" />
+  </form>
   <div class="pt-16">
 
     <!-- Hero -->
-    <section class="relative bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white py-20 overflow-hidden">
+    <section class="relative bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white py-20 min-h-[30rem] flex items-center overflow-hidden">
       <div class="absolute inset-0 opacity-10">
         <div class="absolute top-0 left-0 w-96 h-96 bg-[#c8956a] rounded-full blur-3xl"></div>
       </div>
+
       <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl">
           <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">Let's Build Yours</p>
@@ -36,63 +44,74 @@ import ContactForm from '../components/ContactForm';
         <div class="reveal text-center mb-16">
           <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">How to Get in Touch</p>
           <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">We're Here to Help</h2>
-          <p class="text-xl text-[#7d8f87] max-w-2xl mx-auto">Whether you have questions about our tables or want to start a custom project, we're ready to listen.</p>
+          <p class="text-xl text-[#5a6b64] max-w-2xl mx-auto">Whether you have questions about our tables or want to start a custom project, we're ready to listen.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           {[
             {
-              icon: "✉️",
-              title: "Email Us",
-              detail: "hello@leveldesign.com.au",
-              href: "mailto:hello@leveldesign.com.au",
+              svg: `<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>`,
+              title: "Contact Us",
+              detail: "Use the form below",
+              href: null,
               note: "Response within 2 business days",
             },
             {
-              icon: "📞",
-              title: "Call or Text",
+              svg: `<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.62 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.16 6.16l.97-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>`,
+              title: "Request a Call",
               detail: "Available for project consultations",
-              note: "Weekdays 9am – 5pm AEST",
+              note: "We'll call at a time that suits you",
             },
             {
-              icon: "📍",
+              svg: `<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>`,
               title: "Delivery Area",
-              detail: "Australia-wide delivery",
-              note: "White-glove service included",
+              detail: "Melbourne-wide delivery",
+              note: "Anywhere else in Australia — reach out and we'll work out the details",
             },
           ].map((card, i) => (
-            <div class="reveal bg-[#f5f1e8] rounded-2xl p-8 text-center hover:shadow-lg transition-shadow" style={`--delay: ${i * 0.1}s`}>
-              <div class="w-14 h-14 rounded-full bg-[#3d4f47] flex items-center justify-center mx-auto mb-4 text-2xl">
-                {card.icon}
+            <div class="reveal bg-[#f5f1e8] rounded-2xl p-8 text-center hover:shadow-lg transition-shadow group" style={`--delay: ${i * 0.1}s`}>
+              <div class="w-16 h-16 rounded-2xl bg-[#3d4f47] flex items-center justify-center mx-auto mb-6 group-hover:bg-[#c8956a] transition-colors duration-300">
+                <svg class="text-white w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" set:html={card.svg} />
               </div>
               <h3 class="text-lg font-semibold text-[#3d4f47] mb-2">{card.title}</h3>
               {card.href ? (
                 <a href={card.href} class="text-[#c8956a] hover:underline">{card.detail}</a>
               ) : (
-                <p class="text-[#7d8f87]">{card.detail}</p>
+                <p class="text-[#5a6b64]">{card.detail}</p>
               )}
-              <p class="text-sm text-[#7d8f87] mt-3">{card.note}</p>
+              <p class="text-sm text-[#5a6b64] mt-3">{card.note}</p>
             </div>
           ))}
         </div>
 
-        <!-- Helpful info -->
-        <div class="reveal bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] rounded-3xl p-8 md:p-12 text-white">
-          <div class="max-w-3xl mx-auto">
-            <h3 class="text-2xl font-serif mb-2 text-center">Helpful to Include in Your Enquiry</h3>
-            <p class="text-[#e8dcc8] text-center mb-8">The more we know, the better we can help</p>
-            <div class="grid md:grid-cols-2 gap-4">
-              {[
-                "Your preferred finish and overall look",
-                "How many seats you need day to day",
-                "Links to tables you like or photos of your space",
-                "Your delivery suburb and any timing considerations",
-              ].map((item, i) => (
-                <div class="reveal flex items-start gap-3 bg-[#2d3f37]/50 rounded-xl p-4" style={`--delay: ${i * 0.1}s`}>
-                  <svg class="text-[#c8956a] flex-shrink-0 mt-0.5 w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                  <span class="text-[#e8dcc8]">{item}</span>
-                </div>
-              ))}
+        <!-- Helpful info with image -->
+        <div class="reveal bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] rounded-3xl overflow-hidden text-white">
+          <div class="grid grid-cols-1 lg:grid-cols-2">
+            <!-- Image -->
+            <div class="relative min-h-[320px] lg:min-h-0">
+              <img
+                src="/images/contact/level-design-contact-image.webp"
+                alt="Level Design timber table in a styled interior"
+                class="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
+            <!-- Tips -->
+            <div class="p-8 md:p-12">
+              <h3 class="text-2xl font-serif mb-2">Helpful to Include in Your Enquiry</h3>
+              <p class="text-[#e8dcc8] mb-8">The more we know, the better we can help</p>
+              <div class="space-y-4">
+                {[
+                  "Your preferred finish and overall look",
+                  "How many seats you need day to day",
+                  "Links to tables you like or photos of your space",
+                  "Your delivery suburb and any timing considerations",
+                ].map((item) => (
+                  <div class="flex items-start gap-3 bg-[#2d3f37]/50 rounded-xl p-4">
+                    <svg class="text-[#c8956a] flex-shrink-0 mt-0.5 w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    <span class="text-[#e8dcc8]">{item}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -100,14 +119,14 @@ import ContactForm from '../components/ContactForm';
     </section>
 
     <!-- Form -->
-    <section class="py-24 bg-[#f5f1e8]">
+    <section class="pb-24 bg-white">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="reveal text-center mb-12">
           <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Get Started</p>
           <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">Request a Quote</h2>
-          <p class="text-xl text-[#7d8f87]">We'll review your requirements and suggest the best direction for dimensions, design, and finish.</p>
+          <p class="text-xl text-[#5a6b64]">We'll review your requirements and suggest the best direction for dimensions, design, and finish.</p>
         </div>
-        <ContactForm client:load />
+        <ContactForm client:visible />
       </div>
     </section>
 

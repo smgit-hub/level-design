@@ -70,7 +70,7 @@ export default function TablesFilter({ products }: Props) {
               </div>
             </div>
 
-            <div className="text-sm text-[#7d8f87]">
+            <div className="text-sm text-[#5a6b64]">
               Showing {filtered.length} of {products.length} tables
             </div>
           </div>
@@ -95,9 +95,12 @@ export default function TablesFilter({ products }: Props) {
                     href={`/tables/${table.id}`}
                     className="group block rounded-2xl overflow-hidden bg-[#f5f1e8] hover:shadow-2xl transition-all duration-500"
                   >
-                    {/* Placeholder instead of image */}
-                    <div className="aspect-[4/3] overflow-hidden relative bg-gradient-to-br from-[#3d4f47] to-[#2d3f37] flex items-end p-6">
-                      <span className="text-white/40 font-serif text-2xl">{table.name}</span>
+                    <div className="aspect-[4/3] overflow-hidden relative">
+                      <img
+                        src={table.images.main}
+                        alt={table.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
                       <div className="absolute top-4 right-4 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-medium text-[#3d4f47]">
                         {table.category}
                       </div>
@@ -106,9 +109,9 @@ export default function TablesFilter({ products }: Props) {
                       <h3 className="text-2xl font-semibold text-[#3d4f47] mb-2 group-hover:text-[#c8956a] transition-colors">
                         {table.name}
                       </h3>
-                      <p className="text-[#7d8f87] mb-4">{table.tagline}</p>
+                      <p className="text-[#5a6b64] mb-4">{table.tagline}</p>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-[#7d8f87]">{table.size}</span>
+                        <span className="text-sm text-[#5a6b64]">{table.size}</span>
                         <span className="text-[#c8956a] font-medium group-hover:underline">
                           View Details →
                         </span>
@@ -126,7 +129,7 @@ export default function TablesFilter({ products }: Props) {
               animate={{ opacity: 1 }}
               className="text-center py-20"
             >
-              <p className="text-2xl text-[#7d8f87] mb-4">No tables match your filters</p>
+              <p className="text-2xl text-[#5a6b64] mb-4">No tables match your filters</p>
               <button
                 onClick={() => { setSelectedCategory("All"); setSelectedSize("All Sizes"); }}
                 className="text-[#c8956a] hover:underline"

@@ -11,8 +11,17 @@ export function getStaticPaths() {
 }
 
 const { product } = Astro.props;
+const index = allProducts.findIndex((p) => p.id === product.id);
+const prev = allProducts[(index - 1 + allProducts.length) % allProducts.length];
+const next = allProducts[(index + 1) % allProducts.length];
 ---
 
 <Layout title={product.name} description={product.tagline}>
-  <ProductDetailClient product={product} client:load />
+  <!-- Hidden form for Netlify detection -->
+  <form name="table-enquiry" netlify netlify-honeypot="bot-field" hidden>
+    <input name="table" /><input name="name" /><input name="email" /><input name="phone" />
+    <input name="dimensions" /><textarea name="projectDetails"></textarea>
+    <input name="timberPreference" /><input name="budgetRange" /><input name="timeline" />
+  </form>
+  <ProductDetailClient product={product} prev={{ id: prev.id, name: prev.name }} next={{ id: next.id, name: next.name }} client:load />
 </Layout>

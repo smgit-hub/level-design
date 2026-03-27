@@ -42,15 +42,15 @@ export default function Navigation({ currentPath }: Props) {
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
-          <a href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-full bg-[#e8dcc8] flex items-center justify-center p-1.5 transition-transform duration-300 group-hover:scale-110">
-              <svg viewBox="0 0 40 40" className="w-full h-full text-[#3d4f47]" fill="none" stroke="currentColor" strokeWidth="2">
-                <rect x="8" y="8" width="24" height="24" rx="2" />
-                <line x1="20" y1="8" x2="20" y2="32" />
-                <line x1="8" y1="20" x2="32" y2="20" />
-              </svg>
+          <a href="/" aria-label="Level Design home" className="flex items-center gap-3 group min-w-0 flex-shrink">
+            <div className="w-10 h-10 rounded-full bg-[#e8dcc8] flex items-center justify-center p-1.5 transition-transform duration-300 group-hover:scale-110 flex-shrink-0">
+              <img
+                src="/images/level-logo.png"
+                alt="Level Design"
+                className="w-full h-full object-contain"
+              />
             </div>
-            <span className="text-white text-lg font-semibold hidden sm:block">Level Design</span>
+            <span className="text-[#e8dcc8] text-base font-semibold truncate">Level Design</span>
           </a>
 
           {/* Desktop nav */}
@@ -78,15 +78,15 @@ export default function Navigation({ currentPath }: Props) {
             href="/contact"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="hidden md:block p-2 text-sm bg-transparent border-2 border-[#e8dcc8] text-[#e8dcc8] rounded-full hover:bg-[#e8dcc8] hover:text-[#3d4f47] transition-all duration-300"
+            className="hidden md:flex items-center gap-2 px-5 py-2 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 text-sm font-medium shadow-sm"
           >
-            Contact Us
+            Start a Project
           </motion.a>
 
           {/* Mobile toggle */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden text-[#e8dcc8] hover:text-white transition-colors"
+            className="md:hidden text-[#e8dcc8] hover:text-white transition-colors flex-shrink-0 ml-2"
             aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -121,7 +121,7 @@ export default function Navigation({ currentPath }: Props) {
                 href="/contact"
                 className="block px-4 py-2 text-center bg-[#e8dcc8] text-[#3d4f47] rounded-lg hover:bg-[#c8956a] transition-colors"
               >
-                Contact Us
+                Start a Project
               </a>
             </div>
           </motion.div>
