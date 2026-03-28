@@ -147,7 +147,7 @@ export default function ContactForm() {
 
           <div className="pt-4">
             <button type="submit"
-              className="w-full px-8 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center justify-center gap-2">
+              className="w-full px-8 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center justify-center gap-2 cursor-pointer">
               Send Enquiry
               <ArrowRight size={20} />
             </button>
