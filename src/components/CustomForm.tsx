@@ -184,7 +184,7 @@ export default function CustomForm() {
                 </div>
                 <h3 className="text-3xl font-serif text-[#3d4f47] mb-4">Thank You!</h3>
                 <p className="text-xl text-[#5a6b64] mb-8">We've received your enquiry and will get back to you within 2 business days.</p>
-                <button onClick={() => setIsSubmitted(false)} className="text-[#c8956a] hover:underline">
+                <button onClick={() => setIsSubmitted(false)} className="text-[#c8956a] hover:underline cursor-pointer">
                   Submit another enquiry
                 </button>
               </div>
