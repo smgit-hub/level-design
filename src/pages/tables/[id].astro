@@ -18,7 +18,7 @@ const next = allProducts[(index + 1) % allProducts.length];
 
 <Layout title={product.name} description={product.tagline}>
   <!-- Hidden form for Netlify detection -->
-  <form name="table-enquiry" netlify netlify-honeypot="bot-field" hidden>
+  <form name="table-enquiry" data-netlify="true" data-netlify-honeypot="bot-field" style="display:none">
     <input name="table" /><input name="name" /><input name="email" /><input name="phone" />
     <input name="dimensions" /><textarea name="projectDetails"></textarea>
     <input name="timberPreference" /><input name="budgetRange" /><input name="timeline" />

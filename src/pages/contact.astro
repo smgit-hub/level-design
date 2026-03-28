@@ -5,7 +5,7 @@ import ContactForm from '../components/ContactForm';
 
 <Layout title="Contact" description="Start your table project. Share your space, style, and timeline and we will come back with the right direction and a tailored quote.">
   <!-- Hidden form for Netlify detection -->
-  <form name="contact-enquiry" netlify netlify-honeypot="bot-field" hidden>
+  <form name="contact-enquiry" data-netlify="true" data-netlify-honeypot="bot-field" style="display:none">
     <input name="name" /><input name="email" /><input name="phone" />
     <input name="preferredTable" /><input name="dimensions" />
     <textarea name="projectDetails"></textarea>
