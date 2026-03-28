@@ -179,7 +179,7 @@ import houzzImg from '../assets/images/about/level-design-houzz-magazine-coffee-
               </div>
               <div id="trade-form">
                 <h3 class="text-2xl font-semibold mb-6">Get in Touch</h3>
-                <form name="trade-enquiry" data-netlify="true" data-netlify-honeypot="bot-field" action="/about?trade=sent" method="POST" class="space-y-4">
+                <form id="trade-form-el" name="trade-enquiry" data-netlify="true" data-netlify-honeypot="bot-field" class="space-y-4">
                   <input type="hidden" name="form-name" value="trade-enquiry" />
                   <div style="display:none"><input name="bot-field" /></div>
                   <input type="text" name="name" required placeholder="Your name" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:border-[#c8956a] focus:outline-none transition-colors" />
@@ -189,15 +189,23 @@ import houzzImg from '../assets/images/about/level-design-houzz-magazine-coffee-
                 </form>
               </div>
               <script>
-                if (new URLSearchParams(window.location.search).get('trade') === 'sent') {
-                  document.getElementById('trade-success').style.display = 'block';
-                  document.getElementById('trade-form').style.display = 'none';
-                  window.addEventListener('load', function() {
+                document.getElementById('trade-form-el').addEventListener('submit', async function(e) {
+                  e.preventDefault();
+                  try {
+                    await fetch('/', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                      body: new URLSearchParams(new FormData(this)).toString()
+                    });
+                    document.getElementById('trade-success').style.display = 'block';
+                    document.getElementById('trade-form').style.display = 'none';
                     setTimeout(function() {
                       document.getElementById('trade-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }, 300);
-                  });
-                }
+                    }, 100);
+                  } catch(err) {
+                    alert('Something went wrong — please try again or email us at hello@leveldesign.com.au');
+                  }
+                });
               </script>
             </div>
           </div>
