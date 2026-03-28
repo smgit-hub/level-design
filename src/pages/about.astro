@@ -192,7 +192,11 @@ import houzzImg from '../assets/images/about/level-design-houzz-magazine-coffee-
                 if (new URLSearchParams(window.location.search).get('trade') === 'sent') {
                   document.getElementById('trade-success').style.display = 'block';
                   document.getElementById('trade-form').style.display = 'none';
-                  document.getElementById('trade-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  window.addEventListener('load', function() {
+                    setTimeout(function() {
+                      document.getElementById('trade-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 300);
+                  });
                 }
               </script>
             </div>
