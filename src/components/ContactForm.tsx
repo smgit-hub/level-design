@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ArrowRight, CheckCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 
@@ -29,7 +29,14 @@ const encode = (data: Record<string, string>) =>
 export default function ContactForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isError, setIsError] = useState(false);
+  const successRef = useRef<HTMLDivElement>(null);
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+
+  useEffect(() => {
+    if (isSubmitted && successRef.current) {
+      successRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [isSubmitted]);
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -53,8 +60,9 @@ export default function ContactForm() {
       className="bg-[#f5f1e8] rounded-3xl p-8 md:p-12"
     >
       {!isSubmitted ? (
-        <form name="contact-enquiry" data-netlify="true" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form name="contact-enquiry" data-netlify="true" data-netlify-honeypot="bot-field" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <input type="hidden" name="form-name" value="contact-enquiry" />
+          <div style={{ display: "none" }} aria-hidden="true"><input name="bot-field" tabIndex={-1} autoComplete="off" /></div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-[#3d4f47] mb-2">Name *</label>
@@ -148,7 +156,7 @@ export default function ContactForm() {
           </div>
         </form>
       ) : (
-        <div className="text-center py-12">
+        <div ref={successRef} className="text-center py-12">
           <div className="w-20 h-20 rounded-full bg-[#c8956a] flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="text-white" size={40} />
           </div>

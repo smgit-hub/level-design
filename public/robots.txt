@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://leveldesign.com.au/sitemap.xml
