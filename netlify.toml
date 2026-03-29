@@ -13,7 +13,43 @@
     X-XSS-Protection = "1; mode=block"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://ajax.googleapis.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self' blob:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://ajax.googleapis.com https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://www.google-analytics.com; media-src 'self' blob:; font-src 'self'; connect-src 'self' blob: https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://region1.google-analytics.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'"
+
+# Redirects for old WordPress URLs
+[[redirects]]
+  from = "/nina/"
+  to = "/tables/nina"
+  status = 301
+
+[[redirects]]
+  from = "/nina-series/"
+  to = "/tables/nina"
+  status = 301
+
+[[redirects]]
+  from = "/kola/"
+  to = "/tables"
+  status = 301
+
+[[redirects]]
+  from = "/arun-series/"
+  to = "/tables"
+  status = 301
+
+[[redirects]]
+  from = "/timbers-finishes/"
+  to = "/custom"
+  status = 301
+
+[[redirects]]
+  from = "/matt-coffee-table-nest/"
+  to = "/tables"
+  status = 301
+
+[[redirects]]
+  from = "/living/"
+  to = "/"
+  status = 301
 
 [[headers]]
   for = "/images/*"
