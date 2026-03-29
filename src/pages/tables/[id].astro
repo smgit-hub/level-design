@@ -16,7 +16,11 @@ const prev = allProducts[(index - 1 + allProducts.length) % allProducts.length];
 const next = allProducts[(index + 1) % allProducts.length];
 ---
 
-<Layout title={product.name} description={product.tagline}>
+<Layout
+  title={`${product.name} | Handcrafted Dining Table Melbourne | Level Design`}
+  description={`${product.name} — ${product.tagline}. Handcrafted timber dining table designed and made in Melbourne, Australia. Custom sizing available.`}
+  ogImage={product.images.main}
+>
   <!-- Hidden form for Netlify detection -->
   <form name="table-enquiry" data-netlify="true" data-netlify-honeypot="bot-field" style="display:none">
     <input name="table" /><input name="name" /><input name="email" /><input name="phone" />
