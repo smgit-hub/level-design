@@ -32,6 +32,14 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
     {preloadImage && <link rel="preload" as="image" href={preloadImage} />}
     <link rel="apple-touch-icon" href="/favicon-circle.png" />
     <ViewTransitions />
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7FGDPXHPK5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-7FGDPXHPK5');
+    </script>
   </head>
   <body class="bg-[#f5f1e8] text-[#3d4f47]">
     <Navigation client:load currentPath={currentPath} transition:persist />

@@ -17,6 +17,7 @@
     "react-hook-form": "^7.55.0"
   },
   "devDependencies": {
+    "@astrojs/sitemap": "^3.7.2",
     "@gltf-transform/core": "^4.3.0",
     "@gltf-transform/extensions": "^4.3.0",
     "@gltf-transform/functions": "^4.3.0",
