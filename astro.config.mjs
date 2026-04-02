@@ -5,6 +5,7 @@ import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://leveldesign.com.au',
+  trailingSlash: 'always',
   integrations: [react(), sitemap()],
   image: {
     service: { entrypoint: 'astro/assets/services/sharp' },
