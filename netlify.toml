@@ -57,6 +57,31 @@
   to = "/"
   status = 301
 
+[[redirects]]
+  from = "/burt-entertainment-unit/"
+  to = "/tables"
+  status = 301
+
+[[redirects]]
+  from = "/ana-dining-table/"
+  to = "/tables"
+  status = 301
+
+[[redirects]]
+  from = "/phil-chest-of-drawers/"
+  to = "/tables"
+  status = 301
+
+[[redirects]]
+  from = "/lisa-coffee-table-nest/"
+  to = "/tables"
+  status = 301
+
+[[redirects]]
+  from = "/cat-bedside-table/"
+  to = "/tables"
+  status = 301
+
 [[headers]]
   for = "/images/*"
   [headers.values]
