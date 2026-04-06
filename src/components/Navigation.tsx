@@ -7,9 +7,9 @@ interface Props {
 }
 
 const navLinks = [
-  { path: "/tables", label: "Tables" },
-  { path: "/custom", label: "Custom" },
-  { path: "/about", label: "About" },
+  { path: "/tables/", label: "Tables" },
+  { path: "/custom/", label: "Custom" },
+  { path: "/about/", label: "About" },
 ];
 
 export default function Navigation({ currentPath }: Props) {
@@ -75,7 +75,7 @@ export default function Navigation({ currentPath }: Props) {
 
           {/* CTA */}
           <motion.a
-            href="/contact"
+            href="/contact/"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="hidden md:flex items-center gap-2 px-5 py-2 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 text-sm font-medium shadow-sm"
@@ -118,7 +118,7 @@ export default function Navigation({ currentPath }: Props) {
                 </a>
               ))}
               <a
-                href="/contact"
+                href="/contact/"
                 className="block px-4 py-2 text-center bg-[#e8dcc8] text-[#3d4f47] rounded-lg hover:bg-[#c8956a] transition-colors"
               >
                 Start a Project

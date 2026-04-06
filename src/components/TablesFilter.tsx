@@ -92,7 +92,7 @@ export default function TablesFilter({ products }: Props) {
                   transition={{ duration: 0.3, delay: index * 0.05 }}
                 >
                   <a
-                    href={`/tables/${table.id}`}
+                    href={`/tables/${table.id}/`}
                     className="group block rounded-2xl overflow-hidden bg-[#f5f1e8] hover:shadow-2xl transition-all duration-500"
                   >
                     <div className="aspect-[4/3] overflow-hidden relative">

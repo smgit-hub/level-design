@@ -26,8 +26,8 @@ const year = new Date().getFullYear();
         <h3 class="text-white text-xs font-semibold tracking-widest uppercase mb-4">Tables</h3>
         <ul class="space-y-2">
           {[
-            { href: '/tables', label: 'All Tables' },
-            { href: '/custom', label: 'Custom Order' },
+            { href: '/tables/', label: 'All Tables' },
+            { href: '/custom/', label: 'Custom Order' },
           ].map(({ href, label }) => (
             <li><a href={href} class="text-sm text-[#b8ac98] hover:text-white transition-colors">{label}</a></li>
           ))}
@@ -37,8 +37,8 @@ const year = new Date().getFullYear();
         <h3 class="text-white text-xs font-semibold tracking-widest uppercase mb-4">Company</h3>
         <ul class="space-y-2">
           {[
-            { href: '/about', label: 'About Us' },
-            { href: '/contact', label: 'Contact' },
+            { href: '/about/', label: 'About Us' },
+            { href: '/contact/', label: 'Contact' },
           ].map(({ href, label }) => (
             <li><a href={href} class="text-sm text-[#b8ac98] hover:text-white transition-colors">{label}</a></li>
           ))}
@@ -47,7 +47,7 @@ const year = new Date().getFullYear();
       <div>
         <h3 class="text-white text-xs font-semibold tracking-widest uppercase mb-4">Legal</h3>
         <ul class="space-y-2">
-          <li><a href="/privacy" class="text-sm text-[#b8ac98] hover:text-white transition-colors">Privacy Policy</a></li>
+          <li><a href="/privacy/" class="text-sm text-[#b8ac98] hover:text-white transition-colors">Privacy Policy</a></li>
         </ul>
       </div>
       <div>
