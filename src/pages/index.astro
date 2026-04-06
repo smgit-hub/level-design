@@ -196,7 +196,7 @@ import review3 from '../assets/images/home/level-design-customer-review-3.webp';
             { name: "Emma Thompson", role: "Architect", content: "I recommend Level Design to all my clients. Their attention to detail and quality is unmatched.", tableLabel: "Venn Table", tableId: "venn", img: review3, pos: "object-bottom" },
             { name: "James Chen", role: "Homeowner", content: "Working with Level Design was a dream. They understood our vision and delivered beyond expectations.", tableLabel: "Luna Table", tableId: "luna", img: review2, pos: "object-center" },
           ].map((t, i) => (
-            <a href={`/tables/${t.tableId}`} class="reveal group rounded-2xl bg-white shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden block border border-transparent hover:border-[#e8dcc8]" style={`--delay: ${i * 0.1}s`}>
+            <a href={`/tables/${t.tableId}/`} class="reveal group rounded-2xl bg-white shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden block border border-transparent hover:border-[#e8dcc8]" style={`--delay: ${i * 0.1}s`}>
               <div class="aspect-[4/3] overflow-hidden">
                 <Image src={t.img} alt={`${t.name}'s dining space`} loading="lazy" class={`w-full h-full object-cover ${t.pos} group-hover:scale-105 transition-transform duration-500`} />
               </div>
