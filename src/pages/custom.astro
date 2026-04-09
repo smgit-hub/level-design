@@ -3,9 +3,44 @@ import Layout from '../layouts/Layout.astro';
 import CustomForm from '../components/CustomForm';
 import { Image } from 'astro:assets';
 import customImg from '../assets/images/custom/level-design-custom-furniture.webp';
+
+const faqs = [
+  {
+    question: 'Can I customise the dimensions of my dining table?',
+    answer:
+      'Yes. Level Design custom dining tables are made to suit your room, circulation, seating requirements, and the way you use the space day to day.',
+  },
+  {
+    question: 'What timber species and finishes can I choose from?',
+    answer:
+      'We can guide you through timber species such as American Oak, Tasmanian Oak, and other suitable options, then help narrow the finish based on colour, durability, and the look you want to achieve.',
+  },
+  {
+    question: 'Do you work with Melbourne clients only?',
+    answer:
+      'Level Design is Melbourne-based, but projects can be discussed for other locations in Australia depending on delivery requirements and scope.',
+  },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.answer,
+    },
+  })),
+};
 ---
 
-<Layout title="Custom Dining Tables Melbourne | Level Design" description="Design your custom dining table with Level Design, Melbourne. Choose your dimensions, timber species, and finish. Made to measure for Australian homes.">
+<Layout
+  title="Custom Dining Tables Melbourne | Bespoke Timber Tables | Level Design"
+  description="Design a custom dining table in Melbourne with Level Design. Bespoke timber dining tables tailored to your dimensions, timber preferences, finish, and everyday use."
+  schema={schema}
+>
   <!-- Hidden form for Netlify detection -->
   <form name="custom-brief" data-netlify="true" data-netlify-honeypot="bot-field" style="display:none">
     <input name="name" /><input name="email" /><input name="phone" />
@@ -71,6 +106,42 @@ import customImg from '../assets/images/custom/level-design-custom-furniture.web
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 bg-[#f5f1e8]">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal text-center mb-14">
+          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Custom Table Design</p>
+          <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">Bespoke Timber Dining Tables for Melbourne Homes</h2>
+          <p class="text-xl text-[#5a6b64] max-w-3xl mx-auto">Our custom process is designed for people who want a table that feels resolved in both scale and detail, whether that means fitting a tighter dining zone or creating a centrepiece for entertaining.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {[
+            {
+              title: 'Designed around your layout',
+              body: 'We help determine practical dimensions, ideal overhangs, leg placement, and seating counts so the finished table feels natural in the room rather than simply filling it.',
+            },
+            {
+              title: 'Material decisions made with guidance',
+              body: 'Timber species, finish level, edge profile, and base style all affect the final character of the piece. We work through those decisions with you before production begins.',
+            },
+            {
+              title: 'Suitable for architects and interior designers',
+              body: 'If you are specifying furniture for a project, we can help align the table with the wider interior palette, circulation plan, and client brief.',
+            },
+            {
+              title: 'Built for everyday durability',
+              body: 'Every custom table balances appearance with daily practicality, so the final finish and detailing support real family life, entertaining, and long-term use.',
+            },
+          ].map((item, i) => (
+            <div class="reveal rounded-2xl bg-white p-8 shadow-sm" style={`--delay: ${i * 0.1}s`}>
+              <h3 class="text-2xl font-semibold text-[#3d4f47] mb-4">{item.title}</h3>
+              <p class="text-[#5a6b64] leading-relaxed">{item.body}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -192,6 +263,22 @@ import customImg from '../assets/images/custom/level-design-custom-furniture.web
 
     <!-- Form + FAQ (React island) -->
     <CustomForm client:visible />
+
+    <section class="py-24 bg-white">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal bg-[#f5f1e8] rounded-3xl p-8 md:p-10">
+          <h2 class="text-3xl md:text-4xl font-serif text-[#3d4f47] mb-8">Custom Dining Table FAQs</h2>
+          <div class="space-y-6">
+            {faqs.map((item) => (
+              <div class="border-b border-[#d9cfbd] pb-6 last:border-b-0 last:pb-0">
+                <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{item.question}</h3>
+                <p class="text-[#5a6b64] leading-relaxed">{item.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
 
   </div>
 </Layout>

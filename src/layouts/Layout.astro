@@ -9,6 +9,8 @@ interface Props {
   description?: string;
   preloadImage?: string;
   ogImage?: string;
+  ogType?: string;
+  schema?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
@@ -16,12 +18,44 @@ const {
   description = 'Handcrafted timber dining tables designed and made in Melbourne, Australia. 9 signature designs, fully customisable to your space.',
   preloadImage,
   ogImage = '/images/home/level-design-handcrafted-furniture-hero.webp',
+  ogType = 'website',
+  schema,
 } = Astro.props;
 
 const currentPath = Astro.url.pathname;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
 const siteURL = Astro.site ?? new URL(Astro.url.origin);
 const ogImageURL = new URL(ogImage, siteURL);
+const baseSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: 'Level Design',
+  url: siteURL.toString(),
+  image: new URL('/images/home/level-design-handcrafted-furniture-hero.webp', siteURL).toString(),
+  logo: new URL('/images/level-logo.png', siteURL).toString(),
+  description,
+  areaServed: [
+    { '@type': 'City', name: 'Melbourne' },
+    { '@type': 'Country', name: 'Australia' },
+  ],
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Melbourne',
+    addressCountry: 'AU',
+  },
+  brand: {
+    '@type': 'Brand',
+    name: 'Level Design',
+  },
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'customer service',
+    url: new URL('/contact/', siteURL).toString(),
+    areaServed: 'AU',
+    availableLanguage: 'en',
+  },
+};
+const schemaNodes = [baseSchema, ...(Array.isArray(schema) ? schema : schema ? [schema] : [])];
 ---
 
 <!doctype html>
@@ -33,7 +67,7 @@ const ogImageURL = new URL(ogImage, siteURL);
     <link rel="canonical" href={canonicalURL} />
     <title>{title}</title>
     <!-- Open Graph -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -47,6 +81,9 @@ const ogImageURL = new URL(ogImage, siteURL);
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     {preloadImage && <link rel="preload" as="image" href={preloadImage} />}
     <link rel="apple-touch-icon" href="/favicon-circle.png" />
+    {schemaNodes.map((node) => (
+      <script type="application/ld+json" set:html={JSON.stringify(node)} />
+    ))}
     <ViewTransitions />
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-7FGDPXHPK5"></script>

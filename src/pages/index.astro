@@ -5,9 +5,45 @@ import { Image } from 'astro:assets';
 import review1 from '../assets/images/home/level-design-customer-review-1.webp';
 import review2 from '../assets/images/home/level-design-customer-review-2.webp';
 import review3 from '../assets/images/home/level-design-customer-review-3.webp';
+
+const faqs = [
+  {
+    question: 'Do you make custom timber dining tables in Melbourne?',
+    answer:
+      'Yes. Level Design creates custom timber dining tables in Melbourne, with guidance on dimensions, seating, timber selection, and finish so the final piece suits your space and daily use.',
+  },
+  {
+    question: 'Can any Level Design table be customised?',
+    answer:
+      'Yes. The collection is designed as a starting point, and each table can be discussed in custom sizes, finishes, and material options to better suit your project.',
+  },
+  {
+    question: 'Do you work with homeowners, designers, and architects?',
+    answer:
+      'Yes. Level Design works directly with homeowners as well as interior designers and architects who need well-resolved timber dining tables for residential projects.',
+  },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.answer,
+    },
+  })),
+};
 ---
 
-<Layout title="Timber Dining Tables Melbourne | Level Design" description="Handcrafted timber dining tables designed and made in Melbourne, Australia. 9 signature designs, fully customisable. Over 250 pieces crafted for Australian homes." preloadImage="/images/home/level-design-handcrafted-furniture-hero.webp">
+<Layout
+  title="Timber Dining Tables Melbourne | Custom Dining Tables | Level Design"
+  description="Handcrafted timber dining tables designed in Melbourne by Level Design. Explore custom dining tables, signature designs, and bespoke solid timber pieces made for Australian homes."
+  preloadImage="/images/home/level-design-handcrafted-furniture-hero.webp"
+  schema={schema}
+>
   <div class="pt-16">
 
     <!-- Hero -->
@@ -69,6 +105,33 @@ import review3 from '../assets/images/home/level-design-customer-review-3.webp';
               <div class="text-sm text-[#5a6b64]">{stat.desc}</div>
             </div>
           ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="py-20 bg-white">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal text-center mb-14">
+          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Melbourne Dining Tables</p>
+          <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">Custom Timber Dining Tables Designed for Real Homes</h2>
+          <p class="text-xl text-[#5a6b64] max-w-3xl mx-auto">
+            Level Design creates handcrafted timber dining tables for Melbourne homes and design-led residential projects across Australia. Each piece is shaped around proportion, practicality, and material warmth rather than off-the-shelf sizing.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="reveal rounded-2xl bg-[#f5f1e8] p-8">
+            <h3 class="text-2xl font-semibold text-[#3d4f47] mb-4">A collection built to be customised</h3>
+            <p class="text-[#5a6b64] leading-relaxed">
+              Our signature table designs are a starting point. We regularly adapt dimensions, seating capacity, timber species, and finishes so the final table feels considered in the room it is made for.
+            </p>
+          </div>
+          <div class="reveal rounded-2xl bg-[#f5f1e8] p-8" style="--delay: 0.1s">
+            <h3 class="text-2xl font-semibold text-[#3d4f47] mb-4">Made for everyday living and entertaining</h3>
+            <p class="text-[#5a6b64] leading-relaxed">
+              Whether you need a round table for a compact dining area or a large statement design for entertaining, the focus stays the same: strong proportions, quality materials, and long-term durability.
+            </p>
+          </div>
         </div>
       </div>
     </section>
@@ -236,6 +299,22 @@ import review3 from '../assets/images/home/level-design-customer-review-3.webp';
             <a href="/tables/" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-transparent border-2 border-white text-white rounded-full hover:bg-white hover:text-[#3d4f47] transition-all duration-300">
               Browse Collections
             </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 bg-white">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal bg-[#f5f1e8] rounded-3xl p-8 md:p-10">
+          <h2 class="text-3xl md:text-4xl font-serif text-[#3d4f47] mb-8">Timber Dining Table FAQs</h2>
+          <div class="space-y-6">
+            {faqs.map((item) => (
+              <div class="border-b border-[#d9cfbd] pb-6 last:border-b-0 last:pb-0">
+                <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{item.question}</h3>
+                <p class="text-[#5a6b64] leading-relaxed">{item.answer}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>

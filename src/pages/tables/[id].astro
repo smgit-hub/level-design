@@ -14,12 +14,91 @@ const { product } = Astro.props;
 const index = allProducts.findIndex((p) => p.id === product.id);
 const prev = allProducts[(index - 1 + allProducts.length) % allProducts.length];
 const next = allProducts[(index + 1) % allProducts.length];
+const productUrl = `/tables/${product.id}/`;
+const pageDescription = `${product.name} — ${product.tagline}. Handcrafted timber dining table designed and made in Melbourne, Australia. Custom sizing available.`;
+const productFaqs = [
+  {
+    question: `Can ${product.name} be made in custom dimensions?`,
+    answer: `Yes. ${product.name} can be tailored in size, proportion, and finish to better suit your room, seating requirements, and preferred layout.`,
+  },
+  {
+    question: `What timber and finish options are available for ${product.name}?`,
+    answer: `${product.name} can be discussed in a range of timber species and finishes, with guidance provided around tone, grain character, durability, and how the final piece will sit in your interior.`,
+  },
+  {
+    question: `Is ${product.name} suitable for Melbourne homes and design projects?`,
+    answer: `Yes. Level Design works with Melbourne homeowners, interior designers, and architects to create dining tables that balance everyday practicality with a strong design outcome.`,
+  },
+];
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description: pageDescription,
+    image: [product.images.main, ...product.images.gallery].map((image: string) => new URL(image, Astro.site ?? Astro.url.origin).toString()),
+    category: 'Timber dining table',
+    brand: {
+      '@type': 'Brand',
+      name: 'Level Design',
+    },
+    manufacturer: {
+      '@type': 'Organization',
+      name: 'Level Design',
+    },
+    url: new URL(productUrl, Astro.site ?? Astro.url.origin).toString(),
+    material: product.specifications['Timber / Finish Shown'],
+    additionalProperty: Object.entries(product.specifications).map(([name, value]) => ({
+      '@type': 'PropertyValue',
+      name,
+      value,
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: new URL('/', Astro.site ?? Astro.url.origin).toString(),
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Tables',
+        item: new URL('/tables/', Astro.site ?? Astro.url.origin).toString(),
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: product.name,
+        item: new URL(productUrl, Astro.site ?? Astro.url.origin).toString(),
+      },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: productFaqs.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  },
+];
 ---
 
 <Layout
   title={`${product.name} | Handcrafted Dining Table Melbourne | Level Design`}
-  description={`${product.name} — ${product.tagline}. Handcrafted timber dining table designed and made in Melbourne, Australia. Custom sizing available.`}
+  description={pageDescription}
   ogImage={product.images.main}
+  ogType="product"
+  schema={schema}
 >
   <!-- Hidden form for Netlify detection -->
   <form name="table-enquiry" data-netlify="true" data-netlify-honeypot="bot-field" style="display:none">
@@ -28,4 +107,68 @@ const next = allProducts[(index + 1) % allProducts.length];
     <input name="timberPreference" /><input name="budgetRange" /><input name="timeline" />
   </form>
   <ProductDetailClient product={product} prev={{ id: prev.id, name: prev.name }} next={{ id: next.id, name: next.name }} client:load />
+
+  <section class="py-20 bg-[#f5f1e8]">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="reveal text-center mb-14">
+        <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">About This Design</p>
+        <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">{product.name} for Modern Australian Dining Spaces</h2>
+        <p class="text-xl text-[#5a6b64] max-w-3xl mx-auto">{product.description} Each table is built with customisation in mind, making it suitable for both residential dining rooms and design-led interior projects.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {[
+          {
+            title: 'Sized around your room',
+            body: `The shown ${product.specifications['Dimensions Shown']} format is a starting point. We can refine scale, seating count, and overhang to better match your floor plan and circulation.`,
+          },
+          {
+            title: 'Resolved in material and finish',
+            body: `${product.specifications['Timber / Finish Shown']} shows one direction for this design, but timber species and finish can be adjusted to suit your palette, maintenance preferences, and project brief.`,
+          },
+          {
+            title: 'Built for everyday use',
+            body: `${product.name} balances visual presence with practical function, making it a strong option for daily family use, entertaining, and long-term living.`,
+          },
+        ].map((item, i) => (
+          <div class="reveal rounded-2xl bg-white p-8 shadow-sm" style={`--delay: ${i * 0.1}s`}>
+            <h3 class="text-2xl font-semibold text-[#3d4f47] mb-4">{item.title}</h3>
+            <p class="text-[#5a6b64] leading-relaxed">{item.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 bg-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+        <div class="reveal">
+          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Customisation</p>
+          <h2 class="text-4xl font-serif text-[#3d4f47] mb-6">Tailor {product.name} to Your Project</h2>
+          <p class="text-[#5a6b64] text-lg leading-relaxed mb-5">
+            Every Level Design table is discussed on a project-by-project basis, so dimensions, seating capacity, timber selection, and finish can be aligned with the way you live and entertain.
+          </p>
+          <p class="text-[#5a6b64] text-lg leading-relaxed">
+            If you like the overall design language of {product.name} but need different proportions, a different timber tone, or advice on whether it suits your room, the <a href="/custom/" class="text-[#c8956a] hover:underline">custom dining table process</a> is the best next step.
+          </p>
+        </div>
+        <div class="reveal bg-[#f5f1e8] rounded-3xl p-8 md:p-10" style="--delay: 0.1s">
+          <h2 class="text-3xl font-serif text-[#3d4f47] mb-8">{product.name} FAQs</h2>
+          <div class="space-y-6">
+            {productFaqs.map((item) => (
+              <div class="border-b border-[#d9cfbd] pb-6 last:border-b-0 last:pb-0">
+                <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{item.question}</h3>
+                <p class="text-[#5a6b64] leading-relaxed">{item.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal mt-12 text-center" style="--delay: 0.15s">
+        <p class="text-[#5a6b64] text-lg mb-6">Still comparing options? Explore the full <a href="/tables/" class="text-[#c8956a] hover:underline">timber dining table collection</a> or <a href="/contact/" class="text-[#c8956a] hover:underline">request guidance</a> on the right size and finish for your space.</p>
+      </div>
+    </div>
+  </section>
 </Layout>
