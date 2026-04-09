@@ -38,7 +38,7 @@ export default function Navigation({ currentPath }: Props) {
         isScrolled ? "bg-[#3d4f47]/95 backdrop-blur-md shadow-lg" : "bg-[#3d4f47]"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 sm:px-6 lg:px-10">
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
