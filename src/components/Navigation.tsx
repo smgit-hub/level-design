@@ -50,7 +50,7 @@ export default function Navigation({ currentPath }: Props) {
                 className="w-full h-full object-contain"
               />
             </div>
-            <span className="text-white text-base font-semibold truncate">Level Design</span>
+            <span className="text-white text-lg font-semibold truncate">Level Design</span>
           </a>
 
           {/* Desktop nav */}
