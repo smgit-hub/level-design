@@ -43,14 +43,14 @@ export default function Navigation({ currentPath }: Props) {
 
           {/* Logo */}
           <a href="/" aria-label="Level Design home" className="flex items-center gap-3 group min-w-0 flex-shrink">
-            <div className="w-10 h-10 rounded-full bg-[#e8dcc8] flex items-center justify-center p-1.5 transition-transform duration-300 group-hover:scale-110 flex-shrink-0">
+            <div className="w-12 h-12 rounded-full bg-[#e8dcc8] flex items-center justify-center p-2 transition-transform duration-300 group-hover:scale-110 flex-shrink-0">
               <img
                 src="/images/level-logo.png"
                 alt="Level Design"
                 className="w-full h-full object-contain"
               />
             </div>
-            <span className="text-[#e8dcc8] text-base font-semibold truncate">Level Design</span>
+            <span className="text-white text-base font-semibold truncate">Level Design</span>
           </a>
 
           {/* Desktop nav */}
