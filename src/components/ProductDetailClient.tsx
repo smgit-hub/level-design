@@ -55,9 +55,9 @@ export default function ProductDetailClient({ product, prev, next }: Props) {
   };
 
   return (
-    <div className="bg-[#faf8f5] pt-16">
+    <div className="bg-[#faf8f5]">
       {/* Product header */}
-      <section className="pt-6 pb-12">
+      <section className="pt-28 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Table nav */}
           <div className="flex items-center justify-between text-xs text-[#8a9b94] mb-8 mt-2">

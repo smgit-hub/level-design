@@ -39,7 +39,7 @@ export default function Navigation({ currentPath }: Props) {
       }`}
     >
       <div className="w-full px-4 sm:px-6 lg:px-10">
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center h-16">
+        <div className="grid grid-cols-[1fr_auto] md:grid-cols-[1fr_auto_1fr] items-center h-16">
 
           {/* Logo */}
           <a href="/" aria-label="Level Design home" className="flex items-center gap-3 group min-w-0 justify-self-start">
@@ -101,7 +101,7 @@ export default function Navigation({ currentPath }: Props) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-[#2d3f37] border-t border-[#4d5f57]"
+            className="md:hidden mx-4 mb-4 overflow-hidden rounded-2xl border border-white/15 bg-[#1f2f29]/88 shadow-2xl backdrop-blur-xl"
           >
             <div className="px-4 py-4 space-y-3">
               {navLinks.map((link) => (
@@ -110,8 +110,8 @@ export default function Navigation({ currentPath }: Props) {
                   href={link.path}
                   className={`block px-4 py-2 rounded-lg transition-colors ${
                     activePath === link.path
-                      ? "bg-[#3d4f47] text-white"
-                      : "text-[#e8dcc8] hover:bg-[#3d4f47]"
+                      ? "bg-white/12 text-white"
+                      : "text-[#e8dcc8] hover:bg-white/10"
                   }`}
                 >
                   {link.label}
@@ -119,7 +119,7 @@ export default function Navigation({ currentPath }: Props) {
               ))}
               <a
                 href="/contact/"
-                className="block px-4 py-2 text-center bg-[#e8dcc8] text-[#3d4f47] rounded-lg hover:bg-[#c8956a] transition-colors"
+                className="block px-4 py-2 text-center bg-[#e8dcc8] text-[#3d4f47] rounded-lg hover:bg-[#c8956a] hover:text-white transition-colors"
               >
                 Start a Project
               </a>
