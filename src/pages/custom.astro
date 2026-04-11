@@ -22,6 +22,14 @@ const faqs = [
   },
 ];
 
+const serviceAreas = [
+  'Melbourne',
+  'Bayside',
+  'Mornington Peninsula',
+  'Geelong',
+  'Regional Victoria by enquiry',
+];
+
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -34,12 +42,27 @@ const schema = {
     },
   })),
 };
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Custom dining tables Melbourne',
+  serviceType: 'Bespoke timber dining table design',
+  provider: {
+    '@type': 'LocalBusiness',
+    name: 'Level Design',
+    sameAs: 'https://share.google/2X8cmzgsefNsOyp1a',
+  },
+  areaServed: serviceAreas.map((area) => ({
+    '@type': 'Place',
+    name: area,
+  })),
+};
 ---
 
 <Layout
   title="Custom Dining Tables Melbourne | Bespoke Timber Tables | Level Design"
   description="Design a custom dining table in Melbourne with Level Design. Bespoke timber dining tables tailored to your dimensions, timber preferences, finish, and everyday use."
-  schema={schema}
+  schema={[schema, serviceSchema]}
 >
   <!-- Hidden form for Netlify detection -->
   <form name="custom-brief" data-netlify="true" data-netlify-honeypot="bot-field" style="display:none">
@@ -145,6 +168,30 @@ const schema = {
               <p class="text-[#5a6b64] leading-relaxed">{item.body}</p>
             </div>
           ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="py-20 bg-white">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal rounded-3xl bg-[#f5f1e8] p-8 md:p-10">
+          <div class="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-10 items-start">
+            <div>
+              <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Melbourne Service Area</p>
+              <h2 class="text-3xl md:text-4xl font-serif text-[#3d4f47] mb-5">Custom Tables for Melbourne and Victorian Homes</h2>
+              <p class="text-[#5a6b64] text-lg leading-relaxed">
+                Most custom projects begin with a Melbourne or Victorian home, renovation, or interior design brief. We can help resolve table size, timber tone, finish, and delivery considerations early, so the finished piece feels right in the room.
+              </p>
+            </div>
+            <div class="grid grid-cols-1 gap-3">
+              {serviceAreas.map((area) => (
+                <div class="rounded-xl bg-white px-4 py-3 text-[#3d4f47] font-medium shadow-sm">{area}</div>
+              ))}
+            </div>
+          </div>
+          <a href="/contact/" class="inline-flex mt-8 text-[#c8956a] font-medium hover:underline">
+            Ask about your Melbourne table project →
+          </a>
         </div>
       </div>
     </section>

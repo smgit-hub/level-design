@@ -1,9 +1,48 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ContactForm from '../components/ContactForm';
+
+const serviceAreas = [
+  {
+    area: 'Melbourne',
+    detail: 'Custom timber dining table enquiries for homes, apartments, renovations, and design-led residential projects.',
+  },
+  {
+    area: 'Bayside and inner suburbs',
+    detail: 'Made-to-measure tables for compact dining rooms, family homes, and interior design projects.',
+  },
+  {
+    area: 'Mornington Peninsula',
+    detail: 'Statement timber dining tables for relaxed living, entertaining, and coastal-inspired interiors.',
+  },
+  {
+    area: 'Regional Victoria',
+    detail: 'Projects by enquiry, with delivery planning discussed during the quoting process.',
+  },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  name: 'Contact Level Design',
+  description:
+    'Contact Level Design for custom timber dining table enquiries in Melbourne, Victoria, and Australia-wide projects by enquiry.',
+  about: {
+    '@type': 'Service',
+    name: 'Melbourne custom dining table enquiries',
+    areaServed: serviceAreas.map((item) => ({
+      '@type': 'Place',
+      name: item.area,
+    })),
+  },
+};
 ---
 
-<Layout title="Contact Level Design | Melbourne Dining Table Enquiries" description="Get in touch with Level Design to start your custom dining table project. Melbourne-based makers, Australia-wide delivery. Response within 2 business days.">
+<Layout
+  title="Contact Level Design | Melbourne Dining Table Enquiries"
+  description="Get in touch with Level Design to start your custom dining table project. Melbourne-based makers, Victoria service areas, and Australia-wide projects by enquiry."
+  schema={schema}
+>
   <!-- Hidden form for Netlify detection -->
   <form name="contact-enquiry" data-netlify="true" data-netlify-honeypot="bot-field" style="display:none">
     <input name="name" /><input name="email" /><input name="phone" />
@@ -24,7 +63,7 @@ import ContactForm from '../components/ContactForm';
           <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">Let's Build Yours</p>
           <h1 class="hero-in text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Start Your Table Project</h1>
           <p class="hero-in text-xl text-[#e8dcc8] mb-8" style="--delay: 0.6s">
-            Share your space, style, and timeline. We will come back with the right direction and a tailored quote.
+            Share your Melbourne or Victorian project, space, style, and timeline. We will come back with the right direction and a tailored quote.
           </p>
           <div class="hero-in flex flex-wrap gap-4" style="--delay: 0.8s">
             {["Response within 2 business days", "One-on-one design support"].map((item) => (
@@ -82,6 +121,27 @@ import ContactForm from '../components/ContactForm';
               <p class="text-sm text-[#5a6b64] mt-3">{card.note}</p>
             </div>
           ))}
+        </div>
+
+        <div class="reveal bg-[#f5f1e8] rounded-3xl p-8 md:p-10 mb-16">
+          <div class="max-w-3xl mb-8">
+            <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Service Areas</p>
+            <h2 class="text-3xl md:text-4xl font-serif text-[#3d4f47] mb-4">Melbourne and Victorian Table Projects</h2>
+            <p class="text-[#5a6b64] text-lg leading-relaxed">
+              Level Design is Melbourne-based and works with homeowners, interior designers, and architects on custom timber dining tables across Melbourne and wider Victoria. If your project is outside these areas, send through the details and we can advise on delivery options.
+            </p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            {serviceAreas.map((item, i) => (
+              <div class="rounded-2xl bg-white p-6" style={`--delay: ${i * 0.1}s`}>
+                <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{item.area}</h3>
+                <p class="text-sm text-[#5a6b64] leading-relaxed">{item.detail}</p>
+              </div>
+            ))}
+          </div>
+          <a href="/melbourne-custom-dining-tables/" class="inline-flex mt-8 text-[#c8956a] font-medium hover:underline">
+            Read more about custom dining tables in Melbourne →
+          </a>
         </div>
 
         <!-- Helpful info with image -->
