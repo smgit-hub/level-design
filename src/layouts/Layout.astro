@@ -26,6 +26,7 @@ const currentPath = Astro.url.pathname;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
 const siteURL = Astro.site ?? new URL(Astro.url.origin);
 const ogImageURL = new URL(ogImage, siteURL);
+const googleBusinessProfileURL = 'https://share.google/2X8cmzgsefNsOyp1a';
 const baseSchema = {
   '@context': 'https://schema.org',
   '@type': 'LocalBusiness',
@@ -36,12 +37,43 @@ const baseSchema = {
   description,
   areaServed: [
     { '@type': 'City', name: 'Melbourne' },
+    { '@type': 'AdministrativeArea', name: 'Victoria' },
     { '@type': 'Country', name: 'Australia' },
+  ],
+  sameAs: [
+    googleBusinessProfileURL,
+    'https://www.facebook.com/leveldesignmelbourne/',
+    'https://www.instagram.com/level_design/',
   ],
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'Melbourne',
+    addressRegion: 'VIC',
     addressCountry: 'AU',
+  },
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Custom timber dining tables Melbourne',
+    itemListElement: [
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: 'Custom dining tables Melbourne',
+          serviceType: 'Bespoke timber dining table design',
+          areaServed: { '@type': 'City', name: 'Melbourne' },
+        },
+      },
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Product',
+          name: 'Handcrafted timber dining tables',
+          category: 'Furniture',
+          areaServed: { '@type': 'AdministrativeArea', name: 'Victoria' },
+        },
+      },
+    ],
   },
   brand: {
     '@type': 'Brand',

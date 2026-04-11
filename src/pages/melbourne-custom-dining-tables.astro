@@ -1,0 +1,212 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { products } from '../data/products';
+
+const faqs = [
+  {
+    question: 'Do you make custom dining tables for Melbourne homes?',
+    answer:
+      'Yes. Level Design creates custom timber dining tables for Melbourne homes, apartments, renovations, and design-led residential projects, with dimensions and finishes tailored to the space.',
+  },
+  {
+    question: 'Which Melbourne areas do you work with?',
+    answer:
+      'We work with clients across Melbourne and wider Victoria, including inner Melbourne, Bayside, the Mornington Peninsula, Geelong, and regional areas by enquiry.',
+  },
+  {
+    question: 'Can I start with an existing table design and customise it?',
+    answer:
+      'Yes. The Level Design collection is designed as a starting point. Each table can be adjusted for size, seating capacity, timber species, finish, and project requirements.',
+  },
+  {
+    question: 'Do you work with interior designers and architects in Melbourne?',
+    answer:
+      'Yes. Level Design works with homeowners, interior designers, architects, and project teams who need a considered timber dining table for a residential interior.',
+  },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'Custom dining tables Melbourne',
+    serviceType: 'Bespoke timber dining table design',
+    provider: {
+      '@type': 'LocalBusiness',
+      name: 'Level Design',
+      url: new URL('/', Astro.site ?? Astro.url.origin).toString(),
+      sameAs: 'https://share.google/2X8cmzgsefNsOyp1a',
+    },
+    areaServed: [
+      { '@type': 'City', name: 'Melbourne' },
+      { '@type': 'AdministrativeArea', name: 'Victoria' },
+      { '@type': 'Country', name: 'Australia' },
+    ],
+    description:
+      'Custom timber dining tables designed for Melbourne homes, with bespoke dimensions, timber species, finishes, and design guidance.',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  },
+];
+---
+
+<Layout
+  title="Custom Dining Tables Melbourne | Bespoke Timber Tables | Level Design"
+  description="Custom dining tables in Melbourne by Level Design. Bespoke timber dining tables tailored for Melbourne homes, renovations, architects, interior designers, and Australian residential projects."
+  ogImage="/images/home/level-design-handcrafted-furniture-hero.webp"
+  schema={schema}
+>
+  <div class="pt-16">
+    <section class="relative bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white py-24 min-h-[34rem] flex items-center overflow-hidden">
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-[#c8956a] rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-[#c8956a] rounded-full blur-3xl"></div>
+      </div>
+      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl">
+          <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">Melbourne Custom Dining Tables</p>
+          <h1 class="hero-in text-5xl md:text-7xl font-serif mb-6" style="--delay: 0.4s">Bespoke Timber Tables for Melbourne Homes</h1>
+          <p class="hero-in text-xl md:text-2xl text-[#e8dcc8] leading-relaxed mb-8" style="--delay: 0.6s">
+            Level Design creates custom timber dining tables for Melbourne interiors, with considered proportions, material guidance, and finishes tailored to how you live.
+          </p>
+          <div class="hero-in flex flex-col sm:flex-row gap-4" style="--delay: 0.8s">
+            <a href="/custom/" class="btn-scale inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 shadow-lg">
+              Start a Custom Table
+            </a>
+            <a href="https://share.google/2X8cmzgsefNsOyp1a" target="_blank" rel="noopener noreferrer" class="btn-scale inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/90 text-[#3d4f47] rounded-full hover:bg-white transition-all duration-300 shadow-lg">
+              View Google Business Profile
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div class="reveal">
+            <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Local Design Support</p>
+            <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">Designed Around Melbourne Spaces</h2>
+            <div class="space-y-5 text-[#5a6b64] text-lg leading-relaxed">
+              <p>
+                Melbourne homes vary from compact apartments and heritage terraces to larger family homes and architect-designed renovations. A custom dining table needs to respond to that context, not just fill a standard size.
+              </p>
+              <p>
+                We help refine the practical details: overall length and width, seating count, leg placement, circulation, timber tone, edge profile, and finish durability. The result is a dining table that feels intentional in your room and robust enough for daily use.
+              </p>
+            </div>
+          </div>
+          <div class="reveal-right grid grid-cols-1 sm:grid-cols-2 gap-4" style="--delay: 0.1s">
+            {[
+              { label: 'Inner Melbourne', detail: 'Apartments, terraces, and compact dining zones' },
+              { label: 'Bayside', detail: 'Family dining rooms and coastal-inspired interiors' },
+              { label: 'Mornington Peninsula', detail: 'Statement tables for relaxed entertaining' },
+              { label: 'Regional Victoria', detail: 'Projects by enquiry, with delivery planning' },
+            ].map((area, i) => (
+              <div class="rounded-2xl bg-[#f5f1e8] p-6" style={`--delay: ${i * 0.1}s`}>
+                <h3 class="text-xl font-semibold text-[#3d4f47] mb-2">{area.label}</h3>
+                <p class="text-[#5a6b64] text-sm leading-relaxed">{area.detail}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 bg-[#f5f1e8]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal text-center mb-14">
+          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Popular Starting Points</p>
+          <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">Timber Dining Tables Made to Measure</h2>
+          <p class="text-xl text-[#5a6b64] max-w-3xl mx-auto">
+            Start from a signature design, then customise dimensions, timber species, finish, and details to suit your Melbourne home or project brief.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            products.pillar,
+            products.luna,
+            products.yama,
+          ].map((table, i) => (
+            <a href={`/tables/${table.id}/`} class="reveal group rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300" style={`--delay: ${i * 0.1}s`}>
+              <div class="aspect-[4/3] overflow-hidden">
+                <img src={table.images.main} alt={`${table.name} custom timber dining table Melbourne`} loading="lazy" width="1536" height="1024" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              </div>
+              <div class="p-6">
+                <h3 class="text-xl font-semibold text-[#3d4f47] mb-2 group-hover:text-[#c8956a] transition-colors">{table.name}</h3>
+                <p class="text-[#5a6b64] text-sm mb-4">{table.tagline}</p>
+                <span class="text-[#c8956a] text-sm font-medium">View design →</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 bg-white">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal text-center mb-14">
+          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">How It Works</p>
+          <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">From Melbourne Brief to Finished Table</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {[
+            { step: '01', title: 'Share the room', body: 'Send dimensions, seating needs, inspiration, and any project constraints.' },
+            { step: '02', title: 'Refine the design', body: 'We guide the proportions, base style, timber, edge detail, and finish direction.' },
+            { step: '03', title: 'Confirm the details', body: 'The table specification is resolved before production begins.' },
+            { step: '04', title: 'Deliver and enjoy', body: 'Delivery is planned around your Melbourne or Victorian project requirements.' },
+          ].map((item, i) => (
+            <div class="reveal rounded-2xl bg-[#f5f1e8] p-6" style={`--delay: ${i * 0.1}s`}>
+              <div class="text-5xl font-serif text-[#c8956a] mb-4">{item.step}</div>
+              <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{item.title}</h3>
+              <p class="text-[#5a6b64] text-sm leading-relaxed">{item.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 bg-[#f5f1e8]">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal bg-white rounded-3xl p-8 md:p-10 shadow-sm">
+          <h2 class="text-3xl md:text-4xl font-serif text-[#3d4f47] mb-8">Melbourne Custom Dining Table FAQs</h2>
+          <div class="space-y-6">
+            {faqs.map((item) => (
+              <div class="border-b border-[#d9cfbd] pb-6 last:border-b-0 last:pb-0">
+                <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{item.question}</h3>
+                <p class="text-[#5a6b64] leading-relaxed">{item.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="reveal">
+          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Start Locally</p>
+          <h2 class="text-4xl md:text-5xl font-serif mb-6">Planning a Custom Dining Table in Melbourne?</h2>
+          <p class="text-xl text-[#e8dcc8] mb-8 max-w-2xl mx-auto">
+            Tell us about your space, preferred style, timber direction, and timing. We will help shape the right table for the room.
+          </p>
+          <a href="/contact/" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 shadow-lg">
+            Request a Melbourne Table Quote
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>
