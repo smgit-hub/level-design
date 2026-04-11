@@ -27,10 +27,14 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
 const siteURL = Astro.site ?? new URL(Astro.url.origin);
 const ogImageURL = new URL(ogImage, siteURL);
 const googleBusinessProfileURL = 'https://share.google/2X8cmzgsefNsOyp1a';
+const businessSchemaId = new URL('/#level-design', siteURL).toString();
 const baseSchema = {
   '@context': 'https://schema.org',
   '@type': 'LocalBusiness',
+  '@id': businessSchemaId,
   name: 'Level Design',
+  legalName: 'Level Design',
+  alternateName: 'Level Design Melbourne',
   url: siteURL.toString(),
   image: new URL('/images/home/level-design-handcrafted-furniture-hero.webp', siteURL).toString(),
   logo: new URL('/images/level-logo.png', siteURL).toString(),
@@ -87,7 +91,19 @@ const baseSchema = {
     availableLanguage: 'en',
   },
 };
-const schemaNodes = [baseSchema, ...(Array.isArray(schema) ? schema : schema ? [schema] : [])];
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': new URL('/#website', siteURL).toString(),
+  name: 'Level Design',
+  alternateName: 'Level Design Melbourne',
+  url: siteURL.toString(),
+  publisher: {
+    '@id': businessSchemaId,
+  },
+  inLanguage: 'en-AU',
+};
+const schemaNodes = [baseSchema, websiteSchema, ...(Array.isArray(schema) ? schema : schema ? [schema] : [])];
 ---
 
 <!doctype html>
@@ -113,6 +129,7 @@ const schemaNodes = [baseSchema, ...(Array.isArray(schema) ? schema : schema ? [
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     {preloadImage && <link rel="preload" as="image" href={preloadImage} />}
     <link rel="apple-touch-icon" href="/favicon-circle.png" />
+    <link rel="me" href={googleBusinessProfileURL} />
     {schemaNodes.map((node) => (
       <script type="application/ld+json" set:html={JSON.stringify(node)} />
     ))}
