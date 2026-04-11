@@ -39,10 +39,10 @@ export default function Navigation({ currentPath }: Props) {
       }`}
     >
       <div className="w-full px-4 sm:px-6 lg:px-10">
-        <div className="flex items-center justify-between h-16">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center h-16">
 
           {/* Logo */}
-          <a href="/" aria-label="Level Design home" className="flex items-center gap-3 group min-w-0 flex-shrink">
+          <a href="/" aria-label="Level Design home" className="flex items-center gap-3 group min-w-0 justify-self-start">
             <div className="w-12 h-12 rounded-full bg-[#e8dcc8] flex items-center justify-center p-2 transition-transform duration-300 group-hover:scale-110 flex-shrink-0">
               <img
                 src="/images/level-logo.png"
@@ -54,7 +54,7 @@ export default function Navigation({ currentPath }: Props) {
           </a>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-8 justify-self-center">
             {navLinks.map((link) => (
               <a
                 key={link.path}
@@ -78,7 +78,7 @@ export default function Navigation({ currentPath }: Props) {
             href="/contact/"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="hidden md:flex items-center gap-2 px-5 py-2 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 text-sm font-medium shadow-sm"
+            className="hidden md:flex items-center gap-2 px-5 py-2 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 text-sm font-medium shadow-sm justify-self-end"
           >
             Start a Project
           </motion.a>
@@ -86,7 +86,7 @@ export default function Navigation({ currentPath }: Props) {
           {/* Mobile toggle */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden text-[#e8dcc8] hover:text-white transition-colors flex-shrink-0 ml-2"
+            className="md:hidden text-[#e8dcc8] hover:text-white transition-colors justify-self-end ml-2"
             aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
