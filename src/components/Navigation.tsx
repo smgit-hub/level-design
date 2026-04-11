@@ -35,7 +35,7 @@ export default function Navigation({ currentPath }: Props) {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-[#3d4f47]/95 backdrop-blur-md shadow-lg" : "bg-[#3d4f47]"
+        isScrolled ? "bg-[#3d4f47]/95 backdrop-blur-md shadow-lg" : "bg-transparent"
       }`}
     >
       <div className="w-full px-4 sm:px-6 lg:px-10">
