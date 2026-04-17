@@ -24,32 +24,32 @@
 # Redirects for old WordPress URLs
 [[redirects]]
   from = "/nina/"
-  to = "/tables/nina"
+  to = "/tables/nina/"
   status = 301
 
 [[redirects]]
   from = "/nina-series/"
-  to = "/tables/nina"
+  to = "/tables/nina/"
   status = 301
 
 [[redirects]]
   from = "/kola/"
-  to = "/tables"
+  to = "/tables/"
   status = 301
 
 [[redirects]]
   from = "/arun-series/"
-  to = "/tables"
+  to = "/tables/"
   status = 301
 
 [[redirects]]
   from = "/timbers-finishes/"
-  to = "/custom"
+  to = "/custom/"
   status = 301
 
 [[redirects]]
   from = "/matt-coffee-table-nest/"
-  to = "/tables"
+  to = "/tables/"
   status = 301
 
 [[redirects]]
@@ -59,27 +59,32 @@
 
 [[redirects]]
   from = "/burt-entertainment-unit/"
-  to = "/tables"
+  to = "/tables/"
   status = 301
 
 [[redirects]]
   from = "/ana-dining-table/"
-  to = "/tables"
+  to = "/tables/"
   status = 301
 
 [[redirects]]
   from = "/phil-chest-of-drawers/"
-  to = "/tables"
+  to = "/tables/"
+  status = 301
+
+[[redirects]]
+  from = "/phi-chest-of-drawers/"
+  to = "/tables/"
   status = 301
 
 [[redirects]]
   from = "/lisa-coffee-table-nest/"
-  to = "/tables"
+  to = "/tables/"
   status = 301
 
 [[redirects]]
   from = "/cat-bedside-table/"
-  to = "/tables"
+  to = "/tables/"
   status = 301
 
 [[headers]]
@@ -91,4 +96,3 @@
   for = "/models/*"
   [headers.values]
     Cache-Control = "public, max-age=3600"
-
