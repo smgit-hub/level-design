@@ -87,6 +87,26 @@
   to = "/tables/"
   status = 301
 
+[[redirects]]
+  from = "/ajx-dining-table/feed/"
+  to = "/tables/"
+  status = 301
+
+[[redirects]]
+  from = "/hal-bedside-table/"
+  to = "/tables/"
+  status = 301
+
+[[redirects]]
+  from = "/jm-bed/"
+  to = "/tables/"
+  status = 301
+
+[[redirects]]
+  from = "/louie-coffee-table/"
+  to = "/tables/"
+  status = 301
+
 [[headers]]
   for = "/images/*"
   [headers.values]
