@@ -138,9 +138,9 @@ const schemaNodes = [baseSchema, websiteSchema, ...(Array.isArray(schema) ? sche
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-7FGDPXHPK5"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-7FGDPXHPK5');
+      window.gtag = function(){window.dataLayer.push(arguments);}
+      window.gtag('js', new Date());
+      window.gtag('config', 'G-7FGDPXHPK5');
     </script>
   </head>
   <body class="bg-[#f5f1e8] text-[#3d4f47]">
