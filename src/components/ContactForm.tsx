@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import { useState, useEffect, useRef } from "react";
 import { ArrowRight, CheckCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { trackEvent } from "../lib/analytics";
 
 type FormData = {
   name: string;
@@ -44,6 +45,11 @@ export default function ContactForm() {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: encode({ "form-name": "contact-enquiry", ...data }),
+      });
+      trackEvent("generate_lead", {
+        form_name: "contact_enquiry",
+        lead_type: "contact",
+        page_path: window.location.pathname,
       });
       setIsSubmitted(true);
     } catch {

@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle, Ruler, Truck, Shield } from "lucide-react";
 import { useForm } from "react-hook-form";
 import type { Product } from "../data/products";
+import { trackEvent } from "../lib/analytics";
 
 interface Props {
   product: Product;
@@ -47,6 +48,12 @@ export default function ProductDetailClient({ product, prev, next }: Props) {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: encode({ "form-name": "table-enquiry", "table": product.name, ...data }),
+      });
+      trackEvent("generate_lead", {
+        form_name: "table_enquiry",
+        lead_type: "product_table",
+        table_name: product.name,
+        page_path: window.location.pathname,
       });
       setIsSubmitted(true);
     } catch {
@@ -148,13 +155,29 @@ export default function ProductDetailClient({ product, prev, next }: Props) {
                 {/* CTA */}
                 <div className="flex flex-col sm:flex-row gap-4">
                   <button
-                    onClick={() => document.getElementById("enquiry-form")?.scrollIntoView({ behavior: "smooth" })}
+                    onClick={() => {
+                      trackEvent("select_content", {
+                        content_type: "cta",
+                        item_id: "enquire_about_this_table",
+                        table_name: product.name,
+                        page_path: window.location.pathname,
+                      });
+                      document.getElementById("enquiry-form")?.scrollIntoView({ behavior: "smooth" });
+                    }}
                     className="flex-1 px-8 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl font-medium"
                   >
                     Enquire About This Table
                   </button>
                   <a
                     href="/custom/"
+                    onClick={() =>
+                      trackEvent("select_content", {
+                        content_type: "cta",
+                        item_id: "customise_design",
+                        table_name: product.name,
+                        page_path: window.location.pathname,
+                      })
+                    }
                     className="flex-1 px-8 py-4 bg-transparent border-2 border-[#3d4f47] text-[#3d4f47] rounded-full hover:bg-[#3d4f47] hover:text-white transition-all duration-300 font-medium text-center"
                   >
                     Customise Design

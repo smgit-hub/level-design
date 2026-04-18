@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import { useState, useEffect, useRef } from "react";
 import { CheckCircle, ArrowRight } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { trackEvent } from "../lib/analytics";
 
 type FormData = {
   name: string;
@@ -57,6 +58,11 @@ export default function CustomForm() {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: encode({ "form-name": "custom-brief", ...data }),
+      });
+      trackEvent("generate_lead", {
+        form_name: "custom_brief",
+        lead_type: "custom_table",
+        page_path: window.location.pathname,
       });
       setIsSubmitted(true);
     } catch {

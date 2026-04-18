@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import { trackEvent } from "../lib/analytics";
 
 interface Props {
   currentPath: string;
@@ -76,6 +77,13 @@ export default function Navigation({ currentPath }: Props) {
           {/* CTA */}
           <motion.a
             href="/contact/"
+            onClick={() =>
+              trackEvent("select_content", {
+                content_type: "cta",
+                item_id: "start_project_nav_desktop",
+                page_path: window.location.pathname,
+              })
+            }
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="hidden md:flex items-center gap-2 px-5 py-2 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 text-sm font-medium shadow-sm justify-self-end"
@@ -119,6 +127,13 @@ export default function Navigation({ currentPath }: Props) {
               ))}
               <a
                 href="/contact/"
+                onClick={() =>
+                  trackEvent("select_content", {
+                    content_type: "cta",
+                    item_id: "start_project_nav_mobile",
+                    page_path: window.location.pathname,
+                  })
+                }
                 className="block px-4 py-2 text-center bg-[#e8dcc8] text-[#3d4f47] rounded-lg hover:bg-[#c8956a] hover:text-white transition-colors"
               >
                 Start a Project
