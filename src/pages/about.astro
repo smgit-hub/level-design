@@ -1,9 +1,29 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
+import SectionHeader from '../components/SectionHeader.astro';
+import IconFeatureGrid from '../components/IconFeatureGrid.astro';
 import aboutImg from '../assets/images/about/level-design-about-image.webp';
 import belleImg from '../assets/images/about/level-design-belle-magazine-custom-table.webp';
 import houzzImg from '../assets/images/about/level-design-houzz-magazine-coffee-table.webp';
+
+const valueItems = [
+  {
+    title: 'Thoughtful Design',
+    desc: 'Every piece is designed with intention, balancing aesthetics with functionality for real-world use.',
+    svg: '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>',
+  },
+  {
+    title: 'Local Production',
+    desc: 'Working with skilled Australian makers means close collaboration and supporting our community.',
+    svg: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>',
+  },
+  {
+    title: 'Quality First',
+    desc: 'We use premium materials and traditional techniques to create tables that last generations.',
+    svg: '<circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>',
+  },
+];
 ---
 
 <Layout title="About Level Design | Melbourne Timber Table Makers" description="Level Design creates design-led timber dining tables made in Melbourne, Australia. Over 10 years of craftsmanship, featured in Belle and Houzz magazines.">
@@ -62,48 +82,26 @@ import houzzImg from '../assets/images/about/level-design-houzz-magazine-coffee-
     <!-- Values -->
     <section class="py-24 bg-[#f5f1e8]">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="reveal text-center mb-16">
-          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Our Approach</p>
-          <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47]">What Guides Our Work</h2>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            {
-              title: "Thoughtful Design",
-              desc: "Every piece is designed with intention, balancing aesthetics with functionality for real-world use.",
-              svg: `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>`,
-            },
-            {
-              title: "Local Production",
-              desc: "Working with skilled Australian makers means close collaboration and supporting our community.",
-              svg: `<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>`,
-            },
-            {
-              title: "Quality First",
-              desc: "We use premium materials and traditional techniques to create tables that last generations.",
-              svg: `<circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>`,
-            },
-          ].map((v, i) => (
-            <div class="reveal p-8 rounded-2xl bg-white hover:shadow-xl transition-shadow duration-300 group" style={`--delay: ${i * 0.1}s`}>
-              <div class="w-16 h-16 rounded-2xl bg-[#3d4f47] flex items-center justify-center mb-6 group-hover:bg-[#c8956a] transition-colors duration-300">
-                <svg class="text-white w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" set:html={v.svg} />
-              </div>
-              <h3 class="text-2xl font-semibold text-[#3d4f47] mb-4">{v.title}</h3>
-              <p class="text-[#5a6b64]">{v.desc}</p>
-            </div>
-          ))}
-        </div>
+        <SectionHeader
+          eyebrow="Our Approach"
+          title="What Guides Our Work"
+          wrapperClass="text-center mb-16"
+          titleClass="text-4xl md:text-5xl font-serif text-[#3d4f47]"
+        />
+        <IconFeatureGrid items={valueItems} />
       </div>
     </section>
 
     <!-- Timeline -->
     <section class="py-24 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="reveal text-center mb-16">
-          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">History</p>
-          <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">10 Years of Designing and Locally Making Tables</h2>
-          <p class="text-xl text-[#5a6b64] max-w-3xl mx-auto">A steady commitment to well-resolved furniture, close collaborations with makers, and an understanding of how tables are actually used every day.</p>
-        </div>
+        <SectionHeader
+          eyebrow="History"
+          title="10 Years of Designing and Locally Making Tables"
+          description="A steady commitment to well-resolved furniture, close collaborations with makers, and an understanding of how tables are actually used every day."
+          wrapperClass="text-center mb-16"
+          descriptionClass="text-xl text-[#5a6b64] max-w-3xl mx-auto"
+        />
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
             { year: "10+", title: "Years of Designing", desc: "Over a decade perfecting our craft and understanding what makes a great table." },

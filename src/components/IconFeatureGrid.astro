@@ -1,0 +1,45 @@
+---
+interface FeatureItem {
+  title: string;
+  desc: string;
+  svg: string;
+  number?: string;
+}
+
+interface Props {
+  items: FeatureItem[];
+  gridClass?: string;
+  cardClass?: string;
+  iconWrapClass?: string;
+  iconClass?: string;
+  titleClass?: string;
+  descClass?: string;
+  numberClass?: string;
+  delayStep?: number;
+}
+
+const {
+  items,
+  gridClass = 'grid grid-cols-1 md:grid-cols-3 gap-8',
+  cardClass = 'p-8 rounded-2xl bg-white hover:shadow-xl transition-all duration-300 group',
+  iconWrapClass = 'w-16 h-16 rounded-2xl bg-[#3d4f47] flex items-center justify-center mb-6 group-hover:bg-[#c8956a] transition-colors duration-300',
+  iconClass = 'text-white w-8 h-8',
+  titleClass = 'text-2xl font-semibold text-[#3d4f47] mb-4',
+  descClass = 'text-[#5a6b64]',
+  numberClass = 'text-sm text-[#c8956a] font-medium mb-2',
+  delayStep = 0.1,
+} = Astro.props;
+---
+
+<div class={gridClass}>
+  {items.map((item, i) => (
+    <div class:list={['reveal', cardClass]} style={`--delay: ${i * delayStep}s`}>
+      <div class={iconWrapClass}>
+        <svg class={iconClass} fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" set:html={item.svg} />
+      </div>
+      {item.number && <div class={numberClass}>{item.number}</div>}
+      <h3 class={titleClass}>{item.title}</h3>
+      <p class={descClass}>{item.desc}</p>
+    </div>
+  ))}
+</div>

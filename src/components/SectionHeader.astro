@@ -1,0 +1,30 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  wrapperClass?: string;
+  revealClass?: string;
+  eyebrowClass?: string;
+  titleClass?: string;
+  descriptionClass?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  description,
+  wrapperClass = 'text-center mb-16',
+  revealClass = 'reveal',
+  eyebrowClass = 'text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm',
+  titleClass = 'text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6',
+  descriptionClass = 'text-xl text-[#5a6b64] max-w-2xl mx-auto',
+} = Astro.props;
+---
+
+<div class:list={[revealClass, wrapperClass]}>
+  {eyebrow && <p class={eyebrowClass}>{eyebrow}</p>}
+  <h2 class={titleClass}>{title}</h2>
+  {description && <p class={descriptionClass}>{description}</p>}
+  <slot />
+</div>

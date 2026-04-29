@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import CustomForm from '../components/CustomForm';
 import { Image } from 'astro:assets';
+import SectionHeader from '../components/SectionHeader.astro';
+import IconFeatureGrid from '../components/IconFeatureGrid.astro';
 import customImg from '../assets/images/custom/level-design-custom-furniture.webp';
 
 const faqs = [
@@ -28,6 +30,13 @@ const serviceAreas = [
   'Mornington Peninsula',
   'Geelong',
   'Regional Victoria by enquiry',
+];
+
+const processSteps = [
+  { svg: '<path d="M21 6H3"/><path d="M10 12H3"/><path d="M10 18H3"/><circle cx="17" cy="15" r="3"/><path d="m21 18-1.9-1.9"/>', number: '01', title: 'Tailored Dimensions', desc: "Share your space measurements and seating needs. We'll recommend proportions that work." },
+  { svg: '<circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>', number: '02', title: 'Timber & Finish Guidance', desc: 'Choose from sustainable timbers. We guide you through options for tone and durability.' },
+  { svg: '<path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" x2="12" y1="22" y2="12"/>', number: '03', title: 'Design and Refine', desc: 'Collaborate on the design until it feels right. We provide renders and material samples.' },
+  { svg: '<path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/><rect width="13" height="8" x="9" y="13" rx="1"/><path d="M16 13v-2a4 4 0 0 0-8 0v2"/><circle cx="11.5" cy="17.5" r=".5" fill="currentColor"/><circle cx="20.5" cy="17.5" r=".5" fill="currentColor"/>', number: '04', title: 'Craft and Deliver', desc: 'Your table is handcrafted by skilled makers, then delivered and installed with care.' },
 ];
 
 const schema = {
@@ -135,14 +144,17 @@ const serviceSchema = {
 
     <section class="py-24 bg-[#f5f1e8]">
       <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="reveal text-center mb-14">
-          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Custom Table Design</p>
-          <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">Bespoke Timber Dining Tables for Melbourne Homes</h2>
-          <p class="text-xl text-[#5a6b64] max-w-3xl mx-auto">Our custom process is designed for people who want a table that feels resolved in both scale and detail, whether that means fitting a tighter dining zone or creating a centrepiece for entertaining.</p>
+        <SectionHeader
+          eyebrow="Custom Table Design"
+          title="Bespoke Timber Dining Tables for Melbourne Homes"
+          description="Our custom process is designed for people who want a table that feels resolved in both scale and detail, whether that means fitting a tighter dining zone or creating a centrepiece for entertaining."
+          wrapperClass="text-center mb-14"
+          descriptionClass="text-xl text-[#5a6b64] max-w-3xl mx-auto"
+        >
           <a href="/melbourne-custom-dining-tables/" class="inline-flex mt-6 text-[#c8956a] font-medium hover:underline">
             Learn about custom dining tables in Melbourne →
           </a>
-        </div>
+        </SectionHeader>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           {[
@@ -199,28 +211,16 @@ const serviceSchema = {
     <!-- Process -->
     <section class="py-24 bg-[#f5f1e8]">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="reveal text-center mb-16">
-          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Our Process</p>
-          <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">Clear Steps, No Guesswork</h2>
-          <p class="text-xl text-[#5a6b64] max-w-2xl mx-auto">From initial concept to final delivery, we guide you through every step with clarity and care.</p>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {[
-            { svg: `<path d="M21 6H3"/><path d="M10 12H3"/><path d="M10 18H3"/><circle cx="17" cy="15" r="3"/><path d="m21 18-1.9-1.9"/>`, number: "01", title: "Tailored Dimensions", desc: "Share your space measurements and seating needs. We'll recommend proportions that work." },
-            { svg: `<circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>`, number: "02", title: "Timber & Finish Guidance", desc: "Choose from sustainable timbers. We guide you through options for tone and durability." },
-            { svg: `<path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" x2="12" y1="22" y2="12"/>`, number: "03", title: "Design and Refine", desc: "Collaborate on the design until it feels right. We provide renders and material samples." },
-            { svg: `<path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/><rect width="13" height="8" x="9" y="13" rx="1"/><path d="M16 13v-2a4 4 0 0 0-8 0v2"/><circle cx="11.5" cy="17.5" r=".5" fill="currentColor"/><circle cx="20.5" cy="17.5" r=".5" fill="currentColor"/>`, number: "04", title: "Craft and Deliver", desc: "Your table is handcrafted by skilled makers, then delivered and installed with care." },
-          ].map((step, i) => (
-            <div class="reveal relative bg-white rounded-2xl p-8 hover:shadow-xl transition-shadow duration-300 group" style={`--delay: ${i * 0.1}s`}>
-              <div class="w-16 h-16 rounded-2xl bg-[#3d4f47] flex items-center justify-center mb-6 group-hover:bg-[#c8956a] transition-colors duration-300">
-                <svg class="text-white w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" set:html={step.svg} />
-              </div>
-              <div class="text-sm text-[#c8956a] font-medium mb-2">{step.number}</div>
-              <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{step.title}</h3>
-              <p class="text-[#5a6b64]">{step.desc}</p>
-            </div>
-          ))}
-        </div>
+        <SectionHeader
+          eyebrow="Our Process"
+          title="Clear Steps, No Guesswork"
+          description="From initial concept to final delivery, we guide you through every step with clarity and care."
+        />
+        <IconFeatureGrid
+          items={processSteps}
+          gridClass="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+          titleClass="text-xl font-semibold text-[#3d4f47] mb-3"
+        />
       </div>
     </section>
 

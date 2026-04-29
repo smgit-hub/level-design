@@ -1,6 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ContactForm from '../components/ContactForm';
+import { Image } from 'astro:assets';
+import SectionHeader from '../components/SectionHeader.astro';
+import contactImg from '../assets/images/contact/level-design-contact-image.webp';
 
 const serviceAreas = [
   {
@@ -80,11 +83,11 @@ const schema = {
     <!-- Info cards -->
     <section class="py-24 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="reveal text-center mb-16">
-          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">How to Get in Touch</p>
-          <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">We're Here to Help</h2>
-          <p class="text-xl text-[#5a6b64] max-w-2xl mx-auto">Whether you have questions about our tables or want to start a custom project, we're ready to listen.</p>
-        </div>
+        <SectionHeader
+          eyebrow="How to Get in Touch"
+          title="We're Here to Help"
+          description="Whether you have questions about our tables or want to start a custom project, we're ready to listen."
+        />
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           {[
@@ -149,8 +152,8 @@ const schema = {
           <div class="grid grid-cols-1 lg:grid-cols-2">
             <!-- Image -->
             <div class="relative min-h-[320px] lg:min-h-0">
-              <img
-                src="/images/contact/level-design-contact-image.webp"
+              <Image
+                src={contactImg}
                 alt="Level Design timber table in a styled interior"
                 class="absolute inset-0 w-full h-full object-cover"
               />
@@ -181,11 +184,13 @@ const schema = {
     <!-- Form -->
     <section class="pb-24 bg-white">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="reveal text-center mb-12">
-          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Get Started</p>
-          <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">Request a Quote</h2>
-          <p class="text-xl text-[#5a6b64]">We'll review your requirements and suggest the best direction for dimensions, design, and finish.</p>
-        </div>
+        <SectionHeader
+          eyebrow="Get Started"
+          title="Request a Quote"
+          description="We'll review your requirements and suggest the best direction for dimensions, design, and finish."
+          wrapperClass="text-center mb-12"
+          descriptionClass="text-xl text-[#5a6b64]"
+        />
         <ContactForm client:visible />
       </div>
     </section>
