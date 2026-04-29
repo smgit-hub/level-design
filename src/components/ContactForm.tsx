@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { ArrowRight, CheckCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { trackEvent } from "../lib/analytics";
+import { EMAIL_PATTERN, toFormUrlEncoded } from "../lib/forms";
 
 type FormData = {
   name: string;
@@ -22,11 +23,6 @@ const tableOptions = [
   "Custom Design", "Not sure yet",
 ];
 
-const encode = (data: Record<string, string>) =>
-  Object.keys(data)
-    .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key] || ""))
-    .join("&");
-
 export default function ContactForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -40,12 +36,14 @@ export default function ContactForm() {
   }, [isSubmitted]);
 
   const onSubmit = async (data: FormData) => {
+    setIsError(false);
     try {
-      await fetch("/", {
+      const response = await fetch("/", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: encode({ "form-name": "contact-enquiry", ...data }),
+        body: toFormUrlEncoded({ "form-name": "contact-enquiry", ...data }),
       });
+      if (!response.ok) throw new Error("Failed to submit contact enquiry");
       trackEvent("generate_lead", {
         form_name: "contact_enquiry",
         lead_type: "contact",
@@ -85,7 +83,7 @@ export default function ContactForm() {
               <input
                 {...register("email", {
                   required: "Email is required",
-                  pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, message: "Invalid email" },
+                  pattern: { value: EMAIL_PATTERN, message: "Invalid email" },
                 })}
                 type="email"
                 placeholder="your@email.com"
@@ -168,7 +166,13 @@ export default function ContactForm() {
           </div>
           <h3 className="text-3xl font-serif text-[#3d4f47] mb-4">Thank You!</h3>
           <p className="text-xl text-[#5a6b64] mb-8">We've received your enquiry and will get back to you within 2 business days.</p>
-          <button onClick={() => setIsSubmitted(false)} className="text-[#c8956a] hover:underline cursor-pointer">
+          <button
+            onClick={() => {
+              setIsSubmitted(false);
+              setIsError(false);
+            }}
+            className="text-[#c8956a] hover:underline cursor-pointer"
+          >
             Submit another enquiry
           </button>
         </div>

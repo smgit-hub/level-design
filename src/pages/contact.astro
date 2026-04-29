@@ -95,7 +95,6 @@ const schema = {
               svg: `<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>`,
               title: "Contact Us",
               detail: "Use the form below",
-              href: null,
               note: "Response within 2 business days",
             },
             {
@@ -116,11 +115,7 @@ const schema = {
                 <svg class="text-white w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" set:html={card.svg} />
               </div>
               <h3 class="text-lg font-semibold text-[#3d4f47] mb-2">{card.title}</h3>
-              {card.href ? (
-                <a href={card.href} class="text-[#c8956a] hover:underline">{card.detail}</a>
-              ) : (
-                <p class="text-[#5a6b64]">{card.detail}</p>
-              )}
+              <p class="text-[#5a6b64]">{card.detail}</p>
               <p class="text-sm text-[#5a6b64] mt-3">{card.note}</p>
             </div>
           ))}

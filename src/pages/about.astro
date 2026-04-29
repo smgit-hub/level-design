@@ -192,13 +192,19 @@ const valueItems = [
                 </form>
               </div>
               <script>
-                document.getElementById('trade-form-el').addEventListener('submit', async function(e) {
+                const tradeForm = document.getElementById('trade-form-el');
+                if (tradeForm instanceof HTMLFormElement) {
+                  tradeForm.addEventListener('submit', async function(e) {
                   e.preventDefault();
                   try {
+                    const formData = new FormData(tradeForm);
+                    const formBody = new URLSearchParams(
+                      Array.from(formData.entries()).map(([key, value]) => [key, String(value)])
+                    ).toString();
                     await fetch('/', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                      body: new URLSearchParams(new FormData(this)).toString()
+                      body: formBody
                     });
                     if (typeof window.gtag === 'function') {
                       window.gtag('event', 'generate_lead', {
@@ -207,15 +213,18 @@ const valueItems = [
                         page_path: window.location.pathname,
                       });
                     }
-                    document.getElementById('trade-success').style.display = 'block';
-                    document.getElementById('trade-form').style.display = 'none';
+                    const successPanel = document.getElementById('trade-success');
+                    const formPanel = document.getElementById('trade-form');
+                    if (successPanel) successPanel.style.display = 'block';
+                    if (formPanel) formPanel.style.display = 'none';
                     setTimeout(function() {
-                      document.getElementById('trade-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      successPanel?.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }, 100);
                   } catch(err) {
                     alert('Something went wrong — please try again or email us at hello@leveldesign.com.au');
                   }
-                });
+                  });
+                }
               </script>
             </div>
           </div>

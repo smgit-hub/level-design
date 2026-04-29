@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, CheckCircle, Ruler, Truck, Shield } from "lucide
 import { useForm } from "react-hook-form";
 import type { Product } from "../data/products";
 import { trackEvent } from "../lib/analytics";
+import { EMAIL_PATTERN, toFormUrlEncoded } from "../lib/forms";
 
 interface Props {
   product: Product;
@@ -22,17 +23,11 @@ type FormData = {
   timeline: string;
 };
 
-
-const encode = (data: Record<string, string>) =>
-  Object.keys(data)
-    .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key] || ""))
-    .join("&");
-
 export default function ProductDetailClient({ product, prev, next }: Props) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isError, setIsError] = useState(false);
   const successRef = useRef<HTMLDivElement>(null);
-  const allImages = (product: Props["product"]) => [product.images.main, ...product.images.gallery];
+  const productImages = [product.images.main, ...product.images.gallery];
 
   useEffect(() => {
     if (isSubmitted && successRef.current) {
@@ -43,12 +38,14 @@ export default function ProductDetailClient({ product, prev, next }: Props) {
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
+    setIsError(false);
     try {
-      await fetch("/", {
+      const response = await fetch("/", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: encode({ "form-name": "table-enquiry", "table": product.name, ...data }),
+        body: toFormUrlEncoded({ "form-name": "table-enquiry", table: product.name, ...data }),
       });
+      if (!response.ok) throw new Error("Failed to submit table enquiry");
       trackEvent("generate_lead", {
         form_name: "table_enquiry",
         lead_type: "product_table",
@@ -96,12 +93,12 @@ export default function ProductDetailClient({ product, prev, next }: Props) {
                 </div>
                 {/* Thumbnails — always 3, showing the non-selected images */}
                 <div className="grid grid-cols-3 gap-3">
-                  {allImages(product)
+                  {productImages
                     .filter((img) => img !== selectedImage)
                     .slice(0, 3)
                     .map((img, i) => (
                       <button
-                        key={i}
+                        key={img}
                         onClick={() => setSelectedImage(img)}
                         className="aspect-[4/3] rounded-xl overflow-hidden border-2 border-transparent hover:border-[#c8956a] transition-all duration-200"
                       >
@@ -281,7 +278,7 @@ export default function ProductDetailClient({ product, prev, next }: Props) {
                     <input
                       {...register("email", {
                         required: "Email is required",
-                        pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, message: "Invalid email" },
+                        pattern: { value: EMAIL_PATTERN, message: "Invalid email" },
                       })}
                       type="email"
                       placeholder="your@email.com"
@@ -348,7 +345,13 @@ export default function ProductDetailClient({ product, prev, next }: Props) {
                 </div>
                 <h3 className="text-3xl font-serif text-[#3d4f47] mb-4">Thank You!</h3>
                 <p className="text-xl text-[#5a6b64] mb-8">We've received your enquiry and will get back to you within 2 business days.</p>
-                <button onClick={() => setIsSubmitted(false)} className="text-[#c8956a] hover:underline cursor-pointer">
+                <button
+                  onClick={() => {
+                    setIsSubmitted(false);
+                    setIsError(false);
+                  }}
+                  className="text-[#c8956a] hover:underline cursor-pointer"
+                >
                   Submit another enquiry
                 </button>
               </div>

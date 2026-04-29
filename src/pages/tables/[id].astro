@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import ProductDetailClient from '../../components/ProductDetailClient';
-import { products, allProducts } from '../../data/products';
+import { allProducts } from '../../data/products';
 
 export function getStaticPaths() {
   return allProducts.map((p) => ({
