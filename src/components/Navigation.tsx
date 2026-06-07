@@ -52,8 +52,8 @@ export default function Navigation({ currentPath }: Props) {
               />
             </div>
             <span className="text-white text-lg font-semibold truncate">Level Design</span>
+            <span style={{ background: '#FFD700', color: '#000', fontWeight: 900, fontSize: '0.85rem', letterSpacing: '0.15em', padding: '4px 10px', borderRadius: '6px', border: '2px solid #000', marginLeft: '10px', flexShrink: 0 }}>CLD</span>
           </a>
-          <span style={{ background: '#FFD700', color: '#000', fontWeight: 900, fontSize: '0.85rem', letterSpacing: '0.15em', padding: '4px 10px', borderRadius: '6px', border: '2px solid #000', marginLeft: '10px', flexShrink: 0 }}>CLD</span>
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-8 justify-self-center">
