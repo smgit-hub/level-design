@@ -74,6 +74,13 @@ export default function Navigation({ currentPath }: Props) {
             ))}
           </div>
 
+          {/* Verification badge */}
+          <div className="hidden md:flex items-center justify-self-end mr-3">
+            <span style={{ background: '#FFD700', color: '#000', fontWeight: 900, fontSize: '1.1rem', letterSpacing: '0.2em', padding: '6px 16px', borderRadius: '6px', border: '2px solid #000', boxShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>
+              CLD
+            </span>
+          </div>
+
           {/* CTA */}
           <motion.a
             href="/contact/"
@@ -90,6 +97,11 @@ export default function Navigation({ currentPath }: Props) {
           >
             Start a Project
           </motion.a>
+
+          {/* Verification badge mobile */}
+          <span className="md:hidden mr-2" style={{ background: '#FFD700', color: '#000', fontWeight: 900, fontSize: '0.9rem', letterSpacing: '0.2em', padding: '4px 10px', borderRadius: '6px', border: '2px solid #000' }}>
+            CLD
+          </span>
 
           {/* Mobile toggle */}
           <button
