@@ -9,24 +9,24 @@ import houzzImg from '../assets/images/about/level-design-houzz-magazine-coffee-
 
 const valueItems = [
   {
-    title: 'Thoughtful Design',
-    desc: 'Every piece is designed with intention, balancing aesthetics with functionality for real-world use.',
+    title: 'Design expertise',
+    desc: 'We bring over a decade of experience in dining table design — understanding proportion, material, construction, and how tables live in real homes.',
+    svg: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
+  },
+  {
+    title: 'Understanding how people live and entertain',
+    desc: 'The best dining table is designed around the people who use it. We learn how you cook, host, gather, and live — then design accordingly.',
     svg: '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>',
   },
   {
-    title: 'Local Production',
-    desc: 'Working with skilled Australian makers means close collaboration and supporting our community.',
-    svg: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>',
-  },
-  {
-    title: 'Quality First',
-    desc: 'We use premium materials and traditional techniques to create tables that last generations.',
+    title: 'Heirloom-quality material knowledge',
+    desc: 'Selecting the right timber and finish is a design decision. We guide every client through the options in the context of their interior and their life.',
     svg: '<circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>',
   },
 ];
 ---
 
-<Layout title="About Level Design | Melbourne Timber Table Makers" description="Level Design creates design-led timber dining tables made in Melbourne, Australia. Over 10 years of craftsmanship, featured in Belle and Houzz magazines.">
+<Layout title="About Level Design | Dining Table Design Studio Melbourne" description="Level Design is a dining table design studio based in Melbourne. We design bespoke dining tables around our clients' spaces, lifestyles, and entertaining needs. Featured in Belle and Houzz.">
   <div>
 
     <!-- Hero -->
@@ -37,12 +37,12 @@ const valueItems = [
       <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl">
           <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">About Level Design</p>
-          <h1 class="hero-in text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Australian Made Tables, Designed with Purpose</h1>
+          <h1 class="hero-in text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">A Dining Table Design Studio Based in Melbourne</h1>
           <p class="hero-in text-xl text-[#e8dcc8] leading-relaxed mb-8" style="--delay: 0.6s">
-            For more than 10 years, we have focused on designing tables that feel grounded, practical, and right for the spaces they inhabit.
+            For more than 10 years, we have focused on designing bespoke dining tables shaped around the spaces, lifestyles, and entertaining habits of the people who commission them.
           </p>
           <div class="hero-in flex flex-wrap gap-4" style="--delay: 0.8s">
-            {["10+ years of craftsmanship", "Australian made", "Magazine featured"].map((item) => (
+            {["10+ years of design expertise", "Featured in Belle and Houzz", "Working with homeowners, designers & architects"].map((item) => (
               <div class="px-4 py-2 bg-[#2d3f37] rounded-full text-sm flex items-center gap-2">
                 <svg class="w-4 h-4 text-[#c8956a]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 {item}
@@ -58,14 +58,14 @@ const valueItems = [
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div class="reveal-left">
-            <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">What We Do</p>
+            <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">The Practice</p>
             <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">
-              We Design Tables and Work with Local Makers to Bring Them to Life
+              We Design Dining Tables Around the People Who Will Use Them
             </h2>
             <div class="space-y-6 text-[#5a6b64] text-lg">
-              <p>Level Design creates Australian timber tables with a strong focus on materiality, making warmth, and everyday use. Our tables work with a design-led approach and a close relationship with local makers.</p>
-              <p>Alongside private tables, we regularly work with interior designers and architects to deliver custom pieces for their projects.</p>
-              <p>Unlike mass-produced furniture, we believe every space deserves furniture that feels considered and intentional — from the timber selection to the final finish.</p>
+              <p>Level Design is a dining table design studio. We work with clients across Melbourne and Australia to design bespoke dining tables shaped around their specific rooms, the way they live, and the way they entertain.</p>
+              <p>Every project begins with understanding the space — its proportions, its material palette, the people who gather around it, and what they need the table to do. The design follows from that understanding, not from a catalogue.</p>
+              <p>We work directly with homeowners, and regularly collaborate with interior designers and architects who are specifying furniture for design-led residential projects. Our knowledge of scale, proportion, material, and construction allows us to work closely with each client's brief and bring the right result to life.</p>
             </div>
           </div>
           <div class="reveal-right relative">
@@ -96,17 +96,17 @@ const valueItems = [
     <section class="py-24 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          eyebrow="History"
-          title="10 Years of Designing and Locally Making Tables"
-          description="A steady commitment to well-resolved furniture, close collaborations with makers, and an understanding of how tables are actually used every day."
+          eyebrow="The Studio"
+          title="10 Years of Designing Around People and Their Spaces"
+          description="A steady commitment to design-led work, close collaboration with each client, and a genuine understanding of how dining tables are used every day."
           wrapperClass="text-center mb-16"
           descriptionClass="text-xl text-[#5a6b64] max-w-3xl mx-auto"
         />
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
-            { year: "10+", title: "Years of Designing", desc: "Over a decade perfecting our craft and understanding what makes a great table." },
-            { year: "Local", title: "Australian Makers", desc: "Partnering with the finest timber craftspeople in Australia." },
-            { year: "Design-led", title: "Approach", desc: "Every table is shaped around real materials and customer needs." },
+            { year: "10+", title: "Years of Practice", desc: "Over a decade designing bespoke dining tables around individual spaces and lifestyles." },
+            { year: "Local", title: "Australian Made", desc: "Designed in Melbourne and made with American and Australian hardwoods by skilled local craftspeople." },
+            { year: "Design-led", title: "From First Conversation", desc: "Every project begins with understanding the client's space — not with a catalogue." },
           ].map((item, i) => (
             <div class="reveal text-center p-8 rounded-2xl bg-[#f5f1e8] hover:bg-[#e8dcc8] transition-colors duration-300" style={`--delay: ${i * 0.1}s`}>
               <div class="text-6xl font-serif text-[#c8956a] mb-4">{item.year}</div>
@@ -159,9 +159,9 @@ const valueItems = [
         <div class="bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] rounded-3xl p-12 text-white">
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div class="reveal">
-              <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Trade & Collaboration</p>
-              <h2 class="text-3xl md:text-4xl font-serif mb-4">Built to Support Designers and Architects</h2>
-              <p class="text-[#e8dcc8] mb-6">We collaborate with interior designers and architects on custom and collective projects, helping bring their vision to life with bespoke furniture.</p>
+              <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Designers & Architects</p>
+              <h2 class="text-3xl md:text-4xl font-serif mb-4">A Studio Partner for Design-led Residential Projects</h2>
+              <p class="text-[#e8dcc8] mb-6">We work closely with interior designers and architects to design dining tables that sit precisely within their clients' interiors — aligned with material palettes, circulation plans, and project briefs.</p>
               <div class="space-y-3">
                 {["Flexible dimensions", "Timber guidance", "Close specification support"].map((item) => (
                   <div class="flex items-center gap-3">

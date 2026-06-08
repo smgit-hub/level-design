@@ -12,22 +12,23 @@ const year = new Date().getFullYear();
         </div>
         <div>
           <p class="text-white text-lg font-semibold leading-tight">Level Design</p>
-          <p class="text-xs text-[#b8ac98]">Handcrafted timber tables, Melbourne</p>
+          <p class="text-xs text-[#b8ac98]">Dining table design studio, Melbourne</p>
         </div>
       </div>
       <p class="text-sm text-[#b8ac98] max-w-xs sm:text-right">
-        Design-led timber tables made for everyday living, hosting, and lasting use.
+        Bespoke dining tables designed around your space, lifestyle, and the way you entertain.
       </p>
     </div>
 
     <!-- Middle: Links -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
       <div>
-        <h3 class="text-white text-xs font-semibold tracking-widest uppercase mb-4">Tables</h3>
+        <h3 class="text-white text-xs font-semibold tracking-widest uppercase mb-4">Explore</h3>
         <ul class="space-y-2">
           {[
-            { href: '/tables/', label: 'All Tables' },
-            { href: '/custom/', label: 'Custom Order' },
+            { href: '/tables/', label: 'Collection' },
+            { href: '/projects/', label: 'Projects' },
+            { href: '/custom/', label: 'Custom Design' },
             { href: '/melbourne-custom-dining-tables/', label: 'Melbourne Tables' },
           ].map(({ href, label }) => (
             <li><a href={href} class="text-sm text-[#b8ac98] hover:text-white transition-colors">{label}</a></li>
@@ -35,11 +36,11 @@ const year = new Date().getFullYear();
         </ul>
       </div>
       <div>
-        <h3 class="text-white text-xs font-semibold tracking-widest uppercase mb-4">Company</h3>
+        <h3 class="text-white text-xs font-semibold tracking-widest uppercase mb-4">Studio</h3>
         <ul class="space-y-2">
           {[
-            { href: '/about/', label: 'About Us' },
-            { href: '/contact/', label: 'Contact' },
+            { href: '/about/', label: 'About' },
+            { href: '/contact/', label: 'Start a Project' },
           ].map(({ href, label }) => (
             <li><a href={href} class="text-sm text-[#b8ac98] hover:text-white transition-colors">{label}</a></li>
           ))}
@@ -54,23 +55,23 @@ const year = new Date().getFullYear();
       <div>
         <h3 class="text-white text-xs font-semibold tracking-widest uppercase mb-4">Follow</h3>
         <div class="flex gap-3">
-          <a href="https://share.google/2X8cmzgsefNsOyp1a" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-[#3d4f47] flex items-center justify-center hover:bg-[#c8956a] transition-colors" aria-label="Google Business Profile">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-7.07 17.07A10 10 0 1 0 12 2Zm0 18.2A8.2 8.2 0 1 1 20.2 12c0 .7-.08 1.33-.24 1.9h-7.8v-3.3h11.55c.18.72.29 1.47.29 2.26C24 19.14 18.74 24 12 24v-3.8Zm0-9.6v3.3h4.5A4.9 4.9 0 0 1 12 16.5a4.5 4.5 0 1 1 3.18-7.68l2.33-2.33A7.78 7.78 0 1 0 12 19.78v-3.28a4.5 4.5 0 0 1 0-9v3.1Z" /></svg>
-          </a>
           <a href="https://www.facebook.com/leveldesignmelbourne/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-[#3d4f47] flex items-center justify-center hover:bg-[#c8956a] transition-colors" aria-label="Facebook">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" /></svg>
           </a>
           <a href="https://www.instagram.com/level_design/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-[#3d4f47] flex items-center justify-center hover:bg-[#c8956a] transition-colors" aria-label="Instagram">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" /></svg>
           </a>
+          <a href="https://share.google/2X8cmzgsefNsOyp1a" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-[#3d4f47] flex items-center justify-center hover:bg-[#c8956a] transition-colors" aria-label="Google Business Profile">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-7.07 17.07A10 10 0 1 0 12 2Zm0 18.2A8.2 8.2 0 1 1 20.2 12c0 .7-.08 1.33-.24 1.9h-7.8v-3.3h11.55c.18.72.29 1.47.29 2.26C24 19.14 18.74 24 12 24v-3.8Zm0-9.6v3.3h4.5A4.9 4.9 0 0 1 12 16.5a4.5 4.5 0 1 1 3.18-7.68l2.33-2.33A7.78 7.78 0 1 0 12 19.78v-3.28a4.5 4.5 0 0 1 0-9v3.1Z" /></svg>
+          </a>
         </div>
       </div>
     </div>
 
     <!-- Bottom Bar -->
-    <div class="pt-8 border-t border-[#3d4f47] flex flex-col sm:flex-row justify-between items-center gap-2">
-      <p class="text-xs text-[#b8ac98]">© {year} Level Design. All rights reserved.</p>
-      <p class="text-xs text-[#b8ac98]">Melbourne, Australia</p>
+    <div class="pt-8 border-t border-[#3d4f47] flex flex-col items-center gap-1 text-center">
+      <p class="text-xs font-semibold text-white">Level Design</p>
+      <p class="text-xs text-[#b8ac98]">© 2025 Level Design Pty Ltd. All rights reserved.</p>
     </div>
   </div>
 </footer>

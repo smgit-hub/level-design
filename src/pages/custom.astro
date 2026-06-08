@@ -8,19 +8,24 @@ import customImg from '../assets/images/custom/level-design-custom-furniture.web
 
 const faqs = [
   {
-    question: 'Can I customise the dimensions of my dining table?',
+    question: 'What does the design consultation involve?',
     answer:
-      'Yes. Level Design custom dining tables are made to suit your room, circulation, seating requirements, and the way you use the space day to day.',
+      'The consultation is a conversation about your space, your lifestyle, and what you need the table to do. We discuss room dimensions, seating requirements, how you entertain, and your material preferences — and from there we develop a design that feels resolved for your specific situation.',
   },
   {
-    question: 'What timber species and finishes can I choose from?',
+    question: 'How long does the custom design process take?',
     answer:
-      'We can guide you through timber species such as American Oak, Tasmanian Oak, and other suitable options, then help narrow the finish based on colour, durability, and the look you want to achieve.',
+      'The design and consultation phase typically takes one to two weeks, depending on how quickly decisions are made and whether refinements are needed. Production follows once the design is finalised. We\'ll give you a clear timeline from the outset.',
   },
   {
-    question: 'Do you work with Melbourne clients only?',
+    question: 'What timber species and finishes are available?',
     answer:
-      'Level Design is Melbourne-based, but projects can be discussed for other locations in Australia depending on delivery requirements and scope.',
+      'We work primarily with American Oak, Tasmanian Oak, and American Ash. Finish options include raw matte, clear matte, black satin, and black wash — each selected in the context of your interior palette and how the table will be used. We guide you through every option.',
+  },
+  {
+    question: 'Do you work with interior designers and architects?',
+    answer:
+      'Yes. We work directly with designers and architects on residential projects, providing close specification support, timber guidance, and flexible dimensions to suit their clients\' briefs and interior palettes.',
   },
 ];
 
@@ -33,10 +38,11 @@ const serviceAreas = [
 ];
 
 const processSteps = [
-  { svg: '<path d="M21 6H3"/><path d="M10 12H3"/><path d="M10 18H3"/><circle cx="17" cy="15" r="3"/><path d="m21 18-1.9-1.9"/>', number: '01', title: 'Tailored Dimensions', desc: "Share your space measurements and seating needs. We'll recommend proportions that work." },
-  { svg: '<circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>', number: '02', title: 'Timber & Finish Guidance', desc: 'Choose from sustainable timbers. We guide you through options for tone and durability.' },
-  { svg: '<path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" x2="12" y1="22" y2="12"/>', number: '03', title: 'Design and Refine', desc: 'Collaborate on the design until it feels right. We provide renders and material samples.' },
-  { svg: '<path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/><rect width="13" height="8" x="9" y="13" rx="1"/><path d="M16 13v-2a4 4 0 0 0-8 0v2"/><circle cx="11.5" cy="17.5" r=".5" fill="currentColor"/><circle cx="20.5" cy="17.5" r=".5" fill="currentColor"/>', number: '04', title: 'Craft and Deliver', desc: 'Your table is handcrafted by skilled makers, then delivered and installed with care.' },
+  { svg: '<path d="M21 6H3"/><path d="M10 12H3"/><path d="M10 18H3"/><circle cx="17" cy="15" r="3"/><path d="m21 18-1.9-1.9"/>', number: '01', title: 'Consultation', desc: "We begin by understanding your space, lifestyle, seating needs, and how you entertain. This conversation shapes everything that follows." },
+  { svg: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>', number: '02', title: 'Design Development', desc: 'We work through proportion, silhouette, base design, and edge detail — refining until the table feels right for your room.' },
+  { svg: '<circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>', number: '03', title: 'Material Selection', desc: 'Timber species, finish tone, and edge profile are chosen together in the context of your interior — guided by both aesthetics and daily use.' },
+  { svg: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>', number: '04', title: 'Production', desc: 'Once every decision is resolved, your table is made by hand using traditional joinery and sustainably sourced American and Australian hardwoods.' },
+  { svg: '<path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/><rect width="13" height="8" x="9" y="13" rx="1"/><path d="M16 13v-2a4 4 0 0 0-8 0v2"/>', number: '05', title: 'Delivery', desc: 'We coordinate delivery and provide aftercare guidance so your table continues to look and live its best for generations.' },
 ];
 
 const schema = {
@@ -69,8 +75,8 @@ const serviceSchema = {
 ---
 
 <Layout
-  title="Custom Dining Tables Melbourne | Bespoke Timber Tables | Level Design"
-  description="Design a custom dining table in Melbourne with Level Design. Bespoke timber dining tables tailored to your dimensions, timber preferences, finish, and everyday use."
+  title="Custom Dining Table Design Melbourne | Design Consultation | Level Design"
+  description="Level Design offers a bespoke dining table design consultation in Melbourne. We design custom dining tables around your space, lifestyle, seating requirements, and material preferences."
   schema={[schema, serviceSchema]}
 >
   <!-- Hidden form for Netlify detection -->
@@ -88,13 +94,13 @@ const serviceSchema = {
       </div>
       <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl">
-          <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">Built for Your Space</p>
-          <h1 class="hero-in text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Custom Tables, Designed Around You</h1>
+          <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">Custom Dining Table Design — Melbourne</p>
+          <h1 class="hero-in text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Designed Around Your Space and the Way You Live</h1>
           <p class="hero-in text-xl text-[#e8dcc8] mb-8" style="--delay: 0.6s">
-            From dimensions to materials, we collaborate with you to create a piece that feels intentional in your home.
+            Every project begins with understanding how you use your home — how many people you seat, how you entertain, and what the table needs to do. The design follows from there.
           </p>
           <div class="hero-in flex flex-wrap gap-4" style="--delay: 0.8s">
-            {["10 years of design & making", "Magazine-worthy results", "Built to last lifetimes"].map((item) => (
+            {["10+ years of design expertise", "Heirloom-quality pieces", "Design-led from the first conversation"].map((item) => (
               <div class="px-4 py-2 bg-[#2d3f37] rounded-full text-sm flex items-center gap-2">
                 <svg class="w-4 h-4 text-[#c8956a]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 {item}
@@ -118,14 +124,16 @@ const serviceSchema = {
           </div>
           <div class="reveal-right">
             <div class="bg-white rounded-2xl p-8 border border-[#e8dcc8]">
-              <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Custom Includes</p>
-              <h2 class="text-3xl font-serif text-[#3d4f47] mb-6">What's Included in Your Custom Design</h2>
+              <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">What the Consultation Covers</p>
+              <h2 class="text-3xl font-serif text-[#3d4f47] mb-6">A Design Process Built Around You</h2>
               <ul class="space-y-4">
                 {[
-                  "Tabletop shape and edge profile",
-                  "Base style and leg geometry",
-                  "Timber species and grain tone",
-                  "Protective finish for daily use",
+                  "Your space — room dimensions, floor plan, and circulation",
+                  "How you live — family dining, entertaining, everyday use",
+                  "Scale and proportion — the right dimensions for your room",
+                  "Seating requirements — daily use and larger gatherings",
+                  "Material selection — timber species, finish, and edge profile",
+                  "Design refinement — before a single piece of timber is cut",
                 ].map((item, i) => (
                   <li class="reveal flex items-start gap-3" style={`--delay: ${i * 0.1}s`}>
                     <svg class="text-[#c8956a] mt-1 flex-shrink-0 w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
@@ -134,7 +142,7 @@ const serviceSchema = {
                 ))}
               </ul>
               <div class="mt-8 pt-8 border-t border-[#e8dcc8]">
-                <p class="text-sm text-[#5a6b64] mb-4">Every custom table starts with understanding your space and how you'll use it.</p>
+                <p class="text-sm text-[#5a6b64] mb-4">Production begins only once the design feels resolved and right for your room.</p>
               </div>
             </div>
           </div>
@@ -145,9 +153,9 @@ const serviceSchema = {
     <section class="py-24 bg-[#f5f1e8]">
       <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          eyebrow="Custom Table Design"
-          title="Bespoke Timber Dining Tables for Melbourne Homes"
-          description="Our custom process is designed for people who want a table that feels resolved in both scale and detail, whether that means fitting a tighter dining zone or creating a centrepiece for entertaining."
+          eyebrow="The Design Consultation"
+          title="Bespoke Dining Tables Designed for Your Space"
+          description="Our approach puts design at the centre. We begin by understanding how you live, how you entertain, and what role the dining table plays in your home — then we design around that."
           wrapperClass="text-center mb-14"
           descriptionClass="text-xl text-[#5a6b64] max-w-3xl mx-auto"
         >
@@ -159,20 +167,20 @@ const serviceSchema = {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           {[
             {
-              title: 'Designed around your layout',
-              body: 'We help determine practical dimensions, ideal overhangs, leg placement, and seating counts so the finished table feels natural in the room rather than simply filling it.',
+              title: 'Understanding your space',
+              body: 'Before any design decisions are made, we look carefully at how your room is proportioned — ceiling height, floor area, natural light, and circulation — to ensure the table works spatially as well as aesthetically.',
             },
             {
-              title: 'Material decisions made with guidance',
-              body: 'Timber species, finish level, edge profile, and base style all affect the final character of the piece. We work through those decisions with you before production begins.',
+              title: 'Designing for family living and entertaining',
+              body: 'We ask how you actually use your dining space. A household that entertains regularly has different needs to one that primarily wants a table for family dinners — and the design should reflect that.',
             },
             {
-              title: 'Suitable for architects and interior designers',
-              body: 'If you are specifying furniture for a project, we can help align the table with the wider interior palette, circulation plan, and client brief.',
+              title: 'Material selection as a design decision',
+              body: 'Timber species, finish, and edge profile are not afterthoughts. They are integral to how the piece feels in the room. We guide you through the options in the context of your interior and daily use.',
             },
             {
-              title: 'Built for everyday durability',
-              body: 'Every custom table balances appearance with daily practicality, so the final finish and detailing support real family life, entertaining, and long-term use.',
+              title: 'Designed for designers and architects',
+              body: 'We work directly with interior designers and architects on residential projects, helping align the table design with the wider brief, material palette, and client requirements.',
             },
           ].map((item, i) => (
             <div class="reveal rounded-2xl bg-white p-8 shadow-sm" style={`--delay: ${i * 0.1}s`}>
@@ -212,13 +220,13 @@ const serviceSchema = {
     <section class="py-24 bg-[#f5f1e8]">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          eyebrow="Our Process"
-          title="Clear Steps, No Guesswork"
-          description="From initial concept to final delivery, we guide you through every step with clarity and care."
+          eyebrow="The Design Process"
+          title="From Consultation to Delivery"
+          description="Design and collaboration come first. Production follows only once every decision has been resolved — so the table you receive is the table you imagined."
         />
         <IconFeatureGrid
           items={processSteps}
-          gridClass="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+          gridClass="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8"
           titleClass="text-xl font-semibold text-[#3d4f47] mb-3"
         />
       </div>
@@ -281,10 +289,10 @@ const serviceSchema = {
 
           <!-- Content -->
           <div class="reveal-right order-1 lg:order-2">
-            <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Design & Craft</p>
-            <h2 class="text-4xl md:text-5xl font-serif mb-6">Every Table Starts as an Idea</h2>
-            <p class="text-[#e8dcc8] text-lg mb-5 leading-relaxed">Before a single piece of timber is cut, each table goes through a rigorous design phase. We think carefully about proportion, structural integrity, and how the piece will feel in real daily use.</p>
-            <p class="text-[#a0b8b0] text-base mb-10 leading-relaxed">3D modelling lets us resolve every joint, leg profile, and edge detail before the workshop — so what gets built is exactly what was envisioned.</p>
+            <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Design Development</p>
+            <h2 class="text-4xl md:text-5xl font-serif mb-6">Resolved in Design Before a Single Cut Is Made</h2>
+            <p class="text-[#e8dcc8] text-lg mb-5 leading-relaxed">Every table is fully developed through a design phase before production begins. We think carefully about proportion, structural integrity, and how the piece will feel in the room it's made for.</p>
+            <p class="text-[#a0b8b0] text-base mb-10 leading-relaxed">3D modelling allows us to resolve every detail — joint, leg profile, edge, and finish — so what gets built is exactly what was designed. No surprises.</p>
 
             <div class="space-y-6">
               {[

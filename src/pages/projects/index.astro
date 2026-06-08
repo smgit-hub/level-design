@@ -1,0 +1,202 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { products } from '../../data/products';
+
+const projects = [
+  {
+    id: 'pillar',
+    client: 'Sarah Mitchell',
+    role: 'Interior Designer',
+    location: 'South Yarra, Melbourne',
+    design: products.pillar,
+    overview:
+      'This project centred on a large open-plan dining and living space in South Yarra where the dining table needed to anchor the room without overpowering it. The client — an interior designer — wanted a table that could seat ten comfortably for regular entertaining while reading as a considered design object in its own right.',
+    considerations:
+      'The key challenge was scale. The room was generous but the ceiling height was modest, which meant a table with a low visual profile was important. A pedestal base — rather than four corner legs — was chosen to keep the floor plane open and allow flexible seating arrangements. The pill-shaped top with a bevelled edge softened the overall mass and gave the design a quieter, more refined presence.',
+    materials:
+      'American Oak in a raw matte finish was selected to complement the neutral tones of the interior and allow the natural grain of the timber to remain the primary character of the piece. The raw matte finish was chosen for its honesty — it lets the timber breathe and age naturally over time.',
+    outcome:
+      'The Pillar Table was made to 2400mm × 1100mm, comfortably seating between eight and ten people. The client describes it as the centrepiece of the room — a table that invites people to sit, stay, and come back.',
+    quote: 'The craftsmanship is exceptional. Our Pillar Table has become the centrepiece of our dining room.',
+    images: products.pillar.images,
+  },
+  {
+    id: 'venn',
+    client: 'Emma Thompson',
+    role: 'Architect',
+    location: 'Fitzroy, Melbourne',
+    design: products.venn,
+    overview:
+      'For this new build in Fitzroy, the client came with a specific seating requirement and a clear sense of how the space would be used. All of the design work went into resolving the correct size, proportion, and shape — ensuring the table would feel sculptural and considered, while remaining practical for a household that entertains regularly.',
+    considerations:
+      'An organic-form top was chosen deliberately to contrast with the rectilinear geometry of the architecture. The soft, flowing edges of the Venn Table give it a warmth and approachability that a more structured rectangular design would not have provided. The oval pedestal bases echo the organic quality of the top without creating visual noise.',
+    materials:
+      'American Oak with a raw matte finish was specified to sit naturally alongside the timber joinery elsewhere in the home. The raw matte surface keeps the piece looking and feeling like furniture rather than a product — which was an important distinction for this client.',
+    outcome:
+      'The Venn Table was made at 2500mm × 1400mm, giving the client a generous surface that seats eight with room to spare for the table settings she enjoys putting together for guests. The organic top has been photographed extensively since delivery and remains one of our most-requested designs.',
+    quote: 'I recommend Level Design to all my clients. Their attention to detail and quality is unmatched.',
+    images: products.venn.images,
+  },
+  {
+    id: 'luna',
+    client: 'James Chen',
+    role: 'Homeowner',
+    location: 'Brighton, Melbourne',
+    design: products.luna,
+    overview:
+      'This project was driven by a deceptively simple challenge: find a dining table that could seat six in a compact dining room without making the space feel crowded. The client had been searching for the right table for over a year before approaching Level Design — finding that standard off-the-shelf options were either too large for the room or too small to be useful.',
+    considerations:
+      'A round table was recommended early in the process for two reasons: the absence of corners makes better use of the floor area in a compact room, and the format naturally encourages conversation — every seat has an equal relationship with the others. The angled legs of the Luna design were chosen specifically because they create a sense of visual lightness, keeping the room feeling open even when the table is fully set.',
+    materials:
+      "Tasmanian Oak in a clear matte finish was selected for its slightly warmer, tighter grain compared to American Oak. The client's interior featured warm timber floors and soft furnishings in earthy tones — the Tasmanian Oak read more sympathetically against this palette than the alternatives.",
+    outcome:
+      'The Luna Table was made at 1400mm diameter — a size that seats six comfortably and leaves enough floor space around the table for the room to breathe. The client describes the experience of working through the design as collaborative and reassuring — arriving at a result that exceeded what they had imagined was possible.',
+    quote: 'Working with Level Design was a dream. They understood our vision and delivered beyond expectations.',
+    images: products.luna.images,
+  },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Projects | Level Design',
+  description:
+    'A portfolio of bespoke dining table projects designed by Level Design around our clients\' spaces, lifestyles, and entertaining needs.',
+  url: 'https://leveldesign.com.au/projects/',
+};
+---
+
+<Layout
+  title="Projects | Bespoke Dining Table Design | Level Design Melbourne"
+  description="Explore a portfolio of bespoke dining table projects by Level Design. Each project begins with a unique brief — shaped around the client's space, lifestyle, and entertaining needs."
+  schema={schema}
+>
+  <div>
+
+    <!-- Hero -->
+    <section class="relative bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white pt-36 pb-20 min-h-[30rem] flex items-center overflow-hidden">
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-[#c8956a] rounded-full blur-3xl"></div>
+      </div>
+      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl">
+          <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">Project Portfolio</p>
+          <h1 class="hero-in text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Every Table Begins with a Unique Brief</h1>
+          <p class="hero-in text-xl text-[#e8dcc8] mb-8 max-w-2xl" style="--delay: 0.6s">
+            A selection of dining table projects designed around our clients' spaces, lifestyles, and the way they entertain.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    {projects.map((project, i) => (
+      <section
+        id={`project-${project.id}`}
+        class={`py-24 ${i % 2 === 0 ? 'bg-white' : 'bg-[#f5f1e8]'}`}
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <!-- Project header -->
+          <div class="reveal mb-16">
+            <p class="text-[#c8956a] font-medium mb-2 tracking-wider uppercase text-sm">{project.role} — {project.location}</p>
+            <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-4">{project.design.name}</h2>
+            <p class="text-xl text-[#5a6b64] max-w-2xl">{project.design.tagline}</p>
+          </div>
+
+          <!-- Main image + overview -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
+            <div class="reveal">
+              <img
+                src={project.images.main}
+                alt={`${project.design.name} — ${project.client}`}
+                loading="lazy"
+                class="w-full rounded-2xl object-cover aspect-[4/3]"
+              />
+            </div>
+            <div class="reveal" style="--delay: 0.1s">
+              <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-xs">Project Overview</p>
+              <p class="text-[#5a6b64] text-lg leading-relaxed mb-8">{project.overview}</p>
+              <blockquote class="border-l-2 border-[#c8956a] pl-6">
+                <p class="text-[#3d4f47] text-xl font-serif italic leading-relaxed mb-4">"{project.quote}"</p>
+                <footer class="text-sm text-[#5a6b64]">
+                  <span class="font-semibold text-[#3d4f47]">{project.client}</span> — {project.role}, {project.location}
+                </footer>
+              </blockquote>
+            </div>
+          </div>
+
+          <!-- Design considerations + materials -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+            <div class="reveal rounded-2xl bg-[#f5f1e8] p-8" style={i % 2 === 0 ? '' : '--delay: 0s'}>
+              <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-xs">Design Considerations</p>
+              <p class="text-[#5a6b64] leading-relaxed">{project.considerations}</p>
+            </div>
+            <div class="reveal rounded-2xl bg-[#f5f1e8] p-8" style="--delay: 0.1s">
+              <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-xs">Material Selection</p>
+              <p class="text-[#5a6b64] leading-relaxed">{project.materials}</p>
+            </div>
+          </div>
+
+          <!-- Outcome + gallery -->
+          <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+            <div class="reveal lg:col-span-2">
+              <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-xs">Final Outcome</p>
+              <p class="text-[#5a6b64] leading-relaxed mb-6">{project.outcome}</p>
+              <div class="space-y-2 text-sm">
+                {Object.entries(project.design.specifications).map(([k, v]) => (
+                  <div class="flex gap-2">
+                    <span class="text-[#3d4f47] font-medium min-w-[140px]">{k}</span>
+                    <span class="text-[#5a6b64]">{v}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div class="reveal lg:col-span-3 grid grid-cols-3 gap-3" style="--delay: 0.1s">
+              {project.images.gallery.map((img, gi) => (
+                <img
+                  src={img}
+                  alt={`${project.design.name} — detail ${gi + 1}`}
+                  loading="lazy"
+                  class="w-full rounded-xl object-cover aspect-square"
+                />
+              ))}
+            </div>
+          </div>
+
+          <!-- Link to table design -->
+          <div class="reveal mt-12">
+            <a href={`/tables/${project.id}/`} class="inline-flex items-center gap-2 text-[#c8956a] font-medium hover:underline">
+              View {project.design.name} in the collection →
+            </a>
+          </div>
+
+        </div>
+      </section>
+    ))}
+
+    <!-- CTA -->
+    <section class="py-24 bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-0 left-0 w-96 h-96 bg-[#c8956a] rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-[#c8956a] rounded-full blur-3xl"></div>
+      </div>
+      <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="reveal">
+          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Start Your Project</p>
+          <h2 class="text-4xl md:text-5xl font-serif mb-6">Ready to Design Your Table?</h2>
+          <p class="text-xl text-[#e8dcc8] mb-8 max-w-2xl mx-auto">Every project begins with a conversation about your space. Tell us about your room, your lifestyle, and what you're looking for — we'll design around that.</p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/custom/" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 shadow-lg hover:shadow-xl">
+              Begin a Design Consultation →
+            </a>
+            <a href="/tables/" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-transparent border-2 border-white text-white rounded-full hover:bg-white hover:text-[#3d4f47] transition-all duration-300">
+              Explore the Collection
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</Layout>

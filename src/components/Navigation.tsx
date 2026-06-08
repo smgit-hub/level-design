@@ -8,18 +8,20 @@ interface Props {
 }
 
 const navLinks = [
-  { path: "/tables/", label: "Tables" },
-  { path: "/custom/", label: "Custom" },
+  { path: "/tables/", label: "Collection" },
+  { path: "/projects/", label: "Projects" },
+  { path: "/custom/", label: "Custom Design" },
   { path: "/about/", label: "About" },
 ];
 
 export default function Navigation({ currentPath }: Props) {
-  const [isScrolled, setIsScrolled] = useState(false);
+  const isHomepage = currentPath === "/";
+  const [isScrolled, setIsScrolled] = useState(!isHomepage);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activePath, setActivePath] = useState(currentPath);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    const handleScroll = () => setIsScrolled(window.location.pathname !== "/" || window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     // Keep active path in sync with Astro View Transitions
     const handlePageLoad = () => {
@@ -52,7 +54,6 @@ export default function Navigation({ currentPath }: Props) {
               />
             </div>
             <span className="text-white text-lg font-semibold truncate">Level Design</span>
-            <span style={{ background: '#FFD700', color: '#000', fontWeight: 900, fontSize: '0.85rem', letterSpacing: '0.15em', padding: '4px 10px', borderRadius: '6px', border: '2px solid #000', marginLeft: '10px', flexShrink: 0 }}>CLD</span>
           </a>
 
           {/* Desktop nav */}
