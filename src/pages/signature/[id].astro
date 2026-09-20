@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import ProductDetailClient from '../../components/ProductDetailClient';
+import FaqAccordion from '../../components/FaqAccordion.astro';
 import { allProducts } from '../../data/signature-products';
 
 export function getStaticPaths() {
@@ -18,12 +19,8 @@ const productUrl = `/signature/${product.id}/`;
 const pageDescription = `${product.name} — ${product.tagline}. Handcrafted timber dining table designed and made in Melbourne, Australia. Custom sizing available.`;
 const productFaqs = [
   {
-    question: `Can ${product.name} be made in custom dimensions?`,
-    answer: `Yes. ${product.name} can be tailored in size, proportion, and finish to better suit your room, seating requirements, and preferred layout.`,
-  },
-  {
-    question: `What timber and finish options are available for ${product.name}?`,
-    answer: `${product.name} can be discussed in a range of timber species and finishes, with guidance provided around tone, grain character, durability, and how the final piece will sit in your interior.`,
+    question: `Can ${product.name} be made in a different size, timber, or finish?`,
+    answer: `Yes. ${product.name} can be tailored in size, proportion, timber species, and finish to better suit your room, seating requirements, and interior palette.`,
   },
   {
     question: `Is ${product.name} suitable for Melbourne homes and design projects?`,
@@ -108,61 +105,18 @@ const schema = [
   </form>
   <ProductDetailClient product={product} prev={{ id: prev.id, name: prev.name }} next={{ id: next.id, name: next.name }} client:load />
 
-  <section class="py-20 bg-[#f5f1e8]">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="reveal text-center mb-14">
-        <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">About This Design</p>
-        <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">{product.name} for Modern Australian Dining Spaces</h2>
-        <p class="text-xl text-[#5a6b64] max-w-3xl mx-auto">{product.description} Each table is built with customisation in mind, making it suitable for both residential dining rooms and design-led interior projects.</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {[
-          {
-            title: 'Sized around your room',
-            body: `The shown ${product.specifications['Dimensions Shown']} format is a starting point. We can refine scale, seating count, and overhang to better match your floor plan and circulation.`,
-          },
-          {
-            title: 'Resolved in material and finish',
-            body: `${product.specifications['Timber / Finish Shown']} shows one direction for this design, but timber species and finish can be adjusted to suit your palette, maintenance preferences, and project brief.`,
-          },
-          {
-            title: 'Built for everyday use',
-            body: `${product.name} balances visual presence with practical function, making it a strong option for daily family use, entertaining, and long-term living.`,
-          },
-        ].map((item, i) => (
-          <div class="reveal rounded-2xl bg-white p-8 shadow-sm" style={`--delay: ${i * 0.1}s`}>
-            <h3 class="text-2xl font-semibold text-[#3d4f47] mb-4">{item.title}</h3>
-            <p class="text-[#5a6b64] leading-relaxed">{item.body}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="py-20 bg-white">
+  <section class="py-16 bg-white">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
         <div class="reveal">
-          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Customisation</p>
-          <h2 class="text-4xl font-serif text-[#3d4f47] mb-6">Tailor {product.name} to Your Project</h2>
-          <p class="text-[#5a6b64] text-lg leading-relaxed mb-5">
-            Every Level Design table is discussed on a project-by-project basis, so dimensions, seating capacity, timber selection, and finish can be aligned with the way you live and entertain.
-          </p>
+          <h2 class="text-3xl font-serif text-[#3d4f47] mb-4">{product.name} for Your Project</h2>
           <p class="text-[#5a6b64] text-lg leading-relaxed">
-            If you like the overall design language of {product.name} but need different proportions, a different timber tone, or advice on whether it suits your room, the <a href="/custom/" class="text-[#c8956a] hover:underline">custom dining table process</a> is the best next step.
+            The shown {product.specifications['Dimensions Shown']} in {product.specifications['Timber / Finish Shown']} is a starting point — size, timber, and finish are discussed and adjusted to fit your room. If you'd like a different proportion or material direction, the <a href="/custom/" class="text-[#c8956a] hover:underline">custom dining table process</a> is the best next step.
           </p>
         </div>
         <div class="reveal bg-[#f5f1e8] rounded-3xl p-8 md:p-10" style="--delay: 0.1s">
-          <h2 class="text-3xl font-serif text-[#3d4f47] mb-8">{product.name} FAQs</h2>
-          <div class="space-y-6">
-            {productFaqs.map((item) => (
-              <div class="border-b border-[#d9cfbd] pb-6 last:border-b-0 last:pb-0">
-                <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{item.question}</h3>
-                <p class="text-[#5a6b64] leading-relaxed">{item.answer}</p>
-              </div>
-            ))}
-          </div>
+          <h2 class="text-2xl font-serif text-[#3d4f47] mb-6">{product.name} FAQs</h2>
+          <FaqAccordion items={productFaqs} />
         </div>
       </div>
 

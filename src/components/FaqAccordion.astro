@@ -1,0 +1,23 @@
+---
+interface FaqItem {
+  question: string;
+  answer: string;
+}
+interface Props {
+  items: FaqItem[];
+}
+const { items } = Astro.props;
+---
+<div class="space-y-4">
+  {items.map((item) => (
+    <details class="group border-b border-[#d9cfbd] pb-4 last:border-b-0 last:pb-0">
+      <summary class="flex items-center justify-between gap-4 cursor-pointer list-none py-2">
+        <span class="text-xl font-semibold text-[#3d4f47]">{item.question}</span>
+        <svg class="w-5 h-5 text-[#c8956a] flex-shrink-0 transition-transform duration-200 group-open:rotate-45" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+      </summary>
+      <p class="text-[#5a6b64] leading-relaxed mt-2 pb-1">{item.answer}</p>
+    </details>
+  ))}
+</div>
