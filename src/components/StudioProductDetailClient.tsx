@@ -36,7 +36,7 @@ const MODEL_VIEWER_SCRIPT_ID = "model-viewer-script";
 export default function StudioProductDetailClient({ product, prev, next }: Props) {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkoutError, setCheckoutError] = useState(false);
-  const productImages = [product.images.main, ...product.images.gallery];
+  const productImages = [...product.images.gallery, product.images.main];
   // The 3D model is the lead visual — it's the default view, with renders as alternates.
   const [selectedView, setSelectedView] = useState<"model" | string>("model");
 
@@ -124,12 +124,14 @@ export default function StudioProductDetailClient({ product, prev, next }: Props
                       className="w-full h-full object-cover transition-opacity duration-300"
                     />
                   )}
-                  <span className="absolute bottom-3 left-3 bg-black/50 text-white/80 text-xs tracking-wide px-3 py-1 rounded-full pointer-events-none">
-                    {selectedView === "model" ? "Drag to rotate · Scroll to zoom" : "3D render — handcrafted to match"}
-                  </span>
+                  {selectedView === "model" && (
+                    <span className="absolute bottom-3 left-3 bg-black/50 text-white/80 text-xs tracking-wide px-3 py-1 rounded-full pointer-events-none">
+                      Drag to rotate · Scroll to zoom
+                    </span>
+                  )}
                 </div>
                 {/* Thumbnails — always shows the non-selected views (3D model + renders) */}
-                <div className="grid grid-cols-3 gap-3 mb-4">
+                <div className="grid grid-cols-2 gap-3 mb-4">
                   {selectedView !== "model" && (
                     <button
                       onClick={() => setSelectedView("model")}
@@ -141,7 +143,7 @@ export default function StudioProductDetailClient({ product, prev, next }: Props
                   )}
                   {productImages
                     .filter((img) => img !== selectedView)
-                    .slice(0, selectedView === "model" ? 3 : 2)
+                    .slice(0, 2)
                     .map((img, i) => (
                       <button
                         key={img}

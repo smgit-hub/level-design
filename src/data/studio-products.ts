@@ -55,10 +55,7 @@ export const studioProducts: Record<string, StudioProduct> = {
     },
     images: {
       main: "/images/studio/line/level-design-line-studio-dining-table-main.webp",
-      gallery: [
-        "/images/studio/line/level-design-line-studio-dining-table-image-1.webp",
-        "/images/studio/line/level-design-line-studio-dining-table-image-2.webp",
-      ],
+      gallery: ["/images/studio/line/level-design-line-studio-dining-table-lifestyle.webp"],
     },
     price: 249900,
     stripePriceId: "price_REPLACE_ME_line",
@@ -87,10 +84,7 @@ export const studioProducts: Record<string, StudioProduct> = {
     },
     images: {
       main: "/images/studio/curve/level-design-curve-studio-dining-table-main.webp",
-      gallery: [
-        "/images/studio/curve/level-design-curve-studio-dining-table-image-1.webp",
-        "/images/studio/curve/level-design-curve-studio-dining-table-image-2.webp",
-      ],
+      gallery: ["/images/studio/curve/level-design-curve-studio-dining-table-lifestyle.webp"],
     },
     price: 249900,
     stripePriceId: "price_REPLACE_ME_curve",
@@ -119,10 +113,7 @@ export const studioProducts: Record<string, StudioProduct> = {
     },
     images: {
       main: "/images/studio/pill/level-design-pill-studio-dining-table-main.webp",
-      gallery: [
-        "/images/studio/pill/level-design-pill-studio-dining-table-image-1.webp",
-        "/images/studio/pill/level-design-pill-studio-dining-table-image-2.webp",
-      ],
+      gallery: ["/images/studio/pill/level-design-pill-studio-dining-table-lifestyle.webp"],
     },
     price: 269900,
     stripePriceId: "price_REPLACE_ME_pill",
@@ -151,10 +142,7 @@ export const studioProducts: Record<string, StudioProduct> = {
     },
     images: {
       main: "/images/studio/round/level-design-round-studio-dining-table-main.webp",
-      gallery: [
-        "/images/studio/round/level-design-round-studio-dining-table-image-1.webp",
-        "/images/studio/round/level-design-round-studio-dining-table-image-2.webp",
-      ],
+      gallery: ["/images/studio/round/level-design-round-studio-dining-table-lifestyle.webp"],
     },
     price: 229900,
     stripePriceId: "price_REPLACE_ME_round",
