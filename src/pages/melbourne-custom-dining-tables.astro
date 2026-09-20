@@ -1,22 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
 import { products } from '../data/products';
 
 const faqs = [
   {
-    question: 'Do you make custom dining tables for Melbourne homes?',
-    answer:
-      'Yes. Level Design creates custom timber dining tables for Melbourne homes, apartments, renovations, and design-led residential projects, with dimensions and finishes tailored to the space.',
-  },
-  {
     question: 'Which Melbourne areas do you work with?',
     answer:
       'We work with clients across Melbourne and wider Victoria, including inner Melbourne, Bayside, the Mornington Peninsula, Geelong, and regional areas by enquiry.',
-  },
-  {
-    question: 'Can I start with an existing table design and customise it?',
-    answer:
-      'Yes. The Level Design collection is designed as a starting point. Each table can be adjusted for size, seating capacity, timber species, finish, and project requirements.',
   },
   {
     question: 'Do you work with interior designers and architects in Melbourne?',
@@ -188,14 +179,7 @@ const schema = [
       <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="reveal bg-white rounded-3xl p-8 md:p-10 shadow-sm">
           <h2 class="text-3xl md:text-4xl font-serif text-[#3d4f47] mb-8">Melbourne Custom Dining Table FAQs</h2>
-          <div class="space-y-6">
-            {faqs.map((item) => (
-              <div class="border-b border-[#d9cfbd] pb-6 last:border-b-0 last:pb-0">
-                <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{item.question}</h3>
-                <p class="text-[#5a6b64] leading-relaxed">{item.answer}</p>
-              </div>
-            ))}
-          </div>
+          <FaqAccordion items={faqs} />
         </div>
       </div>
     </section>

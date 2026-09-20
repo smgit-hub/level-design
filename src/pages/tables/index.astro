@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import FaqAccordion from '../../components/FaqAccordion.astro';
 import { allProducts } from '../../data/products';
 
 const faqs = [
@@ -69,13 +70,10 @@ const schema = {
     <section class="py-20 bg-[#f5f1e8]">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="reveal max-w-4xl mb-12">
-          <p class="text-[#5a6b64] text-lg leading-relaxed mb-5">
-            This collection represents the design directions we work from at Level Design. Each piece has been resolved in proportion, material, and construction — and each one is available as a custom commission, sized and finished to suit your specific room and brief.
-          </p>
           <p class="text-[#5a6b64] text-lg leading-relaxed">
-            Whether you're drawn to a sculptural pedestal table for a formal dining space, a long rectangular design for open-plan entertaining, or a round table that encourages conversation in a more intimate setting — the collection is a starting point, not a catalogue. Every design can be discussed, adapted, and made to feel like it belongs in your home.
+            Each piece here is a starting point, not a catalogue — every design can be discussed in custom dimensions, timbers, and finishes to suit your room and brief.
           </p>
-          <a href="/melbourne-custom-dining-tables/" class="inline-flex mt-6 text-[#c8956a] font-medium hover:underline">
+          <a href="/melbourne-custom-dining-tables/" class="inline-flex mt-4 text-[#c8956a] font-medium hover:underline">
             See our Melbourne custom dining table service →
           </a>
         </div>
@@ -154,14 +152,7 @@ const schema = {
 
         <div class="reveal bg-[#f5f1e8] rounded-3xl p-8 md:p-10">
           <h2 class="text-3xl font-serif text-[#3d4f47] mb-8">Bespoke Dining Table FAQs</h2>
-          <div class="space-y-6">
-            {faqs.map((item) => (
-              <div class="border-b border-[#d9cfbd] pb-6 last:border-b-0 last:pb-0">
-                <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{item.question}</h3>
-                <p class="text-[#5a6b64] leading-relaxed">{item.answer}</p>
-              </div>
-            ))}
-          </div>
+          <FaqAccordion items={faqs} />
         </div>
       </div>
     </section>

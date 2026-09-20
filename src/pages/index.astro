@@ -8,24 +8,6 @@ import review1 from '../assets/images/home/level-design-customer-review-1.webp';
 import review2 from '../assets/images/home/level-design-customer-review-2.webp';
 import review3 from '../assets/images/home/level-design-customer-review-3.webp';
 
-const faqs = [
-  {
-    question: 'Do you make custom timber dining tables in Melbourne?',
-    answer:
-      'Yes. Level Design creates custom timber dining tables in Melbourne, with guidance on dimensions, seating, timber selection, and finish so the final piece suits your space and daily use.',
-  },
-  {
-    question: 'Can any Level Design table be customised?',
-    answer:
-      'Yes. The collection is designed as a starting point, and each table can be discussed in custom sizes, finishes, and material options to better suit your project.',
-  },
-  {
-    question: 'Do you work with homeowners, designers, and architects?',
-    answer:
-      'Yes. Level Design works directly with homeowners as well as interior designers and architects who need well-resolved timber dining tables for residential projects.',
-  },
-];
-
 const whyChooseItems = [
   {
     title: 'Design-led from the first conversation',
@@ -43,34 +25,12 @@ const whyChooseItems = [
     svg: `<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>`,
   },
 ];
-
-const processSteps = [
-  { number: '01', title: 'Consultation', desc: 'We begin by understanding your space, the way you live, how you entertain, and what the table needs to do.', svg: '<path d="M3 12h18"/><path d="M12 3v18"/>' },
-  { number: '02', title: 'Design Development', desc: 'We work through proportions, silhouette, and design direction — refining until the table feels right for your room.', svg: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>' },
-  { number: '03', title: 'Material Selection', desc: 'Timber species, finish, and edge profile are chosen together, guided by your interior and how the table will be used day-to-day.', svg: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>' },
-  { number: '04', title: 'Production', desc: 'Your table is made by hand using traditional joinery techniques and premium sustainable timber.', svg: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>' },
-  { number: '05', title: 'Delivery', desc: 'We coordinate delivery and provide care guidance so your table continues to look its best for generations.', svg: '<path d="M3 7h11"/><path d="M3 12h18"/><path d="M3 17h11"/>' },
-];
-
-const schema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: faqs.map((item) => ({
-    '@type': 'Question',
-    name: item.question,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: item.answer,
-    },
-  })),
-};
 ---
 
 <Layout
   title="Level Design | Bespoke Dining Table Design Studio Melbourne"
   description="Level Design is a dining table design studio in Melbourne. We create bespoke custom dining tables designed around your space, lifestyle and entertaining needs. Heirloom-quality pieces made to order."
   preloadImage="/images/home/level-design-handcrafted-furniture-hero.webp"
-  schema={schema}
 >
   <div>
 
@@ -133,37 +93,6 @@ const schema = {
               <div class="text-sm text-[#5a6b64]">{stat.desc}</div>
             </div>
           ))}
-        </div>
-      </div>
-    </section>
-
-    <section class="py-20 bg-white">
-      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeader
-          eyebrow="Custom Dining Table Design — Melbourne"
-          title="Bespoke Dining Tables Designed Around Your Space"
-          description="Level Design is a dining table design studio based in Melbourne. We design and create bespoke dining tables shaped around each client's space, lifestyle, and entertaining needs — not off-the-shelf sizing."
-          wrapperClass="text-center mb-14"
-          descriptionClass="text-xl text-[#5a6b64] max-w-3xl mx-auto"
-        >
-          <a href="/melbourne-custom-dining-tables/" class="inline-flex mt-6 text-[#c8956a] font-medium hover:underline">
-            Explore custom dining tables for Melbourne homes →
-          </a>
-        </SectionHeader>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div class="reveal rounded-2xl bg-[#f5f1e8] p-8">
-            <h3 class="text-2xl font-semibold text-[#3d4f47] mb-4">Designed around your room and the way you live</h3>
-            <p class="text-[#5a6b64] leading-relaxed">
-              Every table begins with a conversation about your space — how it's proportioned, how many people you seat, how you entertain, and what materials will look and live best in your home. The result is a table that feels like it was always meant to be there.
-            </p>
-          </div>
-          <div class="reveal rounded-2xl bg-[#f5f1e8] p-8" style="--delay: 0.1s">
-            <h3 class="text-2xl font-semibold text-[#3d4f47] mb-4">Heirloom-quality pieces built to last generations</h3>
-            <p class="text-[#5a6b64] leading-relaxed">
-              We work with sustainably sourced American and Australian hardwoods and traditional joinery techniques to create dining tables that age beautifully. These are pieces designed to become part of a home's story — passed down, not replaced.
-            </p>
-          </div>
         </div>
       </div>
     </section>
@@ -238,26 +167,6 @@ const schema = {
       </div>
     </section>
 
-    <!-- Process -->
-    <section class="py-24 bg-white">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeader
-          eyebrow="The Design Process"
-          title="Every Table Begins with Understanding Your Space"
-          description="Our process is built around collaboration. We work with you from the first conversation through to delivery — with design and material selection at the centre of every decision."
-        />
-        <IconFeatureGrid
-          items={processSteps}
-          gridClass="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8"
-          cardClass="p-0 bg-transparent"
-          iconWrapClass="hidden"
-          titleClass="text-xl font-semibold text-[#3d4f47] mb-3"
-          descClass="text-[#5a6b64] text-sm leading-relaxed"
-          numberClass="text-6xl font-serif text-[#e8dcc8] mb-4"
-        />
-      </div>
-    </section>
-
     <!-- Featured Projects -->
     <section class="py-24 bg-[#f5f1e8]">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -275,7 +184,6 @@ const schema = {
               name: "Sarah Mitchell",
               role: "Interior Designer, South Yarra",
               content: "The craftsmanship is exceptional. Our Pillar Table has become the centrepiece of our dining room.",
-              summary: "A large-format Pillar Table in American Oak, designed to anchor an open-plan dining and living space and seat ten for regular entertaining.",
               tableLabel: "Pillar Table — American Oak",
               projectId: "pillar",
               img: review1,
@@ -285,7 +193,6 @@ const schema = {
               name: "Emma Thompson",
               role: "Architect, Fitzroy",
               content: "I recommend Level Design to all my clients. Their attention to detail and quality is unmatched.",
-              summary: "A sculptural Venn Table with an organic top form, selected for a design-led renovation where the dining table needed to be both functional and considered as an object.",
               tableLabel: "Venn Table — American Oak",
               projectId: "venn",
               img: review3,
@@ -295,7 +202,6 @@ const schema = {
               name: "James Chen",
               role: "Homeowner, Brighton",
               content: "Working with Level Design was a dream. They understood our vision and delivered beyond expectations.",
-              summary: "A round Luna Table sized for a compact dining room that needed to seat six without overwhelming the space — chosen for its proportion and its ability to encourage conversation.",
               tableLabel: "Luna Table — Tasmanian Oak",
               projectId: "luna",
               img: review2,
@@ -308,7 +214,7 @@ const schema = {
               </div>
               <div class="p-8 relative">
                 <p class="text-xs font-semibold tracking-widest uppercase text-[#c8956a] mb-3">{t.tableLabel}</p>
-                <p class="text-[#3d4f47] text-base leading-relaxed mb-4">{t.summary}</p>
+                <p class="text-[#3d4f47] text-lg font-serif italic leading-relaxed mb-4">"{t.content}"</p>
                 <div class="border-t border-[#e8dcc8] pt-4 flex items-center justify-between">
                   <div>
                     <div class="font-semibold text-[#3d4f47] text-sm">{t.name}</div>
@@ -346,22 +252,6 @@ const schema = {
             <a href="/tables/" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-transparent border-2 border-white text-white rounded-full hover:bg-white hover:text-[#3d4f47] transition-all duration-300">
               Explore the Collection
             </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="py-24 bg-white">
-      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="reveal bg-[#f5f1e8] rounded-3xl p-8 md:p-10">
-          <h2 class="text-3xl md:text-4xl font-serif text-[#3d4f47] mb-8">Timber Dining Table FAQs</h2>
-          <div class="space-y-6">
-            {faqs.map((item) => (
-              <div class="border-b border-[#d9cfbd] pb-6 last:border-b-0 last:pb-0">
-                <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{item.question}</h3>
-                <p class="text-[#5a6b64] leading-relaxed">{item.answer}</p>
-              </div>
-            ))}
           </div>
         </div>
       </div>
