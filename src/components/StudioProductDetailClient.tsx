@@ -106,7 +106,15 @@ export default function StudioProductDetailClient({ product, prev, next }: Props
               <div className="mb-6">
                 <h1 className="text-4xl md:text-5xl font-serif text-[#c8956a] mb-4">{product.name}</h1>
                 <p className="text-xl text-[#5a6b64] mb-4">{product.tagline}</p>
-                <p className="text-3xl font-semibold text-[#3d4f47] mb-6">{formatPrice(product.price)}</p>
+                <div className="flex items-center gap-3 mb-6">
+                  {product.compareAtPrice && product.compareAtPrice > product.price && (
+                    <span className="text-xl text-[#8a9b94] line-through">{formatPrice(product.compareAtPrice)}</span>
+                  )}
+                  <p className="text-3xl font-semibold text-[#3d4f47]">{formatPrice(product.price)}</p>
+                  {product.compareAtPrice && product.compareAtPrice > product.price && (
+                    <span className="text-xs font-semibold uppercase tracking-wide text-white bg-[#c8956a] px-2 py-1 rounded-full">Sale</span>
+                  )}
+                </div>
 
                 <p className="text-[#3d4f47] leading-relaxed mb-8">{product.description}</p>
 
@@ -127,7 +135,7 @@ export default function StudioProductDetailClient({ product, prev, next }: Props
                 <div className="grid grid-cols-3 gap-4 mb-8">
                   {[
                     { icon: Ruler, label: "Fixed Dimensions" },
-                    { icon: Truck, label: "Ready to Ship" },
+                    { icon: Truck, label: "Shorter Lead Time" },
                     { icon: ShieldCheck, label: "Secure Checkout" },
                   ].map(({ icon: Icon, label }) => (
                     <div key={label} className="text-center p-4 bg-white rounded-xl">

@@ -11,8 +11,17 @@ export type StudioProduct = {
     main: string;
     gallery: string[];
   };
-  /** AUD, in cents — required so a table can never ship without a price. */
+  /** AUD, in cents — required so a table can never ship without a price. This is always the current charged amount and must match the live Stripe Price. */
   price: number;
+  /**
+   * AUD, in cents — optional "was" price shown struck through next to `price` to run a
+   * sale (e.g. Black Friday, EOFY, Christmas). Leave unset outside of a sale window.
+   * To run a sale: set this to the current regular price, drop `price` to the sale
+   * amount, and point `stripePriceId` at a Stripe Price object for that sale amount
+   * (Stripe Prices are immutable, so the sale needs its own Price object). Revert both
+   * — and switch `stripePriceId` back — once the sale ends.
+   */
+  compareAtPrice?: number;
   /** Stripe Price ID for this table, managed in the Stripe dashboard. */
   stripePriceId: string;
   /** Path to the .glb model used by the rotate-viewer. */
@@ -28,14 +37,14 @@ export const studioProducts: Record<string, StudioProduct> = {
     name: "Line Table",
     tagline: "Crisp, straight-edged proportions for everyday dining",
     description:
-      "The Line Table pairs a sharp-cornered rectangular top with clean, engineered construction — a straightforward, fixed-price design for everyday dining spaces.",
+      "The Line Table pairs a sharp-cornered rectangular top with clean, engineered construction — a straightforward, made-to-order design for everyday dining spaces.",
     category: "Studio",
     size: "Medium",
     features: [
       "Rectangular top with a small corner radius",
       "Engineered oak veneer top over a stable substrate",
       "Solid timber legs for load-bearing strength",
-      "Fixed dimensions, ready to order",
+      "Fixed dimensions, no design consultation required",
       "Seats 6–8 people comfortably",
     ],
     specifications: {
@@ -51,7 +60,7 @@ export const studioProducts: Record<string, StudioProduct> = {
         "/images/studio/line/level-design-line-studio-dining-table-image-2.webp",
       ],
     },
-    price: 129900,
+    price: 249900,
     stripePriceId: "price_REPLACE_ME_line",
     model: "/models/studio/line.glb",
   },
@@ -67,7 +76,7 @@ export const studioProducts: Record<string, StudioProduct> = {
       "Rectangular top with a large corner radius",
       "Engineered oak veneer top over a stable substrate",
       "Solid timber legs for load-bearing strength",
-      "Fixed dimensions, ready to order",
+      "Fixed dimensions, no design consultation required",
       "Seats 6–8 people comfortably",
     ],
     specifications: {
@@ -83,7 +92,7 @@ export const studioProducts: Record<string, StudioProduct> = {
         "/images/studio/curve/level-design-curve-studio-dining-table-image-2.webp",
       ],
     },
-    price: 129900,
+    price: 249900,
     stripePriceId: "price_REPLACE_ME_curve",
     model: "/models/studio/curve.glb",
   },
@@ -99,7 +108,7 @@ export const studioProducts: Record<string, StudioProduct> = {
       "Pill-shaped top with fully rounded ends",
       "Engineered oak veneer top over a stable substrate",
       "Solid timber legs for load-bearing strength",
-      "Fixed dimensions, ready to order",
+      "Fixed dimensions, no design consultation required",
       "Seats 6–8 people comfortably",
     ],
     specifications: {
@@ -115,7 +124,7 @@ export const studioProducts: Record<string, StudioProduct> = {
         "/images/studio/pill/level-design-pill-studio-dining-table-image-2.webp",
       ],
     },
-    price: 139900,
+    price: 269900,
     stripePriceId: "price_REPLACE_ME_pill",
     model: "/models/studio/pill.glb",
   },
@@ -131,7 +140,7 @@ export const studioProducts: Record<string, StudioProduct> = {
       "Round top, no head of table",
       "Engineered oak veneer top over a stable substrate",
       "Solid timber central pedestal base",
-      "Fixed dimensions, ready to order",
+      "Fixed dimensions, no design consultation required",
       "Seats 4–6 people comfortably",
     ],
     specifications: {
@@ -147,7 +156,7 @@ export const studioProducts: Record<string, StudioProduct> = {
         "/images/studio/round/level-design-round-studio-dining-table-image-2.webp",
       ],
     },
-    price: 109900,
+    price: 229900,
     stripePriceId: "price_REPLACE_ME_round",
     model: "/models/studio/round.glb",
   },

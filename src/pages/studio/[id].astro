@@ -16,7 +16,7 @@ const index = allStudioProducts.findIndex((p) => p.id === product.id);
 const prev = allStudioProducts[(index - 1 + allStudioProducts.length) % allStudioProducts.length];
 const next = allStudioProducts[(index + 1) % allStudioProducts.length];
 const productUrl = `/studio/${product.id}/`;
-const pageDescription = `${product.name} — ${product.tagline}. Fixed-price dining table in engineered oak veneer with solid timber legs, ready to order online from Level Design.`;
+const pageDescription = `${product.name} — ${product.tagline}. Same design standard as our Signature Collection, at a more accessible price — engineered oak veneer with solid timber legs.`;
 const productFaqs = [
   {
     question: `What is ${product.name} made from?`,
@@ -24,7 +24,7 @@ const productFaqs = [
   },
   {
     question: `Can ${product.name} be made in a different size or finish?`,
-    answer: `${product.name} is sold as-shown at a fixed price. For a different size, timber, or finish, the Signature Collection or a custom commission would be a better fit.`,
+    answer: `${product.name} is sold as-shown to keep it accessible. For a different size, timber, or finish, the Signature Collection or a custom commission would be a better fit.`,
   },
   {
     question: `How is ${product.name} delivered?`,
@@ -102,7 +102,7 @@ const schema = [
 ---
 
 <Layout
-  title={`${product.name} | Fixed-Price Dining Table Melbourne | Level Design`}
+  title={`${product.name} | Studio Collection Dining Table Melbourne | Level Design`}
   description={pageDescription}
   ogImage={product.images.main}
   ogType="product"

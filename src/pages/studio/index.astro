@@ -5,16 +5,23 @@ import { allStudioProducts } from '../../data/studio-products';
 const formatPrice = (cents: number) =>
   new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 }).format(cents / 100);
 
+const startingPrice = Math.min(...allStudioProducts.map((p) => p.price));
+
 const faqs = [
   {
     question: 'How is the Studio Collection different from the Signature Collection?',
     answer:
-      'Studio tables are engineered veneer construction (with solid timber legs and load points), sold at a fixed price and ready to order — no design consultation required. Signature tables are solid-timber-led and made to order as a bespoke commission.',
+      'Both are the same standard of craft. Studio tables are engineered veneer construction (with solid timber legs and load points), sold as-shown at a more accessible price with no design consultation. Signature tables are solid-timber-led and made to order as a bespoke commission.',
   },
   {
     question: 'Can I customise a Studio table’s size or finish?',
     answer:
-      'Studio tables are sold as-shown at a fixed price to keep them accessible. If you’d like a different size, timber, or finish, the Signature Collection or a custom commission is the better fit.',
+      'Studio tables are sold as-shown to keep them accessible. If you’d like a different size, timber, or finish, the Signature Collection or a custom commission is the better fit.',
+  },
+  {
+    question: 'How long does delivery take?',
+    answer:
+      'Studio tables are still made to order, so please allow a lead time for production — it\'s shorter and more predictable than a bespoke commission since there\'s no design consultation phase. We\'ll be in touch after checkout to confirm the timeline.',
   },
   {
     question: 'How does checkout work?',
@@ -38,8 +45,8 @@ const schema = {
 ---
 
 <Layout
-  title="Studio Collection | Fixed-Price Dining Tables Melbourne | Level Design"
-  description="The Studio Collection: fixed-price, ready-to-order dining tables in engineered oak veneer with solid timber legs. Buy online, no design consultation required."
+  title="Studio Collection | Same Craft, More Accessible | Level Design"
+  description="The Studio Collection: the same design standard as our Signature Collection, at a more accessible price. Engineered oak veneer dining tables with solid timber legs, made to order online."
   schema={schema}
 >
   <div>
@@ -52,12 +59,12 @@ const schema = {
       <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl">
           <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">The Studio Collection</p>
-          <h1 class="hero-in text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Fixed-Price Dining Tables, Ready to Order</h1>
+          <h1 class="hero-in text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Same Craft, More Accessible</h1>
           <p class="hero-in text-xl text-[#e8dcc8] mb-8" style="--delay: 0.6s">
-            Engineered oak veneer construction with solid timber legs — a straightforward, fixed-price alternative to a bespoke commission.
+            Engineered oak veneer construction with solid timber legs — the same design standard as our Signature Collection, at a more accessible price.
           </p>
           <div class="hero-in flex flex-wrap gap-4" style="--delay: 0.8s">
-            {["4 designs", "Fixed pricing, buy online", "Engineered veneer construction"].map((item) => (
+            {["4 designs", `From ${formatPrice(startingPrice)}`, "Shorter lead time"].map((item) => (
               <div class="px-4 py-2 bg-[#2d3f37] rounded-full text-sm flex items-center gap-2">
                 <svg class="w-4 h-4 text-[#c8956a]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 {item}
@@ -73,7 +80,7 @@ const schema = {
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="reveal max-w-4xl mb-12">
           <p class="text-[#5a6b64] text-lg leading-relaxed mb-5">
-            The Studio Collection is built around engineered oak veneer — a stable, consistent-grain top over a substrate designed not to move, paired with solid timber legs where the table takes its load. Each design is sold at a fixed price and ready to order, without a design consultation.
+            The Studio Collection is built around engineered oak veneer — a stable, consistent-grain top over a substrate designed not to move, paired with solid timber legs where the table takes its load. It's the same design standard as our Signature Collection, at a more accessible price.
           </p>
           <p class="text-[#5a6b64] text-lg leading-relaxed">
             Looking for a bespoke, solid-timber-led commission instead? Explore the <a href="/signature/" class="text-[#c8956a] font-medium hover:underline">Signature Collection</a>, or start a <a href="/custom/" class="text-[#c8956a] font-medium hover:underline">custom design consultation</a>.
@@ -99,7 +106,12 @@ const schema = {
               <div class="p-6">
                 <h3 class="text-xl font-semibold text-[#3d4f47] mb-1 group-hover:text-[#c8956a] transition-colors">{table.name}</h3>
                 <p class="text-[#5a6b64] text-sm mb-3">{table.tagline}</p>
-                <p class="text-[#c8956a] font-semibold">{formatPrice(table.price)}</p>
+                <p class="font-semibold">
+                  {table.compareAtPrice && table.compareAtPrice > table.price && (
+                    <span class="text-[#8a9b94] line-through mr-2">{formatPrice(table.compareAtPrice)}</span>
+                  )}
+                  <span class="text-[#c8956a]">{formatPrice(table.price)}</span>
+                </p>
               </div>
             </a>
           ))}

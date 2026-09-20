@@ -20,6 +20,9 @@ export default function Navigation({ currentPath }: Props) {
   const [isScrolled, setIsScrolled] = useState(!isHomepage);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activePath, setActivePath] = useState(currentPath);
+  const isStudioFocused = activePath === "/" || activePath.startsWith("/studio/");
+  const ctaLabel = isStudioFocused ? "Shop Now" : "Start a Project";
+  const ctaHref = isStudioFocused ? "/studio/" : "/contact/";
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.location.pathname !== "/" || window.scrollY > 20);
@@ -79,11 +82,11 @@ export default function Navigation({ currentPath }: Props) {
 
           {/* CTA */}
           <motion.a
-            href="/contact/"
+            href={ctaHref}
             onClick={() =>
               trackEvent("select_content", {
                 content_type: "cta",
-                item_id: "start_project_nav_desktop",
+                item_id: isStudioFocused ? "shop_now_nav_desktop" : "start_project_nav_desktop",
                 page_path: window.location.pathname,
               })
             }
@@ -91,7 +94,7 @@ export default function Navigation({ currentPath }: Props) {
             whileTap={{ scale: 0.95 }}
             className="hidden md:flex items-center gap-2 px-5 py-2 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 text-sm font-medium shadow-sm justify-self-end"
           >
-            Start a Project
+            {ctaLabel}
           </motion.a>
 
           {/* Mobile toggle */}
@@ -129,17 +132,17 @@ export default function Navigation({ currentPath }: Props) {
                 </a>
               ))}
               <a
-                href="/contact/"
+                href={ctaHref}
                 onClick={() =>
                   trackEvent("select_content", {
                     content_type: "cta",
-                    item_id: "start_project_nav_mobile",
+                    item_id: isStudioFocused ? "shop_now_nav_mobile" : "start_project_nav_mobile",
                     page_path: window.location.pathname,
                   })
                 }
                 className="block px-4 py-2 text-center bg-[#e8dcc8] text-[#3d4f47] rounded-lg hover:bg-[#c8956a] hover:text-white transition-colors"
               >
-                Start a Project
+                {ctaLabel}
               </a>
             </div>
           </motion.div>
