@@ -28,8 +28,9 @@ import Layout from '../layouts/Layout.astro';
           <h2 class="text-2xl font-serif text-[#3d4f47] mb-6">Summary</h2>
           <div class="grid md:grid-cols-2 gap-6">
             {[
-              "We only collect information needed to respond to enquiries.",
+              "We only collect information needed to respond to enquiries or fulfil orders.",
               "We do not sell your personal information.",
+              "Card payments are handled directly by Stripe — we never see your full card details.",
               "We use reasonable steps to protect submitted data.",
               "You can contact us to request updates or deletion.",
             ].map((item) => (
@@ -60,6 +61,7 @@ import Layout from '../layouts/Layout.astro';
               {[
                 "Your name, email address, phone number, and any details you include in an enquiry.",
                 "Optional information such as table preferences, dimensions, timing, or design notes.",
+                "If you purchase a Studio Collection table, your order details, delivery address, and transaction amount. Your payment card details are collected and processed directly by our payment provider, Stripe — we do not receive or store your full card details.",
                 "Basic website usage information that may be collected by analytics, hosting, or security tools.",
               ].map((item) => (
                 <li class="flex gap-3">
@@ -77,6 +79,7 @@ import Layout from '../layouts/Layout.astro';
               {[
                 "Respond to enquiries and provide quotes or project information.",
                 "Communicate with you about your table, custom project, or related request.",
+                "Process and fulfil orders placed through the Studio Collection, including arranging delivery.",
                 "Improve website performance, usability, and security.",
                 "Maintain internal business records and customer service history.",
               ].map((item) => (
@@ -90,7 +93,12 @@ import Layout from '../layouts/Layout.astro';
 
           <div>
             <h2 class="text-3xl font-serif text-[#3d4f47] mb-4">When information may be shared</h2>
-            <p class="text-[#5a6b64] text-lg">We do not sell personal information. We may share limited information with trusted service providers where reasonably necessary to operate the website, respond to enquiries, manage projects, or meet legal obligations.</p>
+            <p class="text-[#5a6b64] text-lg">We do not sell personal information. We may share limited information with trusted service providers where reasonably necessary to operate the website, respond to enquiries, manage projects, process payments, or meet legal obligations.</p>
+          </div>
+
+          <div>
+            <h2 class="text-3xl font-serif text-[#3d4f47] mb-4">Payments</h2>
+            <p class="text-[#5a6b64] text-lg">When you purchase a table through the Studio Collection, payment is processed by Stripe, a third-party payment processor. Stripe collects and handles your payment card details directly — we do not receive or store your full card number, expiry, or security code. Stripe may process this information in accordance with its own privacy policy, available at <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer" class="text-[#c8956a] hover:underline">stripe.com/privacy</a>.</p>
           </div>
 
           <div>
