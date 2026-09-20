@@ -1,8 +1,26 @@
 import { motion } from "motion/react";
-import { useState } from "react";
-import { ArrowLeft, ArrowRight, CheckCircle, Ruler, Truck, ShieldCheck } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ArrowLeft, ArrowRight, CheckCircle, Ruler, Truck, ShieldCheck, Rotate3d } from "lucide-react";
 import type { StudioProduct } from "../data/studio-products";
 import { trackEvent } from "../lib/analytics";
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      "model-viewer": React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+        src?: string;
+        "auto-rotate"?: string;
+        "auto-rotate-delay"?: string;
+        "rotation-per-second"?: string;
+        "camera-controls"?: string;
+        "shadow-intensity"?: string;
+        "shadow-softness"?: string;
+        exposure?: string;
+        loading?: string;
+      };
+    }
+  }
+}
 
 interface Props {
   product: StudioProduct;
@@ -13,11 +31,23 @@ interface Props {
 const formatPrice = (cents: number) =>
   new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 }).format(cents / 100);
 
+const MODEL_VIEWER_SCRIPT_ID = "model-viewer-script";
+
 export default function StudioProductDetailClient({ product, prev, next }: Props) {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkoutError, setCheckoutError] = useState(false);
   const productImages = [product.images.main, ...product.images.gallery];
-  const [selectedImage, setSelectedImage] = useState<string>(product.images.main);
+  // The 3D model is the lead visual — it's the default view, with renders as alternates.
+  const [selectedView, setSelectedView] = useState<"model" | string>("model");
+
+  useEffect(() => {
+    if (document.getElementById(MODEL_VIEWER_SCRIPT_ID)) return;
+    const script = document.createElement("script");
+    script.id = MODEL_VIEWER_SCRIPT_ID;
+    script.type = "module";
+    script.src = "https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js";
+    document.head.appendChild(script);
+  }, []);
 
   const handleBuyNow = async () => {
     setCheckoutError(false);
@@ -69,25 +99,53 @@ export default function StudioProductDetailClient({ product, prev, next }: Props
               transition={{ duration: 0.6 }}
             >
               <div className="sticky top-24">
-                <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-3 relative">
-                  <img
-                    src={selectedImage}
-                    alt={product.name}
-                    className="w-full h-full object-cover transition-opacity duration-300"
-                  />
-                  <span className="absolute bottom-3 left-3 bg-black/50 text-white/80 text-xs tracking-wide px-3 py-1 rounded-full">
-                    3D render — handcrafted to match
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-3 relative bg-[#3d4f47]">
+                  {selectedView === "model" ? (
+                    <model-viewer
+                      src={product.model}
+                      auto-rotate=""
+                      auto-rotate-delay="0"
+                      rotation-per-second="20deg"
+                      camera-controls=""
+                      shadow-intensity="1.2"
+                      shadow-softness="0.8"
+                      exposure="1.1"
+                      loading="eager"
+                      style={{ width: "100%", height: "100%", background: "transparent" }}
+                    >
+                      <div slot="poster" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%", background: "#3d4f47" }}>
+                        <span style={{ color: "#e8dcc8", fontSize: 13, letterSpacing: "0.1em", opacity: 0.7 }}>Loading 3D model…</span>
+                      </div>
+                    </model-viewer>
+                  ) : (
+                    <img
+                      src={selectedView}
+                      alt={product.name}
+                      className="w-full h-full object-cover transition-opacity duration-300"
+                    />
+                  )}
+                  <span className="absolute bottom-3 left-3 bg-black/50 text-white/80 text-xs tracking-wide px-3 py-1 rounded-full pointer-events-none">
+                    {selectedView === "model" ? "Drag to rotate · Scroll to zoom" : "3D render — handcrafted to match"}
                   </span>
                 </div>
-                {/* Thumbnails — always shows the non-selected images */}
+                {/* Thumbnails — always shows the non-selected views (3D model + renders) */}
                 <div className="grid grid-cols-3 gap-3 mb-4">
+                  {selectedView !== "model" && (
+                    <button
+                      onClick={() => setSelectedView("model")}
+                      className="aspect-[4/3] rounded-xl overflow-hidden border-2 border-transparent hover:border-[#c8956a] transition-all duration-200 bg-[#3d4f47] flex flex-col items-center justify-center gap-1 text-[#e8dcc8]"
+                    >
+                      <Rotate3d size={22} />
+                      <span className="text-xs">3D View</span>
+                    </button>
+                  )}
                   {productImages
-                    .filter((img) => img !== selectedImage)
-                    .slice(0, 3)
+                    .filter((img) => img !== selectedView)
+                    .slice(0, selectedView === "model" ? 3 : 2)
                     .map((img, i) => (
                       <button
                         key={img}
-                        onClick={() => setSelectedImage(img)}
+                        onClick={() => setSelectedView(img)}
                         className="aspect-[4/3] rounded-xl overflow-hidden border-2 border-transparent hover:border-[#c8956a] transition-all duration-200"
                       >
                         <img src={img} alt={`${product.name} view ${i + 1}`} loading="lazy" className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
