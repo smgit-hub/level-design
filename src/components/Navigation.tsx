@@ -8,7 +8,8 @@ interface Props {
 }
 
 const navLinks = [
-  { path: "/tables/", label: "Collection" },
+  { path: "/signature/", label: "Signature Collection" },
+  { path: "/studio/", label: "Studio Collection" },
   { path: "/projects/", label: "Projects" },
   { path: "/custom/", label: "Custom Design" },
   { path: "/about/", label: "About" },

@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import ProductDetailClient from '../../components/ProductDetailClient';
-import { allProducts } from '../../data/products';
+import { allProducts } from '../../data/signature-products';
 
 export function getStaticPaths() {
   return allProducts.map((p) => ({
@@ -14,7 +14,7 @@ const { product } = Astro.props;
 const index = allProducts.findIndex((p) => p.id === product.id);
 const prev = allProducts[(index - 1 + allProducts.length) % allProducts.length];
 const next = allProducts[(index + 1) % allProducts.length];
-const productUrl = `/tables/${product.id}/`;
+const productUrl = `/signature/${product.id}/`;
 const pageDescription = `${product.name} — ${product.tagline}. Handcrafted timber dining table designed and made in Melbourne, Australia. Custom sizing available.`;
 const productFaqs = [
   {
@@ -67,8 +67,8 @@ const schema = [
       {
         '@type': 'ListItem',
         position: 2,
-        name: 'Tables',
-        item: new URL('/tables/', Astro.site ?? Astro.url.origin).toString(),
+        name: 'Signature',
+        item: new URL('/signature/', Astro.site ?? Astro.url.origin).toString(),
       },
       {
         '@type': 'ListItem',
@@ -167,7 +167,7 @@ const schema = [
       </div>
 
       <div class="reveal mt-12 text-center" style="--delay: 0.15s">
-        <p class="text-[#5a6b64] text-lg mb-6">Still comparing options? Explore the full <a href="/tables/" class="text-[#c8956a] hover:underline">timber dining table collection</a> or <a href="/contact/" class="text-[#c8956a] hover:underline">request guidance</a> on the right size and finish for your space.</p>
+        <p class="text-[#5a6b64] text-lg mb-6">Still comparing options? Explore the full <a href="/signature/" class="text-[#c8956a] hover:underline">timber dining table collection</a> or <a href="/contact/" class="text-[#c8956a] hover:underline">request guidance</a> on the right size and finish for your space.</p>
       </div>
     </div>
   </section>

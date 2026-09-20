@@ -1,0 +1,32 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const table = Astro.url.searchParams.get('table');
+---
+
+<Layout
+  title="Order Confirmed | Studio Collection | Level Design"
+  description="Thank you for your Studio Collection order from Level Design."
+>
+  <section class="pt-40 pb-24 bg-[#faf8f5] min-h-[60vh] flex items-center">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="w-20 h-20 rounded-full bg-[#c8956a] flex items-center justify-center mx-auto mb-6">
+        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <h1 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-4">Thank You{table ? ` — ${table} is on its way` : ''}!</h1>
+      <p class="text-xl text-[#5a6b64] mb-8">
+        Your order is confirmed and a receipt has been sent to your email. We'll be in touch shortly to arrange delivery.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/studio/" class="px-8 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl font-medium">
+          Back to Studio Collection
+        </a>
+        <a href="/contact/" class="px-8 py-4 bg-transparent border-2 border-[#3d4f47] text-[#3d4f47] rounded-full hover:bg-[#3d4f47] hover:text-white transition-all duration-300 font-medium">
+          Contact Us
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

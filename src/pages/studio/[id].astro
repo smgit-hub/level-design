@@ -1,0 +1,144 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import StudioProductDetailClient from '../../components/StudioProductDetailClient';
+import ModelViewer from '../../components/ModelViewer.astro';
+import { allStudioProducts } from '../../data/studio-products';
+
+export function getStaticPaths() {
+  return allStudioProducts.map((p) => ({
+    params: { id: p.id },
+    props: { product: p },
+  }));
+}
+
+const { product } = Astro.props;
+const index = allStudioProducts.findIndex((p) => p.id === product.id);
+const prev = allStudioProducts[(index - 1 + allStudioProducts.length) % allStudioProducts.length];
+const next = allStudioProducts[(index + 1) % allStudioProducts.length];
+const productUrl = `/studio/${product.id}/`;
+const pageDescription = `${product.name} — ${product.tagline}. Fixed-price dining table in engineered oak veneer with solid timber legs, ready to order online from Level Design.`;
+const productFaqs = [
+  {
+    question: `What is ${product.name} made from?`,
+    answer: `${product.name} pairs an engineered oak veneer top with solid timber legs — a stable, consistent-grain construction built for everyday use.`,
+  },
+  {
+    question: `Can ${product.name} be made in a different size or finish?`,
+    answer: `${product.name} is sold as-shown at a fixed price. For a different size, timber, or finish, the Signature Collection or a custom commission would be a better fit.`,
+  },
+  {
+    question: `How is ${product.name} delivered?`,
+    answer: `Once your order is placed through our secure Stripe checkout, we'll be in touch to arrange delivery.`,
+  },
+];
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description: pageDescription,
+    image: [product.images.main, ...product.images.gallery].map((image: string) => new URL(image, Astro.site ?? Astro.url.origin).toString()),
+    category: 'Timber dining table',
+    brand: {
+      '@type': 'Brand',
+      name: 'Level Design',
+    },
+    manufacturer: {
+      '@type': 'Organization',
+      name: 'Level Design',
+    },
+    url: new URL(productUrl, Astro.site ?? Astro.url.origin).toString(),
+    material: product.specifications['Construction'],
+    offers: {
+      '@type': 'Offer',
+      price: (product.price / 100).toFixed(2),
+      priceCurrency: 'AUD',
+      availability: 'https://schema.org/InStock',
+      url: new URL(productUrl, Astro.site ?? Astro.url.origin).toString(),
+    },
+    additionalProperty: Object.entries(product.specifications).map(([name, value]) => ({
+      '@type': 'PropertyValue',
+      name,
+      value,
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: new URL('/', Astro.site ?? Astro.url.origin).toString(),
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Studio',
+        item: new URL('/studio/', Astro.site ?? Astro.url.origin).toString(),
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: product.name,
+        item: new URL(productUrl, Astro.site ?? Astro.url.origin).toString(),
+      },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: productFaqs.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  },
+];
+---
+
+<Layout
+  title={`${product.name} | Fixed-Price Dining Table Melbourne | Level Design`}
+  description={pageDescription}
+  ogImage={product.images.main}
+  ogType="product"
+  schema={schema}
+>
+  <StudioProductDetailClient product={product} prev={{ id: prev.id, name: prev.name }} next={{ id: next.id, name: next.name }} client:load />
+
+  <!-- 3D viewer -->
+  <section class="py-20 bg-[#2d3f37] text-white overflow-hidden">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="reveal text-center mb-10">
+        <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">See It From Every Angle</p>
+        <h2 class="text-3xl md:text-4xl font-serif mb-4">{product.name} in 3D</h2>
+        <p class="text-[#a0b8b0] max-w-2xl mx-auto">Drag to rotate and scroll to zoom — this is a 3D render, handcrafted to match once your order is made.</p>
+      </div>
+      <ModelViewer src={product.model} />
+    </div>
+  </section>
+
+  <section class="py-20 bg-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="reveal bg-[#f5f1e8] rounded-3xl p-8 md:p-10">
+        <h2 class="text-3xl font-serif text-[#3d4f47] mb-8">{product.name} FAQs</h2>
+        <div class="space-y-6">
+          {productFaqs.map((item) => (
+            <div class="border-b border-[#d9cfbd] pb-6 last:border-b-0 last:pb-0">
+              <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{item.question}</h3>
+              <p class="text-[#5a6b64] leading-relaxed">{item.answer}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="reveal mt-12 text-center" style="--delay: 0.15s">
+        <p class="text-[#5a6b64] text-lg mb-6">Comparing options? Explore the full <a href="/studio/" class="text-[#c8956a] hover:underline">Studio Collection</a> or the <a href="/signature/" class="text-[#c8956a] hover:underline">Signature Collection</a> for a bespoke commission.</p>
+      </div>
+    </div>
+  </section>
+</Layout>

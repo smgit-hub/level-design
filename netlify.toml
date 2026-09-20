@@ -5,6 +5,9 @@
 [build.environment]
   NODE_VERSION = "20"
 
+[functions]
+  directory = "netlify/functions"
+
 [[headers]]
   for = "/*"
   [headers.values]
@@ -21,25 +24,36 @@
   to = "/sitemap-index.xml"
   status = 301
 
+# Signature Collection was renamed from /tables/ — redirect old links/bookmarks
+[[redirects]]
+  from = "/tables/*"
+  to = "/signature/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/images/tables/*"
+  to = "/images/signature/:splat"
+  status = 301
+
 # Redirects for old WordPress URLs
 [[redirects]]
   from = "/nina/"
-  to = "/tables/nina/"
+  to = "/signature/nina/"
   status = 301
 
 [[redirects]]
   from = "/nina-series/"
-  to = "/tables/nina/"
+  to = "/signature/nina/"
   status = 301
 
 [[redirects]]
   from = "/kola/"
-  to = "/tables/"
+  to = "/signature/"
   status = 301
 
 [[redirects]]
   from = "/arun-series/"
-  to = "/tables/"
+  to = "/signature/"
   status = 301
 
 [[redirects]]
@@ -49,7 +63,7 @@
 
 [[redirects]]
   from = "/matt-coffee-table-nest/"
-  to = "/tables/"
+  to = "/signature/"
   status = 301
 
 [[redirects]]
@@ -59,52 +73,52 @@
 
 [[redirects]]
   from = "/burt-entertainment-unit/"
-  to = "/tables/"
+  to = "/signature/"
   status = 301
 
 [[redirects]]
   from = "/ana-dining-table/"
-  to = "/tables/"
+  to = "/signature/"
   status = 301
 
 [[redirects]]
   from = "/phil-chest-of-drawers/"
-  to = "/tables/"
+  to = "/signature/"
   status = 301
 
 [[redirects]]
   from = "/phi-chest-of-drawers/"
-  to = "/tables/"
+  to = "/signature/"
   status = 301
 
 [[redirects]]
   from = "/lisa-coffee-table-nest/"
-  to = "/tables/"
+  to = "/signature/"
   status = 301
 
 [[redirects]]
   from = "/cat-bedside-table/"
-  to = "/tables/"
+  to = "/signature/"
   status = 301
 
 [[redirects]]
   from = "/ajx-dining-table/feed/"
-  to = "/tables/"
+  to = "/signature/"
   status = 301
 
 [[redirects]]
   from = "/hal-bedside-table/"
-  to = "/tables/"
+  to = "/signature/"
   status = 301
 
 [[redirects]]
   from = "/jm-bed/"
-  to = "/tables/"
+  to = "/signature/"
   status = 301
 
 [[redirects]]
   from = "/louie-coffee-table/"
-  to = "/tables/"
+  to = "/signature/"
   status = 301
 
 [[headers]]

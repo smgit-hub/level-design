@@ -1,6 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { allProducts } from '../../data/products';
+import { allProducts } from '../../data/signature-products';
 
 const faqs = [
   {
@@ -48,10 +48,10 @@ const schema = {
       </div>
       <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl">
-          <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">The Collection</p>
+          <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">The Signature Collection</p>
           <h1 class="hero-in text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">A Curated Portfolio of Dining Table Designs</h1>
           <p class="hero-in text-xl text-[#e8dcc8] mb-8" style="--delay: 0.6s">
-            Each design is available as a bespoke commission — adapted to your space, material palette, and the way you live.
+            Solid-timber-led designs, each available as a bespoke commission — adapted to your space, material palette, and the way you live.
           </p>
           <div class="hero-in flex flex-wrap gap-4" style="--delay: 0.8s">
             {["9 signature designs", "Available as custom commissions", "Sustainably sourced timber"].map((item) => (
@@ -70,10 +70,13 @@ const schema = {
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="reveal max-w-4xl mb-12">
           <p class="text-[#5a6b64] text-lg leading-relaxed mb-5">
-            This collection represents the design directions we work from at Level Design. Each piece has been resolved in proportion, material, and construction — and each one is available as a custom commission, sized and finished to suit your specific room and brief.
+            The Signature Collection represents the design directions we work from at Level Design — solid-timber-led construction, built and finished by hand. Each piece has been resolved in proportion, material, and construction, and each one is available as a custom commission, sized and finished to suit your specific room and brief.
+          </p>
+          <p class="text-[#5a6b64] text-lg leading-relaxed mb-5">
+            Whether you're drawn to a sculptural pedestal table for a formal dining space, a long rectangular design for open-plan entertaining, or a round table that encourages conversation in a more intimate setting — the collection is a starting point, not a catalogue. Every design can be discussed, adapted, and made to feel like it belongs in your home.
           </p>
           <p class="text-[#5a6b64] text-lg leading-relaxed">
-            Whether you're drawn to a sculptural pedestal table for a formal dining space, a long rectangular design for open-plan entertaining, or a round table that encourages conversation in a more intimate setting — the collection is a starting point, not a catalogue. Every design can be discussed, adapted, and made to feel like it belongs in your home.
+            Looking for a fixed-price, ready-to-order table instead of a bespoke commission? Explore the <a href="/studio/" class="text-[#c8956a] font-medium hover:underline">Studio Collection</a> — engineered veneer construction, built for value without a design consultation.
           </p>
           <a href="/melbourne-custom-dining-tables/" class="inline-flex mt-6 text-[#c8956a] font-medium hover:underline">
             See our Melbourne custom dining table service →
@@ -82,7 +85,7 @@ const schema = {
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {allProducts.map((table, i) => (
             <a
-              href={`/tables/${table.id}/`}
+              href={`/signature/${table.id}/`}
               class="reveal group rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300"
               style={`--delay: ${(i % 3) * 0.1}s`}
             >

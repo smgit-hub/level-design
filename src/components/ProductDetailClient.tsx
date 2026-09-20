@@ -2,7 +2,7 @@ import { motion } from "motion/react";
 import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle, Ruler, Truck, Shield } from "lucide-react";
 import { useForm } from "react-hook-form";
-import type { Product } from "../data/products";
+import type { Product } from "../data/signature-products";
 import { trackEvent } from "../lib/analytics";
 import { EMAIL_PATTERN, toFormUrlEncoded } from "../lib/forms";
 
@@ -65,11 +65,11 @@ export default function ProductDetailClient({ product, prev, next }: Props) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Table nav */}
           <div className="flex items-center justify-between text-xs text-[#8a9b94] mb-8 mt-2">
-            <a href={`/tables/${prev.id}/`} className="inline-flex items-center gap-1.5 hover:text-[#3d4f47] transition-colors">
+            <a href={`/signature/${prev.id}/`} className="inline-flex items-center gap-1.5 hover:text-[#3d4f47] transition-colors">
               <ArrowLeft size={12} />
               {prev.name}
             </a>
-            <a href={`/tables/${next.id}/`} className="inline-flex items-center gap-1.5 hover:text-[#3d4f47] transition-colors">
+            <a href={`/signature/${next.id}/`} className="inline-flex items-center gap-1.5 hover:text-[#3d4f47] transition-colors">
               {next.name}
               <ArrowRight size={12} />
             </a>
