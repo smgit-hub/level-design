@@ -15,19 +15,30 @@ const index = allStudioProducts.findIndex((p) => p.id === product.id);
 const prev = allStudioProducts[(index - 1 + allStudioProducts.length) % allStudioProducts.length];
 const next = allStudioProducts[(index + 1) % allStudioProducts.length];
 const productUrl = `/studio/${product.id}/`;
-const pageDescription = `${product.name} — ${product.tagline}. Same design standard as our Signature Collection, at a more accessible price — engineered oak veneer with solid timber for structural strength.`;
+const pageDescription = `${product.name} — ${product.tagline}. Same design standard as our Signature Collection, at a more accessible price — a set of fixed sizes, ready to order online.`;
+
+const formatPrice = (cents: number) =>
+  new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 }).format(cents / 100);
+const sizePrices = product.sizes.map((s) => s.price);
+const lowPrice = Math.min(...sizePrices);
+const highPrice = Math.max(...sizePrices);
+
 const productFaqs = [
   {
     question: `What is ${product.name} made from?`,
-    answer: `${product.name} pairs an engineered oak veneer top with solid timber for structural strength — a stable, consistent-grain construction built for everyday use.`,
+    answer: `${product.name} is built with real oak veneer over an engineered substrate, with solid oak wherever the table bears weight — a genuine step up from flat-pack, mass-produced furniture.`,
   },
   {
-    question: `Can ${product.name} be made in a different size or finish?`,
-    answer: `${product.name} is sold as-shown to keep it accessible. For a different size, timber, or finish, the Signature Collection or a custom commission would be a better fit.`,
+    question: `What sizes is ${product.name} available in?`,
+    answer: `${product.name} comes in ${product.sizes.length} fixed sizes: ${product.sizes.map((s) => `${s.label} (${formatPrice(s.price)})`).join(', ')}.`,
   },
   {
-    question: `How is ${product.name} delivered?`,
-    answer: `Once your order is placed through our secure Stripe checkout, we'll be in touch to arrange delivery.`,
+    question: `Can I get a different size?`,
+    answer: `${product.name} is available in the sizes above to keep it accessible. For a size outside that range, the Signature Collection or a custom commission would be a better fit.`,
+  },
+  {
+    question: `How is ${product.name} delivered, and what does delivery cost?`,
+    answer: `Delivery is $199 for Melbourne Metro, or $449 for other Australian capital cities and VIC regional areas — both are calculated at checkout. For remote areas (WA, NT, TAS, and far regional addresses), checkout completes without a delivery charge and we'll confirm the fee and invoice it separately.`,
   },
 ];
 const schema = [
@@ -49,8 +60,10 @@ const schema = [
     url: new URL(productUrl, Astro.site ?? Astro.url.origin).toString(),
     material: product.specifications['Construction'],
     offers: {
-      '@type': 'Offer',
-      price: (product.price / 100).toFixed(2),
+      '@type': 'AggregateOffer',
+      lowPrice: (lowPrice / 100).toFixed(2),
+      highPrice: (highPrice / 100).toFixed(2),
+      offerCount: product.sizes.length,
       priceCurrency: 'AUD',
       availability: 'https://schema.org/InStock',
       url: new URL(productUrl, Astro.site ?? Astro.url.origin).toString(),

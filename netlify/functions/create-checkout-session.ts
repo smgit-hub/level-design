@@ -12,17 +12,19 @@ export async function handler(event: { httpMethod: string; body: string | null; 
   }
 
   let productId: string | undefined;
+  let sizeId: string | undefined;
   try {
-    ({ productId } = JSON.parse(event.body || "{}"));
+    ({ productId, sizeId } = JSON.parse(event.body || "{}"));
   } catch {
     return { statusCode: 400, body: JSON.stringify({ error: "Invalid request body." }) };
   }
 
-  // Price is always looked up server-side from the product's Stripe Price ID —
+  // Price is always looked up server-side from the size's Stripe Price ID —
   // never trust a client-supplied amount.
   const product = productId ? studioProducts[productId] : undefined;
-  if (!product) {
-    return { statusCode: 404, body: JSON.stringify({ error: "Unknown product." }) };
+  const size = product?.sizes.find((s) => s.id === sizeId);
+  if (!product || !size) {
+    return { statusCode: 404, body: JSON.stringify({ error: "Unknown product or size." }) };
   }
 
   const stripe = new Stripe(stripeSecretKey);
@@ -31,7 +33,31 @@ export async function handler(event: { httpMethod: string; body: string | null; 
   try {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
-      line_items: [{ price: product.stripePriceId, quantity: 1 }],
+      line_items: [{ price: size.stripePriceId, quantity: 1 }],
+      shipping_address_collection: { allowed_countries: ["AU"] },
+      shipping_options: [
+        {
+          shipping_rate_data: {
+            type: "fixed_amount",
+            fixed_amount: { amount: 19900, currency: "aud" },
+            display_name: "Melbourne Metro Delivery",
+          },
+        },
+        {
+          shipping_rate_data: {
+            type: "fixed_amount",
+            fixed_amount: { amount: 44900, currency: "aud" },
+            display_name: "Other Capital Cities & VIC Regional Delivery",
+          },
+        },
+        {
+          shipping_rate_data: {
+            type: "fixed_amount",
+            fixed_amount: { amount: 0, currency: "aud" },
+            display_name: "Remote Delivery (WA / NT / TAS / far regional) — fee confirmed and invoiced separately",
+          },
+        },
+      ],
       success_url: `${origin}/studio/success/?table=${encodeURIComponent(product.name)}`,
       cancel_url: `${origin}/studio/${product.id}/`,
     });

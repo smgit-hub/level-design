@@ -39,6 +39,9 @@ export default function StudioProductDetailClient({ product, prev, next }: Props
   const productImages = [...product.images.gallery, product.images.main];
   // The 3D model is the lead visual — it's the default view, with renders as alternates.
   const [selectedView, setSelectedView] = useState<"model" | string>("model");
+  // Default to the middle size when there are three, or the smallest when there are two.
+  const [selectedSizeId, setSelectedSizeId] = useState(product.sizes[Math.floor((product.sizes.length - 1) / 2)].id);
+  const selectedSize = product.sizes.find((s) => s.id === selectedSizeId) ?? product.sizes[0];
 
   useEffect(() => {
     if (document.getElementById(MODEL_VIEWER_SCRIPT_ID)) return;
@@ -56,16 +59,16 @@ export default function StudioProductDetailClient({ product, prev, next }: Props
       const response = await fetch("/.netlify/functions/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: product.id }),
+        body: JSON.stringify({ productId: product.id, sizeId: selectedSize.id }),
       });
       if (!response.ok) throw new Error("Checkout session creation failed");
       const { url } = await response.json();
       if (!url) throw new Error("No checkout URL returned");
       trackEvent("begin_checkout", {
         currency: "AUD",
-        value: product.price / 100,
-        item_id: product.id,
-        item_name: product.name,
+        value: selectedSize.price / 100,
+        item_id: `${product.id}_${selectedSize.id}`,
+        item_name: `${product.name} (${selectedSize.label})`,
       });
       window.location.href = url;
     } catch {
@@ -167,13 +170,33 @@ export default function StudioProductDetailClient({ product, prev, next }: Props
                 <h1 className="text-4xl md:text-5xl font-serif text-[#c8956a] mb-4">{product.name}</h1>
                 <p className="text-xl text-[#5a6b64] mb-4">{product.tagline}</p>
                 <div className="flex items-center gap-3 mb-6">
-                  {product.compareAtPrice && product.compareAtPrice > product.price && (
-                    <span className="text-xl text-[#8a9b94] line-through">{formatPrice(product.compareAtPrice)}</span>
+                  {selectedSize.compareAtPrice && selectedSize.compareAtPrice > selectedSize.price && (
+                    <span className="text-xl text-[#8a9b94] line-through">{formatPrice(selectedSize.compareAtPrice)}</span>
                   )}
-                  <p className="text-3xl font-semibold text-[#3d4f47]">{formatPrice(product.price)}</p>
-                  {product.compareAtPrice && product.compareAtPrice > product.price && (
+                  <p className="text-3xl font-semibold text-[#3d4f47]">{formatPrice(selectedSize.price)}</p>
+                  {selectedSize.compareAtPrice && selectedSize.compareAtPrice > selectedSize.price && (
                     <span className="text-xs font-semibold uppercase tracking-wide text-white bg-[#c8956a] px-2 py-1 rounded-full">Sale</span>
                   )}
+                </div>
+
+                {/* Size selector */}
+                <div className="mb-6">
+                  <h2 className="text-xs font-semibold uppercase tracking-wide text-[#8a9b94] mb-3">Size</h2>
+                  <div className="flex flex-wrap gap-3">
+                    {product.sizes.map((size) => (
+                      <button
+                        key={size.id}
+                        onClick={() => setSelectedSizeId(size.id)}
+                        className={`px-4 py-3 rounded-xl border-2 text-left transition-colors duration-200 cursor-pointer ${
+                          size.id === selectedSizeId ? "border-[#c8956a] bg-[#f5f1e8]" : "border-[#e5ddd0] bg-white hover:border-[#c8956a]/50"
+                        }`}
+                      >
+                        <div className="text-sm font-medium text-[#3d4f47]">{size.label}</div>
+                        <div className="text-xs text-[#8a9b94] mt-0.5">{size.seating} · {formatPrice(size.price)}</div>
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-xs text-[#8a9b94] mt-2">The 3D preview and renders show a representative size — proportions don't change with your selection above.</p>
                 </div>
 
                 <p className="text-[#3d4f47] leading-relaxed mb-8">{product.description}</p>
@@ -212,7 +235,7 @@ export default function StudioProductDetailClient({ product, prev, next }: Props
                     disabled={isCheckingOut}
                     className="flex-1 px-8 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl font-medium disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
                   >
-                    {isCheckingOut ? "Redirecting to checkout…" : `Buy Now — ${formatPrice(product.price)}`}
+                    {isCheckingOut ? "Redirecting to checkout…" : `Buy Now — ${formatPrice(selectedSize.price)}`}
                   </button>
                   <a
                     href="/contact/"
@@ -251,7 +274,11 @@ export default function StudioProductDetailClient({ product, prev, next }: Props
           >
             <h2 className="text-3xl font-serif text-[#3d4f47] mb-8">Specifications</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {Object.entries(product.specifications).map(([key, value], i) => (
+              {Object.entries({
+                "Dimensions": selectedSize.dimensions,
+                "Seating Capacity": selectedSize.seating,
+                ...product.specifications,
+              }).map(([key, value], i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 20 }}

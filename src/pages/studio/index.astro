@@ -1,27 +1,37 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { allStudioProducts } from '../../data/studio-products';
+import { allStudioProducts, startingPrice as getStartingPrice } from '../../data/studio-products';
 
 const formatPrice = (cents: number) =>
   new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 }).format(cents / 100);
 
-const startingPrice = Math.min(...allStudioProducts.map((p) => p.price));
+const startingPrice = Math.min(...allStudioProducts.map(getStartingPrice));
 
 const faqs = [
   {
     question: 'How is the Studio Collection different from the Signature Collection?',
     answer:
-      'Both are the same standard of craft. Studio tables are engineered veneer construction, with solid timber for structural strength, sold as-shown at a more accessible price with no design consultation. Signature tables are solid-timber-led and made to order as a bespoke commission.',
+      'Both are the same standard of craft. Studio tables are sold in a set of fixed sizes at a more accessible price, with no design consultation needed. Signature tables are a fully bespoke commission, made to order and discussed with you directly.',
   },
   {
-    question: 'Can I customise a Studio table’s size or finish?',
+    question: 'What are Studio tables made from?',
     answer:
-      'Studio tables are sold as-shown to keep them accessible. If you’d like a different size, timber, or finish, the Signature Collection or a custom commission is the better fit.',
+      'Every Studio table is built with real oak veneer over an engineered substrate, with solid oak wherever it bears weight — a genuine step up from flat-pack, mass-produced furniture.',
+  },
+  {
+    question: 'What sizes are Studio tables available in?',
+    answer:
+      'The Line Table comes in three fixed sizes — 1600mm, 2000mm, and 2350mm. Curve and Pill come in 2000mm and 2350mm, and the Round Table comes in 1200mm and 1500mm diameters. Pricing is shown for each size on the table\'s page. For a size outside that range, the Signature Collection or a custom commission is the better fit.',
   },
   {
     question: 'How long does delivery take?',
     answer:
       'Studio tables are still made to order, so please allow a lead time for production — it\'s shorter and more predictable than a bespoke commission since there\'s no design consultation phase. We\'ll be in touch after checkout to confirm the timeline.',
+  },
+  {
+    question: 'How much does delivery cost?',
+    answer:
+      'Delivery is $199 for Melbourne Metro, or $449 for other Australian capital cities and VIC regional areas — both are added automatically at checkout. For remote areas (WA, NT, TAS, and far regional addresses), checkout completes without a delivery charge and we\'ll confirm the fee and invoice it separately.',
   },
   {
     question: 'How does checkout work?',
@@ -46,7 +56,7 @@ const schema = {
 
 <Layout
   title="Studio Collection | Same Craft, Within Reach | Level Design"
-  description="The Studio Collection: the same design standard as our Signature Collection, at a more accessible price. Engineered oak veneer dining tables with solid timber for structural strength, made to order online."
+  description="The Studio Collection: the same design standard as our Signature Collection, at a more accessible price. A set of fixed sizes, made to order online."
   schema={schema}
 >
   <div>
@@ -61,7 +71,7 @@ const schema = {
           <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">The Studio Collection</p>
           <h1 class="hero-in text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Same Craft, Within Reach</h1>
           <p class="hero-in text-xl text-[#e8dcc8] mb-8" style="--delay: 0.6s">
-            Engineered oak veneer construction with solid timber for structural strength — the same design standard as our Signature Collection, at a more accessible price.
+            Fixed sizes, ready to order online — the same design standard as our Signature Collection, at a more accessible price.
           </p>
           <div class="hero-in flex flex-wrap gap-4" style="--delay: 0.8s">
             {["4 designs", `From ${formatPrice(startingPrice)}`, "Shorter lead time"].map((item) => (
@@ -80,10 +90,13 @@ const schema = {
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="reveal max-w-4xl mb-12">
           <p class="text-[#5a6b64] text-lg leading-relaxed mb-5">
-            The Studio Collection is built around engineered oak veneer — a stable, consistent-grain top over a substrate designed not to move, paired with solid timber for structural strength. It's the same design standard as our Signature Collection, at a more accessible price.
+            The Studio Collection offers the same design standard as Signature in a set of fixed sizes, ready to order online — no design consultation, at a more accessible price.
+          </p>
+          <p class="text-[#5a6b64] text-lg leading-relaxed mb-5">
+            Every table is built with real oak veneer over an engineered substrate, with solid oak wherever it bears weight — not flat-pack, mass-produced furniture.
           </p>
           <p class="text-[#5a6b64] text-lg leading-relaxed">
-            Looking for a bespoke, solid-timber-led commission instead? Explore the <a href="/signature/" class="text-[#c8956a] font-medium hover:underline">Signature Collection</a>, or start a <a href="/custom/" class="text-[#c8956a] font-medium hover:underline">custom design consultation</a>.
+            Looking for a fully bespoke commission instead? Explore the <a href="/signature/" class="text-[#c8956a] font-medium hover:underline">Signature Collection</a>, or start a <a href="/custom/" class="text-[#c8956a] font-medium hover:underline">custom design consultation</a>.
           </p>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -106,12 +119,7 @@ const schema = {
               <div class="p-6">
                 <h3 class="text-xl font-semibold text-[#3d4f47] mb-1 group-hover:text-[#c8956a] transition-colors">{table.name}</h3>
                 <p class="text-[#5a6b64] text-sm mb-3">{table.tagline}</p>
-                <p class="font-semibold">
-                  {table.compareAtPrice && table.compareAtPrice > table.price && (
-                    <span class="text-[#8a9b94] line-through mr-2">{formatPrice(table.compareAtPrice)}</span>
-                  )}
-                  <span class="text-[#c8956a]">{formatPrice(table.price)}</span>
-                </p>
+                <p class="font-semibold text-[#c8956a]">From {formatPrice(getStartingPrice(table))}</p>
               </div>
             </a>
           ))}
@@ -126,7 +134,7 @@ const schema = {
           <p class="text-sm uppercase tracking-wider text-[#c8956a] mb-4">Want It Made to Measure?</p>
           <h2 class="text-3xl md:text-4xl font-serif mb-4">Explore the Signature Collection</h2>
           <p class="text-[#e8dcc8] mb-8 max-w-2xl mx-auto">
-            Solid-timber-led designs, adapted to your space, seating requirements, and material preferences through a full design consultation.
+            Fully bespoke designs, adapted to your space, seating requirements, and material preferences through a full design consultation.
           </p>
           <a href="/signature/" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 shadow-lg hover:shadow-xl">
             View the Signature Collection

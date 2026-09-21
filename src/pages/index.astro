@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { products } from '../data/signature-products';
-import { allStudioProducts } from '../data/studio-products';
+import { allStudioProducts, startingPrice as getStartingPrice } from '../data/studio-products';
 import { Image } from 'astro:assets';
 import SectionHeader from '../components/SectionHeader.astro';
 import IconFeatureGrid from '../components/IconFeatureGrid.astro';
@@ -25,7 +25,7 @@ const whyChooseItems = [
   },
   {
     title: 'Built for daily life, made to last',
-    desc: 'Solid timber craftsmanship in the Signature Collection, engineered veneer stability in Studio — both built to be used every day and to last.',
+    desc: 'Every design, bespoke or Studio, is built to be used every day and to last.',
     svg: `<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>`,
   },
 ];
@@ -169,7 +169,7 @@ const whyChooseItems = [
         <SectionHeader
           eyebrow="The Studio Collection"
           title="Same Craft, Within Reach"
-          description="Four designs in engineered oak veneer with solid timber for structural strength — the same design standard as Signature, at a more accessible price."
+          description="Four designs in a set of fixed sizes, ready to order online — the same design standard as Signature, at a more accessible price."
           wrapperClass="text-center mb-12"
           descriptionClass="text-lg text-[#5a6b64] max-w-3xl mx-auto"
         />
@@ -185,12 +185,7 @@ const whyChooseItems = [
               <div class="absolute inset-0 bg-gradient-to-t from-[#1a2820]/90 via-[#1a2820]/10 to-transparent"></div>
               <div class="absolute bottom-0 left-0 right-0 p-4">
                 <h3 class="text-lg font-serif text-white mb-1">{table.name}</h3>
-                <p class="text-[#e8dcc8] text-xs">
-                  {table.compareAtPrice && table.compareAtPrice > table.price && (
-                    <span class="line-through opacity-60 mr-1">{formatPrice(table.compareAtPrice)}</span>
-                  )}
-                  {formatPrice(table.price)}
-                </p>
+                <p class="text-[#e8dcc8] text-xs">From {formatPrice(getStartingPrice(table))}</p>
               </div>
             </a>
           ))}
