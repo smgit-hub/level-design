@@ -55,10 +55,10 @@ export const studioProducts: Record<string, StudioProduct> = {
     category: "Studio",
     features: [
       "Rectangular top with a small corner radius",
-      "Real oak veneer top, solid oak wherever it bears weight — not flat-pack construction",
+      "Real oak veneer top, solid oak wherever it bears weight — built to last, not to be replaced",
       "View and rotate in 3D before you buy",
       "Three fixed sizes, ready to order online",
-      "Shorter lead time than a bespoke commission",
+      "6–8 week lead time, faster than a bespoke commission",
     ],
     specifications: {
       "Top / Base Style": "Rectangle with small corner radius / Straight legs",
@@ -105,10 +105,10 @@ export const studioProducts: Record<string, StudioProduct> = {
     category: "Studio",
     features: [
       "Rectangular top with a large corner radius",
-      "Real oak veneer top, solid oak wherever it bears weight — not flat-pack construction",
+      "Real oak veneer top, solid oak wherever it bears weight — built to last, not to be replaced",
       "View and rotate in 3D before you buy",
       "Two fixed sizes, ready to order online",
-      "Shorter lead time than a bespoke commission",
+      "6–8 week lead time, faster than a bespoke commission",
     ],
     specifications: {
       "Top / Base Style": "Rectangle with large corner radius / Straight legs",
@@ -147,10 +147,10 @@ export const studioProducts: Record<string, StudioProduct> = {
     category: "Studio",
     features: [
       "Pill-shaped top with fully rounded ends",
-      "Real oak veneer top, solid oak wherever it bears weight — not flat-pack construction",
+      "Real oak veneer top, solid oak wherever it bears weight — built to last, not to be replaced",
       "View and rotate in 3D before you buy",
       "Two fixed sizes, ready to order online",
-      "Shorter lead time than a bespoke commission",
+      "6–8 week lead time, faster than a bespoke commission",
     ],
     specifications: {
       "Top / Base Style": "Pill shape / Straight legs",
@@ -189,10 +189,10 @@ export const studioProducts: Record<string, StudioProduct> = {
     category: "Studio",
     features: [
       "Round top, no head of table",
-      "Real oak veneer top, solid oak wherever it bears weight — not flat-pack construction",
+      "Real oak veneer top, solid oak wherever it bears weight — built to last, not to be replaced",
       "View and rotate in 3D before you buy",
       "Two fixed sizes, ready to order online",
-      "Shorter lead time than a bespoke commission",
+      "6–8 week lead time, faster than a bespoke commission",
     ],
     specifications: {
       "Top / Base Style": "Round / Central pedestal",

@@ -218,7 +218,7 @@ export default function StudioProductDetailClient({ product, prev, next }: Props
                 <div className="grid grid-cols-3 gap-4 mb-8">
                   {[
                     { icon: Ruler, label: "Fixed Dimensions" },
-                    { icon: Truck, label: "Shorter Lead Time" },
+                    { icon: Truck, label: "6–8 Week Lead Time" },
                     { icon: ShieldCheck, label: "Secure Checkout" },
                   ].map(({ icon: Icon, label }) => (
                     <div key={label} className="text-center p-4 bg-white rounded-xl">
