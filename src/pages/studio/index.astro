@@ -11,7 +11,7 @@ const faqs = [
   {
     question: 'How is the Studio Collection different from the Signature Collection?',
     answer:
-      'Both are the same standard of craft. Studio tables are engineered veneer construction (with solid timber legs and load points), sold as-shown at a more accessible price with no design consultation. Signature tables are solid-timber-led and made to order as a bespoke commission.',
+      'Both are the same standard of craft. Studio tables are engineered veneer construction, with solid timber for structural strength, sold as-shown at a more accessible price with no design consultation. Signature tables are solid-timber-led and made to order as a bespoke commission.',
   },
   {
     question: 'Can I customise a Studio table’s size or finish?',
@@ -45,8 +45,8 @@ const schema = {
 ---
 
 <Layout
-  title="Studio Collection | Same Craft, More Accessible | Level Design"
-  description="The Studio Collection: the same design standard as our Signature Collection, at a more accessible price. Engineered oak veneer dining tables with solid timber legs, made to order online."
+  title="Studio Collection | Same Craft, Within Reach | Level Design"
+  description="The Studio Collection: the same design standard as our Signature Collection, at a more accessible price. Engineered oak veneer dining tables with solid timber for structural strength, made to order online."
   schema={schema}
 >
   <div>
@@ -59,9 +59,9 @@ const schema = {
       <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl">
           <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">The Studio Collection</p>
-          <h1 class="hero-in text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Same Craft, More Accessible</h1>
+          <h1 class="hero-in text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Same Craft, Within Reach</h1>
           <p class="hero-in text-xl text-[#e8dcc8] mb-8" style="--delay: 0.6s">
-            Engineered oak veneer construction with solid timber legs — the same design standard as our Signature Collection, at a more accessible price.
+            Engineered oak veneer construction with solid timber for structural strength — the same design standard as our Signature Collection, at a more accessible price.
           </p>
           <div class="hero-in flex flex-wrap gap-4" style="--delay: 0.8s">
             {["4 designs", `From ${formatPrice(startingPrice)}`, "Shorter lead time"].map((item) => (
@@ -80,13 +80,13 @@ const schema = {
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="reveal max-w-4xl mb-12">
           <p class="text-[#5a6b64] text-lg leading-relaxed mb-5">
-            The Studio Collection is built around engineered oak veneer — a stable, consistent-grain top over a substrate designed not to move, paired with solid timber legs where the table takes its load. It's the same design standard as our Signature Collection, at a more accessible price.
+            The Studio Collection is built around engineered oak veneer — a stable, consistent-grain top over a substrate designed not to move, paired with solid timber for structural strength. It's the same design standard as our Signature Collection, at a more accessible price.
           </p>
           <p class="text-[#5a6b64] text-lg leading-relaxed">
             Looking for a bespoke, solid-timber-led commission instead? Explore the <a href="/signature/" class="text-[#c8956a] font-medium hover:underline">Signature Collection</a>, or start a <a href="/custom/" class="text-[#c8956a] font-medium hover:underline">custom design consultation</a>.
           </p>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {allStudioProducts.map((table, i) => (
             <a
               href={`/studio/${table.id}/`}
@@ -95,7 +95,7 @@ const schema = {
             >
               <div class="aspect-[4/3] overflow-hidden">
                 <img
-                  src={table.images.main}
+                  src={table.images.gallery[0] ?? table.images.main}
                   alt={table.name}
                   loading="lazy"
                   width="1536"

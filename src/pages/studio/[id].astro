@@ -15,11 +15,11 @@ const index = allStudioProducts.findIndex((p) => p.id === product.id);
 const prev = allStudioProducts[(index - 1 + allStudioProducts.length) % allStudioProducts.length];
 const next = allStudioProducts[(index + 1) % allStudioProducts.length];
 const productUrl = `/studio/${product.id}/`;
-const pageDescription = `${product.name} — ${product.tagline}. Same design standard as our Signature Collection, at a more accessible price — engineered oak veneer with solid timber legs.`;
+const pageDescription = `${product.name} — ${product.tagline}. Same design standard as our Signature Collection, at a more accessible price — engineered oak veneer with solid timber for structural strength.`;
 const productFaqs = [
   {
     question: `What is ${product.name} made from?`,
-    answer: `${product.name} pairs an engineered oak veneer top with solid timber legs — a stable, consistent-grain construction built for everyday use.`,
+    answer: `${product.name} pairs an engineered oak veneer top with solid timber for structural strength — a stable, consistent-grain construction built for everyday use.`,
   },
   {
     question: `Can ${product.name} be made in a different size or finish?`,
