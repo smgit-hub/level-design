@@ -43,15 +43,15 @@ const schema = {
   <div>
 
     <!-- Hero -->
-    <section class="relative bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white pt-36 pb-20 min-h-[30rem] flex items-center overflow-hidden">
+    <section class="relative bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white pt-28 pb-12 md:pt-32 md:min-h-[24rem] flex items-center overflow-hidden">
       <div class="absolute inset-0 opacity-10">
         <div class="absolute top-0 right-0 w-96 h-96 bg-[#c8956a] rounded-full blur-3xl"></div>
       </div>
       <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl">
           <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">The Signature Collection</p>
-          <h1 class="hero-in text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">A Curated Portfolio of Dining Table Designs</h1>
-          <p class="hero-in text-xl text-[#e8dcc8] mb-8" style="--delay: 0.6s">
+          <h1 class="hero-in text-4xl sm:text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">A Curated Portfolio of Dining Table Designs</h1>
+          <p class="hero-in text-lg sm:text-xl text-[#e8dcc8] mb-8" style="--delay: 0.6s">
             Fully bespoke designs, each available as a custom commission — adapted to your space, material palette, and the way you live.
           </p>
           <div class="hero-in flex flex-wrap gap-4" style="--delay: 0.8s">
@@ -69,17 +69,6 @@ const schema = {
     <!-- Tables Grid -->
     <section class="py-20 bg-[#f5f1e8]">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="reveal max-w-4xl mb-12">
-          <p class="text-[#5a6b64] text-lg leading-relaxed mb-3">
-            Fully bespoke, made-to-order designs — each piece here is a starting point, not a catalogue, and can be discussed in custom dimensions, timbers, and finishes to suit your room and brief.
-          </p>
-          <p class="text-[#5a6b64] text-lg leading-relaxed">
-            Looking for something more accessible instead? Explore the <a href="/studio/" class="text-[#c8956a] font-medium hover:underline">Studio Collection</a> — the same craft, at a lower price point.
-          </p>
-          <a href="/melbourne-custom-dining-tables/" class="inline-flex mt-4 text-[#c8956a] font-medium hover:underline">
-            See our Melbourne custom dining table service →
-          </a>
-        </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {allProducts.map((table, i) => (
             <a
@@ -103,6 +92,17 @@ const schema = {
               </div>
             </a>
           ))}
+        </div>
+        <div class="reveal max-w-4xl mt-14">
+          <p class="text-[#5a6b64] text-lg leading-relaxed mb-3">
+            Fully bespoke, made-to-order designs — each piece here is a starting point, not a catalogue, and can be discussed in custom dimensions, timbers, and finishes to suit your room and brief.
+          </p>
+          <p class="text-[#5a6b64] text-lg leading-relaxed">
+            Looking for something more accessible instead? Explore the <a href="/studio/" class="text-[#c8956a] font-medium hover:underline">Studio Collection</a> — the same craft, at a lower price point.
+          </p>
+          <a href="/melbourne-custom-dining-tables/" class="inline-flex mt-4 text-[#c8956a] font-medium hover:underline">
+            See our Melbourne custom dining table service →
+          </a>
         </div>
       </div>
     </section>
