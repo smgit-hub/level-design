@@ -20,9 +20,9 @@ export default function Navigation({ currentPath }: Props) {
   const [isScrolled, setIsScrolled] = useState(!isHomepage);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activePath, setActivePath] = useState(currentPath);
-  const isStudioFocused = activePath === "/" || activePath.startsWith("/studio/");
-  const ctaLabel = isStudioFocused ? "Shop Now" : "Start a Project";
-  const ctaHref = isStudioFocused ? "/studio/" : "/contact/";
+  // The site's main action is buying a Studio table, so the header button is the same on every page.
+  const ctaLabel = "Shop Now";
+  const ctaHref = "/studio/";
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.location.pathname !== "/" || window.scrollY > 20);
@@ -86,7 +86,7 @@ export default function Navigation({ currentPath }: Props) {
             onClick={() =>
               trackEvent("select_content", {
                 content_type: "cta",
-                item_id: isStudioFocused ? "shop_now_nav_desktop" : "start_project_nav_desktop",
+                item_id: "shop_now_nav_desktop",
                 page_path: window.location.pathname,
               })
             }
@@ -97,14 +97,29 @@ export default function Navigation({ currentPath }: Props) {
             {ctaLabel}
           </motion.a>
 
-          {/* Mobile toggle */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden text-[#e8dcc8] hover:text-white transition-colors justify-self-end ml-2"
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Mobile CTA + toggle */}
+          <div className="md:hidden flex items-center gap-3 justify-self-end">
+            <a
+              href={ctaHref}
+              onClick={() =>
+                trackEvent("select_content", {
+                  content_type: "cta",
+                  item_id: "shop_now_nav_mobile_header",
+                  page_path: window.location.pathname,
+                })
+              }
+              className="px-4 py-2 bg-[#c8956a] text-white rounded-full text-sm font-medium shadow-sm whitespace-nowrap active:bg-[#b8856a]"
+            >
+              {ctaLabel}
+            </a>
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="text-[#e8dcc8] hover:text-white transition-colors"
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -136,11 +151,11 @@ export default function Navigation({ currentPath }: Props) {
                 onClick={() =>
                   trackEvent("select_content", {
                     content_type: "cta",
-                    item_id: isStudioFocused ? "shop_now_nav_mobile" : "start_project_nav_mobile",
+                    item_id: "shop_now_nav_mobile",
                     page_path: window.location.pathname,
                   })
                 }
-                className="block px-4 py-2 text-center bg-[#e8dcc8] text-[#3d4f47] rounded-lg hover:bg-[#c8956a] hover:text-white transition-colors"
+                className="block px-4 py-3 text-center bg-[#c8956a] text-white font-medium rounded-lg hover:bg-[#b8856a] transition-colors"
               >
                 {ctaLabel}
               </a>
