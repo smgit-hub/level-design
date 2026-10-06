@@ -1,0 +1,38 @@
+---
+import type { StudioProduct } from '../data/studio-products';
+
+interface Props {
+  product: StudioProduct;
+  class?: string;
+}
+
+const { product, class: className = 'w-10' } = Astro.props;
+
+// Every icon is drawn on the same millimetre canvas, so the four shapes are directly comparable
+// (the round table's diameter sits between the long tables' widths and lengths, as it does in real life).
+// Stroke uses currentColor, so the parent's text colour sets the icon colour.
+const CANVAS_W = 2700;
+const CANVAS_H = 1750;
+const largest = product.sizes[product.sizes.length - 1];
+const radius =
+  product.outline.kind === 'rect'
+    ? product.outline.cornerRadiusMm
+    : Math.min(largest.lengthMm, largest.widthMm) / 2;
+---
+
+<svg
+  viewBox={`0 0 ${CANVAS_W} ${CANVAS_H}`}
+  class:list={['inline-block h-auto flex-shrink-0', className]}
+  aria-hidden="true"
+>
+  <rect
+    x={(CANVAS_W - largest.lengthMm) / 2}
+    y={(CANVAS_H - largest.widthMm) / 2}
+    width={largest.lengthMm}
+    height={largest.widthMm}
+    rx={radius}
+    fill="none"
+    stroke="currentColor"
+    stroke-width="130"
+  />
+</svg>
