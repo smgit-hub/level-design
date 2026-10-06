@@ -48,16 +48,23 @@ export default function Navigation({ currentPath }: Props) {
       <div className="w-full px-4 sm:px-6 lg:px-10">
         <div className="grid grid-cols-[1fr_auto] md:grid-cols-[1fr_auto_1fr] items-center h-16">
 
-          {/* Logo */}
-          <a href="/" aria-label="Level Design home" className="flex items-center gap-3 group min-w-0 justify-self-start">
-            <div className="w-12 h-12 rounded-full bg-[#e8dcc8] flex items-center justify-center p-2 transition-transform duration-300 group-hover:scale-110 flex-shrink-0">
-              <img
-                src="/images/level-logo.png"
-                alt="Level Design"
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <span className="text-white text-lg font-semibold truncate">Level Design</span>
+          {/* Logo: the mark is drawn straight onto the header in cream (masked from the PNG's alpha), with the name in the site's serif */}
+          <a href="/" aria-label="Level Design home" className="flex items-center gap-2.5 group min-w-0 justify-self-start">
+            <span
+              aria-hidden="true"
+              className="block flex-shrink-0 w-11 h-[31px] bg-[#e8dcc8] transition-opacity duration-200 group-hover:opacity-80"
+              style={{
+                WebkitMaskImage: "url(/images/level-logo.png)",
+                maskImage: "url(/images/level-logo.png)",
+                WebkitMaskSize: "contain",
+                maskSize: "contain",
+                WebkitMaskRepeat: "no-repeat",
+                maskRepeat: "no-repeat",
+                WebkitMaskPosition: "center",
+                maskPosition: "center",
+              }}
+            />
+            <span className="font-serif text-lg tracking-wide text-[#f5f1e8] truncate transition-opacity duration-200 group-hover:opacity-80">Level Design</span>
           </a>
 
           {/* Desktop nav */}
