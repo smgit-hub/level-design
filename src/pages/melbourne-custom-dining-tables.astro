@@ -1,13 +1,42 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
 import FaqAccordion from '../components/FaqAccordion.astro';
+import StudioShapeIcon from '../components/StudioShapeIcon.astro';
 import { products } from '../data/signature-products';
+import { allStudioProducts, startingPrice } from '../data/studio-products';
+import belleImg from '../assets/images/about/level-design-belle-magazine-custom-table.webp';
+import houzzImg from '../assets/images/about/level-design-houzz-magazine-coffee-table.webp';
+
+const formatPrice = (cents: number) =>
+  new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 }).format(cents / 100);
+const studioFromPrice = Math.min(...allStudioProducts.map(startingPrice));
 
 const faqs = [
   {
     question: 'Which Melbourne areas do you work with?',
     answer:
       'We work with clients across Melbourne and wider Victoria, including inner Melbourne, Bayside, the Mornington Peninsula, Geelong, and regional areas by enquiry.',
+  },
+  {
+    question: 'Can I order a dining table online instead of commissioning one?',
+    answer:
+      'Yes. The Studio Collection is a set of four ready-to-order designs in fixed sizes, built to the same standard of craft and priced from ' + formatPrice(studioFromPrice) + '. Delivery is $199 for Melbourne Metro, and the lead time is 6–8 weeks.',
+  },
+  {
+    question: 'How long does a custom table take?',
+    answer:
+      'The design and consultation phase typically takes one to two weeks. Once the design is approved, production and delivery typically take 8–12 weeks, depending on timber availability and complexity.',
+  },
+  {
+    question: 'What timber species and finishes are available?',
+    answer:
+      'We work primarily with American Oak, Tasmanian Oak, and American Ash, and can also work with American Walnut and Australian timbers including Blackbutt, Spotted Gum, and Victorian Ash. Finish options include raw matte, clear matte, black satin, and black wash.',
+  },
+  {
+    question: 'Do you deliver outside Melbourne?',
+    answer:
+      'We deliver Melbourne-wide, and across Victoria and the rest of Australia by arrangement. Get in touch with your location and we will work out the details with you.',
   },
   {
     question: 'Do you work with interior designers and architects in Melbourne?',
@@ -58,7 +87,7 @@ const schema = [
   schema={schema}
 >
   <div>
-    <section class="relative bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white py-24 min-h-[34rem] flex items-center overflow-hidden">
+    <section class="relative bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white pt-28 pb-12 md:pt-32 md:min-h-[24rem] flex items-center overflow-hidden">
       <div class="absolute inset-0 opacity-10">
         <div class="absolute -top-24 -right-24 w-96 h-96 bg-[#c8956a] rounded-full blur-3xl"></div>
         <div class="absolute bottom-0 left-0 w-96 h-96 bg-[#c8956a] rounded-full blur-3xl"></div>
@@ -66,46 +95,47 @@ const schema = [
       <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl">
           <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">Melbourne Custom Dining Tables</p>
-          <h1 class="hero-in text-5xl md:text-7xl font-serif mb-6" style="--delay: 0.4s">Bespoke Timber Tables for Melbourne Homes</h1>
-          <p class="hero-in text-xl md:text-2xl text-[#e8dcc8] leading-relaxed mb-8" style="--delay: 0.6s">
-            Level Design creates custom timber dining tables for Melbourne interiors, with considered proportions, material guidance, and finishes tailored to how you live.
+          <h1 class="hero-in text-4xl sm:text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Custom and Ready-to-Order Timber Tables for Melbourne Homes</h1>
+          <p class="hero-in text-lg sm:text-xl text-[#e8dcc8] leading-relaxed mb-8" style="--delay: 0.6s">
+            Order a ready-made Studio table online, or commission a custom one — considered proportions, material guidance, and finishes tailored to how you live.
           </p>
           <div class="hero-in flex flex-col sm:flex-row gap-4" style="--delay: 0.8s">
-            <a href="/custom/" class="btn-scale inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 shadow-lg">
-              Start a Custom Table
+            <a href="/studio/" class="btn-scale inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 shadow-lg">
+              Shop the Studio Collection →
             </a>
-            <a href="https://share.google/2X8cmzgsefNsOyp1a" target="_blank" rel="noopener noreferrer" class="btn-scale inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/90 text-[#3d4f47] rounded-full hover:bg-white transition-all duration-300 shadow-lg">
-              View Google Business Profile
+            <a href="/custom/" class="btn-scale inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/10 border-2 border-white text-white rounded-full hover:bg-white hover:text-[#3d4f47] transition-all duration-300">
+              Start a Custom Table
             </a>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="py-24 bg-white">
+    <!-- Local intro -->
+    <section class="py-16 md:py-24 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div class="reveal">
             <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Local Design Support</p>
-            <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">Designed Around Melbourne Spaces</h2>
+            <h2 class="text-3xl md:text-5xl font-serif text-[#3d4f47] mb-6">Designed Around Melbourne Spaces</h2>
             <div class="space-y-5 text-[#5a6b64] text-lg leading-relaxed">
               <p>
-                Melbourne homes vary from compact apartments and heritage terraces to larger family homes and architect-designed renovations. A custom dining table needs to respond to that context, not just fill a standard size.
+                Melbourne homes vary from compact apartments and heritage terraces to larger family homes and architect-designed renovations. A dining table needs to respond to that context, not just fill a standard size.
               </p>
               <p>
                 We help refine the practical details: overall length and width, seating count, leg placement, circulation, timber tone, edge profile, and finish durability. The result is a dining table that feels intentional in your room and robust enough for daily use.
               </p>
             </div>
           </div>
-          <div class="reveal-right grid grid-cols-1 sm:grid-cols-2 gap-4" style="--delay: 0.1s">
+          <div class="reveal-right rounded-2xl bg-[#f5f1e8] divide-y divide-[#e5ddd0]" style="--delay: 0.1s">
             {[
               { label: 'Inner Melbourne', detail: 'Apartments, terraces, and compact dining zones' },
               { label: 'Bayside', detail: 'Family dining rooms and coastal-inspired interiors' },
               { label: 'Mornington Peninsula', detail: 'Statement tables for relaxed entertaining' },
               { label: 'Regional Victoria', detail: 'Projects by enquiry, with delivery planning' },
-            ].map((area, i) => (
-              <div class="rounded-2xl bg-[#f5f1e8] p-6" style={`--delay: ${i * 0.1}s`}>
-                <h3 class="text-xl font-semibold text-[#3d4f47] mb-2">{area.label}</h3>
+            ].map((area) => (
+              <div class="px-6 py-4">
+                <h3 class="text-lg font-semibold text-[#3d4f47]">{area.label}</h3>
                 <p class="text-[#5a6b64] text-sm leading-relaxed">{area.detail}</p>
               </div>
             ))}
@@ -114,88 +144,158 @@ const schema = [
       </div>
     </section>
 
-    <section class="py-24 bg-[#f5f1e8]">
+    <!-- Studio: order online -->
+    <section class="py-16 md:py-24 bg-[#f5f1e8]">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="reveal text-center mb-14">
-          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Popular Starting Points</p>
-          <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">Timber Dining Tables Made to Measure</h2>
-          <p class="text-xl text-[#5a6b64] max-w-3xl mx-auto">
-            Start from a signature design, then customise dimensions, timber species, finish, and details to suit your Melbourne home or project brief.
+        <div class="reveal text-center mb-10 md:mb-14">
+          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Ready to Order</p>
+          <h2 class="text-3xl md:text-5xl font-serif text-[#3d4f47] mb-6">The Studio Collection, Delivered Across Melbourne</h2>
+          <p class="text-lg md:text-xl text-[#5a6b64] max-w-3xl mx-auto">
+            Four designs in fixed sizes, from {formatPrice(studioFromPrice)}. The same craft as our custom work. Delivery is $199 for Melbourne Metro, with a 6–8 week lead time.
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {allStudioProducts.map((table, i) => (
+            <a href={`/studio/${table.id}/`} class="reveal group rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300" style={`--delay: ${i * 0.1}s`}>
+              <div class="aspect-[4/3] overflow-hidden">
+                <img src={table.images.gallery[0] ?? table.images.main} alt={`${table.name} oak dining table, Melbourne`} loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              </div>
+              <div class="p-4">
+                <h3 class="font-semibold text-[#3d4f47] group-hover:text-[#c8956a] transition-colors">{table.name}</h3>
+                <p class="flex items-center gap-2 text-xs text-[#5a6b64] mt-1"><StudioShapeIcon product={table} class="w-8" /><span>{table.shape}</span></p>
+                <p class="text-sm font-semibold text-[#c8956a] mt-1">From {formatPrice(startingPrice(table))}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+
+        <div class="reveal text-center mt-10">
+          <a href="/studio/" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl">
+            Shop the Studio Collection →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Signature starting points -->
+    <section class="py-16 md:py-24 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal text-center mb-10 md:mb-14">
+          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Custom Starting Points</p>
+          <h2 class="text-3xl md:text-5xl font-serif text-[#3d4f47] mb-6">Timber Dining Tables Made to Measure</h2>
+          <p class="text-lg md:text-xl text-[#5a6b64] max-w-3xl mx-auto">
+            Want something bespoke? Start from a signature design, then customise dimensions, timber species, finish, and details to suit your Melbourne home or project brief.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
           {[
             products.pillar,
             products.luna,
             products.yama,
           ].map((table, i) => (
-            <a href={`/signature/${table.id}/`} class="reveal group rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300" style={`--delay: ${i * 0.1}s`}>
-              <div class="aspect-[4/3] overflow-hidden">
+            <a href={`/signature/${table.id}/`} class="reveal group flex md:block rounded-2xl overflow-hidden bg-[#f5f1e8] hover:shadow-xl transition-all duration-300" style={`--delay: ${i * 0.1}s`}>
+              <div class="w-28 flex-shrink-0 aspect-square md:w-full md:aspect-[4/3] overflow-hidden">
                 <img src={table.images.main} alt={`${table.name} custom timber dining table Melbourne`} loading="lazy" width="1536" height="1024" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               </div>
-              <div class="p-6">
-                <h3 class="text-xl font-semibold text-[#3d4f47] mb-2 group-hover:text-[#c8956a] transition-colors">{table.name}</h3>
-                <p class="text-[#5a6b64] text-sm mb-4">{table.tagline}</p>
+              <div class="p-4 md:p-6 flex flex-col justify-center">
+                <h3 class="text-lg md:text-xl font-semibold text-[#3d4f47] mb-1 group-hover:text-[#c8956a] transition-colors">{table.name}</h3>
+                <p class="text-[#5a6b64] text-sm mb-2 md:mb-4">{table.tagline}</p>
                 <span class="text-[#c8956a] text-sm font-medium">View design →</span>
               </div>
             </a>
           ))}
         </div>
 
-        <div class="reveal text-center mt-12">
+        <div class="reveal text-center mt-10">
           <a href="/signature/" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl">
-            View Full Collection →
+            View the Signature Collection →
           </a>
         </div>
       </div>
     </section>
 
-    <section class="py-24 bg-white">
+    <!-- How a custom commission works -->
+    <section class="py-16 md:py-24 bg-[#f5f1e8]">
       <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="reveal text-center mb-14">
-          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">How It Works</p>
-          <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">From Melbourne Brief to Finished Table</h2>
+        <div class="reveal text-center mb-10 md:mb-14">
+          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">How a Custom Commission Works</p>
+          <h2 class="text-3xl md:text-5xl font-serif text-[#3d4f47]">From Melbourne Brief to Finished Table</h2>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <ol class="grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-6">
           {[
             { step: '01', title: 'Share the room', body: 'Send dimensions, seating needs, inspiration, and any project constraints.' },
             { step: '02', title: 'Refine the design', body: 'We guide the proportions, base style, timber, edge detail, and finish direction.' },
             { step: '03', title: 'Confirm the details', body: 'The table specification is resolved before production begins.' },
             { step: '04', title: 'Deliver and enjoy', body: 'Delivery is planned around your Melbourne or Victorian project requirements.' },
           ].map((item, i) => (
-            <div class="reveal rounded-2xl bg-[#f5f1e8] p-6" style={`--delay: ${i * 0.1}s`}>
-              <div class="text-5xl font-serif text-[#c8956a] mb-4">{item.step}</div>
-              <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{item.title}</h3>
-              <p class="text-[#5a6b64] text-sm leading-relaxed">{item.body}</p>
-            </div>
+            <li class="reveal flex md:flex-col gap-4" style={`--delay: ${i * 0.1}s`}>
+              <span class="flex-shrink-0 w-10 h-10 rounded-full bg-[#3d4f47] text-white text-sm font-medium flex items-center justify-center">{item.step}</span>
+              <div>
+                <h3 class="text-lg font-semibold text-[#3d4f47] mb-1">{item.title}</h3>
+                <p class="text-[#5a6b64] text-sm leading-relaxed">{item.body}</p>
+              </div>
+            </li>
           ))}
+        </ol>
+        <p class="reveal text-center mt-8 text-[#5a6b64]">See the full <a href="/custom/" class="text-[#c8956a] font-medium hover:underline">design process</a>.</p>
+      </div>
+    </section>
+
+    <!-- Proof -->
+    <section class="py-16 md:py-24 bg-white">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+          <div class="reveal">
+            <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Featured Work</p>
+            <h2 class="text-3xl md:text-4xl font-serif text-[#3d4f47] mb-5">Featured in Belle and Houzz</h2>
+            <p class="text-[#5a6b64] text-lg leading-relaxed mb-5">
+              More than ten years designing dining tables for Melbourne homes, and work that has appeared in magazines that highlight thoughtful Australian design.
+            </p>
+            <a href="/projects/" class="text-[#c8956a] font-medium hover:underline">See our projects →</a>
+          </div>
+          <div class="reveal-right grid grid-cols-2 gap-4">
+            <div class="aspect-[4/3] rounded-xl overflow-hidden shadow-lg">
+              <Image src={belleImg} alt="Level Design table featured in Belle magazine" loading="lazy" class="w-full h-full object-cover" />
+            </div>
+            <div class="aspect-[4/3] rounded-xl overflow-hidden shadow-lg">
+              <Image src={houzzImg} alt="Level Design table featured in Houzz" loading="lazy" class="w-full h-full object-cover" />
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="py-24 bg-[#f5f1e8]">
+    <section class="py-16 md:py-24 bg-[#f5f1e8]">
       <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="reveal bg-white rounded-3xl p-8 md:p-10 shadow-sm">
-          <h2 class="text-3xl md:text-4xl font-serif text-[#3d4f47] mb-8">Melbourne Custom Dining Table FAQs</h2>
+        <div class="reveal bg-white rounded-3xl p-6 md:p-10 shadow-sm">
+          <h2 class="text-3xl md:text-4xl font-serif text-[#3d4f47] mb-8">Melbourne Dining Table FAQs</h2>
           <FaqAccordion items={faqs} />
         </div>
       </div>
     </section>
 
-    <section class="py-24 bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white">
+    <section class="py-16 md:py-24 bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div class="reveal">
           <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Start Locally</p>
-          <h2 class="text-4xl md:text-5xl font-serif mb-6">Planning a Custom Dining Table in Melbourne?</h2>
-          <p class="text-xl text-[#e8dcc8] mb-8 max-w-2xl mx-auto">
-            Tell us about your space, preferred style, timber direction, and timing. We will help shape the right table for the room.
+          <h2 class="text-3xl md:text-5xl font-serif mb-6">Order One Today, or Design Your Own</h2>
+          <p class="text-lg md:text-xl text-[#e8dcc8] mb-8 max-w-2xl mx-auto">
+            Order a Studio table with delivery across Melbourne, or tell us about your space, style, and timing and we will help shape a custom table for the room.
           </p>
-          <a href="/contact/" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 shadow-lg">
-            Request a Melbourne Table Quote
-          </a>
-          <p class="text-sm text-[#e8dcc8] mt-6">Prefer something more affordable? Browse the <a href="/studio/" class="text-white hover:underline">Studio Collection</a> — same craft, more accessible.</p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/studio/" class="btn-scale inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 shadow-lg">
+              Shop the Studio Collection →
+            </a>
+            <a href="/contact/" class="btn-scale inline-flex items-center justify-center gap-2 px-8 py-4 bg-transparent border-2 border-white text-white rounded-full hover:bg-white hover:text-[#3d4f47] transition-all duration-300">
+              Request a Melbourne Table Quote
+            </a>
+          </div>
+          <p class="text-sm text-[#e8dcc8] mt-8">
+            <a href="https://share.google/2X8cmzgsefNsOyp1a" target="_blank" rel="noopener noreferrer" class="hover:text-white hover:underline">View our Google Business Profile</a>
+          </p>
         </div>
       </div>
     </section>
