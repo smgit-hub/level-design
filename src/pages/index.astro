@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import { products } from '../data/signature-products';
 import { allStudioProducts, startingPrice as getStartingPrice } from '../data/studio-products';
+import StudioShapeIcon from '../components/StudioShapeIcon.astro';
 import { Image } from 'astro:assets';
 import SectionHeader from '../components/SectionHeader.astro';
 import IconFeatureGrid from '../components/IconFeatureGrid.astro';
@@ -66,11 +67,11 @@ const whyChooseItems = [
             Thoughtfully designed and expertly made — built to last.
           </p>
           <div class="hero-in flex flex-col sm:flex-row gap-4" style="--delay: 0.9s">
-            <a href="/custom/" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 shadow-lg hover:shadow-xl">
-              Begin a Design Consultation →
+            <a href="/studio/" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 shadow-lg hover:shadow-xl">
+              Shop the Studio Collection →
             </a>
-            <a href="/studio/" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-white/90 backdrop-blur-sm border-2 border-white text-[#3d4f47] rounded-full hover:bg-white transition-all duration-300 shadow-lg">
-              Shop the Studio Collection
+            <a href="/custom/" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm border-2 border-white text-white rounded-full hover:bg-white hover:text-[#3d4f47] transition-all duration-300">
+              Design a Custom Table
             </a>
           </div>
         </div>
@@ -169,7 +170,7 @@ const whyChooseItems = [
         <SectionHeader
           eyebrow="The Studio Collection"
           title="Same Craft, Within Reach"
-          description="Four designs in a set of fixed sizes, ready to order online — the same design standard as Signature, at a more accessible price. Real oak veneer top over a stable substrate, with solid oak wherever it bears weight — built to last, not to be replaced."
+          description="Four designs in a set of fixed sizes, ready to order online — the same design standard as Signature, at a more accessible price."
           wrapperClass="text-center mb-12"
           descriptionClass="text-lg text-[#5a6b64] max-w-3xl mx-auto"
         />
@@ -185,7 +186,7 @@ const whyChooseItems = [
               <div class="absolute inset-0 bg-gradient-to-t from-[#1a2820]/90 via-[#1a2820]/10 to-transparent"></div>
               <div class="absolute bottom-0 left-0 right-0 p-4">
                 <h3 class="text-lg font-serif text-white mb-1">{table.name}</h3>
-                <p class="text-[#e8dcc8] text-xs">{table.shape} · From {formatPrice(getStartingPrice(table))}</p>
+                <p class="text-[#e8dcc8] text-xs flex items-center gap-2"><StudioShapeIcon product={table} /><span>{table.shape} · From {formatPrice(getStartingPrice(table))}</span></p>
               </div>
             </a>
           ))}
@@ -287,14 +288,14 @@ const whyChooseItems = [
       </div>
       <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div class="reveal">
-          <h2 class="text-4xl md:text-5xl font-serif mb-6">Design a Table, or Order One Today</h2>
-          <p class="text-xl text-[#e8dcc8] mb-8 max-w-2xl mx-auto">Start a bespoke commission with a design consultation, or order straight from the Studio Collection — the same craft, at a more accessible price.</p>
+          <h2 class="text-4xl md:text-5xl font-serif mb-6">Order One Today, or Design Your Own</h2>
+          <p class="text-xl text-[#e8dcc8] mb-8 max-w-2xl mx-auto">Order straight from the Studio Collection — the same craft, at a more accessible price — or start a bespoke commission with a design consultation.</p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/custom/" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 shadow-lg hover:shadow-xl">
-              Begin a Design Consultation →
+            <a href="/studio/" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 shadow-lg hover:shadow-xl">
+              Shop the Studio Collection →
             </a>
-            <a href="/studio/" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-transparent border-2 border-white text-white rounded-full hover:bg-white hover:text-[#3d4f47] transition-all duration-300">
-              Shop the Studio Collection
+            <a href="/custom/" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-transparent border-2 border-white text-white rounded-full hover:bg-white hover:text-[#3d4f47] transition-all duration-300">
+              Begin a Design Consultation
             </a>
           </div>
         </div>

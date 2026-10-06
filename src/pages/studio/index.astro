@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { allStudioProducts, startingPrice as getStartingPrice } from '../../data/studio-products';
+import StudioShapeIcon from '../../components/StudioShapeIcon.astro';
 
 const formatPrice = (cents: number) =>
   new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 }).format(cents / 100);
@@ -16,7 +17,7 @@ const faqs = [
   {
     question: 'What are Studio tables made from?',
     answer:
-      'Every Studio table is built with a real oak veneer top over a stable substrate, with solid oak wherever it bears weight — built to last, not to be replaced.',
+      'Every Studio table is built with real oak veneer over a stable substrate — made to last for years of daily use. The Line Table adds a fully solid oak base.',
   },
   {
     question: 'What sizes are Studio tables available in?',
@@ -62,15 +63,15 @@ const schema = {
   <div>
 
     <!-- Hero -->
-    <section class="relative bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white pt-36 pb-20 min-h-[30rem] flex items-center overflow-hidden">
+    <section class="relative bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white pt-28 pb-12 md:pt-32 md:min-h-[24rem] flex items-center overflow-hidden">
       <div class="absolute inset-0 opacity-10">
         <div class="absolute top-0 right-0 w-96 h-96 bg-[#c8956a] rounded-full blur-3xl"></div>
       </div>
       <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl">
           <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">The Studio Collection</p>
-          <h1 class="hero-in text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Same Craft, Within Reach</h1>
-          <p class="hero-in text-xl text-[#e8dcc8] mb-8" style="--delay: 0.6s">
+          <h1 class="hero-in text-4xl sm:text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Same Craft, Within Reach</h1>
+          <p class="hero-in text-lg sm:text-xl text-[#e8dcc8] mb-8" style="--delay: 0.6s">
             Fixed sizes, ready to order online — the same design standard as our Signature Collection, at a more accessible price.
           </p>
           <div class="hero-in flex flex-wrap gap-4" style="--delay: 0.8s">
@@ -88,17 +89,6 @@ const schema = {
     <!-- Tables Grid -->
     <section class="py-20 bg-[#f5f1e8]">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="reveal max-w-4xl mb-12">
-          <p class="text-[#5a6b64] text-lg leading-relaxed mb-5">
-            The Studio Collection offers the same design standard as Signature in a set of fixed sizes, ready to order online — no design consultation, at a more accessible price.
-          </p>
-          <p class="text-[#5a6b64] text-lg leading-relaxed mb-5">
-            Every table is built with a real oak veneer top over a stable substrate, with solid oak wherever it bears weight — built to last, not to be replaced.
-          </p>
-          <p class="text-[#5a6b64] text-lg leading-relaxed">
-            Looking for a fully bespoke commission instead? Explore the <a href="/signature/" class="text-[#c8956a] font-medium hover:underline">Signature Collection</a>, or start a <a href="/custom/" class="text-[#c8956a] font-medium hover:underline">custom design consultation</a>.
-          </p>
-        </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {allStudioProducts.map((table, i) => (
             <a
@@ -118,11 +108,20 @@ const schema = {
               </div>
               <div class="p-6">
                 <h3 class="text-xl font-semibold text-[#3d4f47] mb-1 group-hover:text-[#c8956a] transition-colors">{table.name}</h3>
+                <p class="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-[#8a9b94] mb-2"><StudioShapeIcon product={table} /><span>{table.shape}</span></p>
                 <p class="text-[#5a6b64] text-sm mb-3">{table.tagline}</p>
                 <p class="font-semibold text-[#c8956a]">From {formatPrice(getStartingPrice(table))}</p>
               </div>
             </a>
           ))}
+        </div>
+        <div class="reveal max-w-4xl mt-14">
+          <p class="text-[#5a6b64] text-lg leading-relaxed mb-5">
+            Every table is built with real oak veneer over a stable substrate — made to last for years of daily use. The Line Table adds a fully solid oak base.
+          </p>
+          <p class="text-[#5a6b64] text-lg leading-relaxed">
+            Looking for a fully bespoke commission instead? Explore the <a href="/signature/" class="text-[#c8956a] font-medium hover:underline">Signature Collection</a>, or start a <a href="/custom/" class="text-[#c8956a] font-medium hover:underline">custom design consultation</a>.
+          </p>
         </div>
       </div>
     </section>
