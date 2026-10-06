@@ -174,7 +174,7 @@ const whyChooseItems = [
           descriptionClass="text-lg text-[#5a6b64] max-w-3xl mx-auto"
         />
 
-        <div class="grid grid-cols-2 gap-4 mb-12 max-w-4xl mx-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12 max-w-4xl mx-auto">
           {allStudioProducts.map((table, i) => (
             <a
               href={`/studio/${table.id}/`}
@@ -185,7 +185,7 @@ const whyChooseItems = [
               <div class="absolute inset-0 bg-gradient-to-t from-[#1a2820]/90 via-[#1a2820]/10 to-transparent"></div>
               <div class="absolute bottom-0 left-0 right-0 p-4">
                 <h3 class="text-lg font-serif text-white mb-1">{table.name}</h3>
-                <p class="text-[#e8dcc8] text-xs">From {formatPrice(getStartingPrice(table))}</p>
+                <p class="text-[#e8dcc8] text-xs">{table.shape} · From {formatPrice(getStartingPrice(table))}</p>
               </div>
             </a>
           ))}
