@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { useState, useEffect, useRef } from "react";
-import { ArrowLeft, CheckCircle, Truck } from "lucide-react";
+import { ArrowLeft, CheckCircle, RotateCcw, Truck } from "lucide-react";
 import type { StudioProduct } from "../data/studio-products";
 import { trackEvent } from "../lib/analytics";
 import StudioTableOutline from "./StudioTableOutline";
@@ -11,6 +11,7 @@ declare global {
       "model-viewer": React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
         src?: string;
         "auto-rotate"?: string;
+        "interaction-prompt"?: string;
         "auto-rotate-delay"?: string;
         "rotation-per-second"?: string;
         "camera-controls"?: string;
@@ -20,6 +21,7 @@ declare global {
         loading?: string;
         "touch-action"?: string;
         "environment-image"?: string;
+        "camera-orbit"?: string;
       };
     }
   }
@@ -33,6 +35,10 @@ const formatPrice = (cents: number) =>
   new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 }).format(cents / 100);
 
 const MODEL_VIEWER_SCRIPT_ID = "model-viewer-script";
+// Every table settles on this view: turned about 63 degrees left of square-on, a little below the default height.
+const START_ORBIT = "-63deg 71deg 90%";
+// How long the opening sweep runs before the table glides back to START_ORBIT.
+const SWEEP_MS = 5000;
 
 export default function StudioProductDetailClient({ product }: Props) {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
@@ -47,6 +53,8 @@ export default function StudioProductDetailClient({ product }: Props) {
   const [selectedSizeId, setSelectedSizeId] = useState(product.sizes[Math.floor((product.sizes.length - 1) / 2)].id);
   // Sizes are listed smallest first, and the 3D model and room photo are made at the largest.
   const largestSize = product.sizes[product.sizes.length - 1];
+  // "2350mm × 1150mm" -> "2350 × 1150mm"; "1500mm Diameter" -> "1500mm dia".
+  const largestSizeText = largestSize.label.includes("×") ? largestSize.label.replace("mm", "") : largestSize.label.replace(" Diameter", " dia");
   const selectedSize = product.sizes.find((s) => s.id === selectedSizeId) ?? product.sizes[0];
 
   // On touch screens the viewer starts in scroll mode behind a "Tap to explore" cover, so dragging the
@@ -54,6 +62,19 @@ export default function StudioProductDetailClient({ product }: Props) {
   const [isTouch, setIsTouch] = useState(false);
   const [touchUnlocked, setTouchUnlocked] = useState(false);
   const viewerBoxRef = useRef<HTMLDivElement>(null);
+  const modelRef = useRef<HTMLElement>(null);
+  // True once the visitor has moved the model, which is when the "Reset view" button appears.
+  const [viewMoved, setViewMoved] = useState(false);
+
+  const resetView = () => {
+    const model = modelRef.current as (HTMLElement & { cameraOrbit: string; cameraTarget: string; fieldOfView: string }) | null;
+    if (!model) return;
+    model.removeAttribute("auto-rotate");
+    model.cameraOrbit = START_ORBIT;
+    model.cameraTarget = "auto auto auto";
+    model.fieldOfView = "auto";
+    setViewMoved(false);
+  };
 
   // On phones, a slim buy bar stays at the bottom whenever the main Buy Now button is off-screen —
   // except at the end of the page, where the other-tables section takes over.
@@ -98,6 +119,46 @@ export default function StudioProductDetailClient({ product }: Props) {
     return () => box.removeEventListener("touchmove", block);
   }, [touchUnlocked]);
 
+  // A short, slow opening sweep for a bit of life, then the table settles back on START_ORBIT and stays put.
+  // Touching the model cancels it so it never fights the viewer, and reduced-motion users skip it entirely.
+  useEffect(() => {
+    const model = modelRef.current;
+    if (selectedView !== "model" || !model) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let started = false;
+    const stop = (returnToStart: boolean) => {
+      clearTimeout(timer);
+      model.removeAttribute("auto-rotate");
+      if (returnToStart) (model as HTMLElement & { cameraOrbit: string }).cameraOrbit = START_ORBIT;
+    };
+    const start = () => {
+      if (started) return;
+      started = true;
+      model.setAttribute("auto-rotate", "");
+      timer = setTimeout(() => stop(true), SWEEP_MS);
+    };
+    const onCameraChange = (event: Event) => {
+      if ((event as CustomEvent<{ source?: string }>).detail?.source === "user-interaction") {
+        stop(false);
+        setViewMoved(true);
+      }
+    };
+
+    setViewMoved(false);
+    model.addEventListener("camera-change", onCameraChange);
+    if ((model as HTMLElement & { loaded?: boolean }).loaded) start();
+    else model.addEventListener("load", start, { once: true });
+    model.addEventListener("dblclick", resetView);
+    return () => {
+      model.removeEventListener("dblclick", resetView);
+      model.removeEventListener("camera-change", onCameraChange);
+      model.removeEventListener("load", start);
+      clearTimeout(timer);
+    };
+  }, [selectedView]);
+
   useEffect(() => {
     if (document.getElementById(MODEL_VIEWER_SCRIPT_ID)) return;
     const script = document.createElement("script");
@@ -137,13 +198,6 @@ export default function StudioProductDetailClient({ product }: Props) {
       {/* Product header */}
       <section className="pt-28 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Back link */}
-          <div className="text-xs text-[#8a9b94] mb-8 mt-2">
-            <a href="/studio/" className="inline-flex items-center gap-1.5 hover:text-[#3d4f47] transition-colors">
-              <ArrowLeft size={12} />
-              Studio Collection
-            </a>
-          </div>
           <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-12">
 
             {/* Image gallery */}
@@ -153,26 +207,35 @@ export default function StudioProductDetailClient({ product }: Props) {
               transition={{ duration: 0.6 }}
             >
               <div className="sticky top-24">
-                {views.length > 1 && (
-                  <div className="flex gap-2 mb-3" role="tablist" aria-label="Product views">
-                    {views.map((view) => (
-                      <button
-                        key={view.id}
-                        type="button"
-                        role="tab"
-                        aria-selected={selectedView === view.id}
-                        onClick={() => setSelectedView(view.id)}
-                        className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 cursor-pointer ${
-                          selectedView === view.id
-                            ? "bg-[#3d4f47] text-white"
-                            : "bg-white text-[#3d4f47] border border-[#e5ddd0] hover:border-[#c8956a]"
-                        }`}
-                      >
-                        {view.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
+                <div className="flex items-center gap-2 mb-3">
+                  {views.length > 1 && (
+                    <div className="flex gap-2" role="tablist" aria-label="Product views">
+                      {views.map((view) => (
+                        <button
+                          key={view.id}
+                          type="button"
+                          role="tab"
+                          aria-selected={selectedView === view.id}
+                          onClick={() => setSelectedView(view.id)}
+                          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 cursor-pointer ${
+                            selectedView === view.id
+                              ? "bg-[#3d4f47] text-white"
+                              : "bg-white text-[#3d4f47] border border-[#e5ddd0] hover:border-[#c8956a]"
+                          }`}
+                        >
+                          {view.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  <a
+                    href="/studio/"
+                    className="ml-auto inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium text-[#3d4f47] border border-[#3d4f47] hover:bg-[#3d4f47] hover:text-white transition-colors duration-200"
+                  >
+                    <ArrowLeft size={14} />
+                    <span>Studio<span className="hidden sm:inline"> Collection</span></span>
+                  </a>
+                </div>
                 <div
                   ref={viewerBoxRef}
                   style={touchUnlocked ? { touchAction: "none" } : undefined}
@@ -180,12 +243,14 @@ export default function StudioProductDetailClient({ product }: Props) {
                 >
                   {selectedView === "model" ? (
                     <model-viewer
+                      ref={modelRef}
                       src={product.model}
                       touch-action={touchUnlocked ? "none" : "pan-y"}
-                      auto-rotate=""
                       auto-rotate-delay="0"
-                      rotation-per-second="20deg"
+                      rotation-per-second="12deg"
                       camera-controls=""
+                      camera-orbit={START_ORBIT}
+                      interaction-prompt="none"
                       shadow-intensity="1.2"
                       shadow-softness="0.8"
                       exposure="2.4"
@@ -205,12 +270,23 @@ export default function StudioProductDetailClient({ product }: Props) {
                     />
                   )}
                   <span className="absolute top-3 right-3 bg-black/50 text-white/85 text-xs tracking-wide px-3 py-1 rounded-full pointer-events-none">
-                    Shown at {largestSize.label.replace(" Diameter", " dia")}
+                    Shown at {largestSizeText}
                   </span>
                   {selectedView === "model" && (
                     <span className="absolute bottom-3 left-3 bg-black/50 text-white/80 text-xs tracking-wide px-3 py-1 rounded-full pointer-events-none">
                       {isTouch ? (touchUnlocked ? "Drag to rotate · Pinch to zoom" : "Tap to explore in 3D") : "Drag to rotate · Scroll to zoom"}
                     </span>
+                  )}
+                  {selectedView === "model" && viewMoved && (
+                    <button
+                      type="button"
+                      onClick={resetView}
+                      aria-label="Reset view"
+                      className="absolute bottom-3 right-3 z-10 inline-flex items-center gap-1.5 bg-black/50 hover:bg-black/70 text-white/90 text-xs tracking-wide px-2.5 sm:px-3 py-2 sm:py-1.5 rounded-full cursor-pointer transition-colors"
+                    >
+                      <RotateCcw size={14} />
+                      <span className="hidden sm:inline">Reset view</span>
+                    </button>
                   )}
                   {isTouch && selectedView === "model" && !touchUnlocked && (
                     <div
@@ -241,7 +317,8 @@ export default function StudioProductDetailClient({ product }: Props) {
             >
               <div className="mb-6">
                 <h1 className="text-4xl md:text-5xl font-serif text-[#c8956a] mb-4">{product.name}</h1>
-                <p className="text-xl text-[#5a6b64] mb-4">{product.tagline}</p>
+                <p className="text-xl text-[#5a6b64] mb-2">{product.tagline}</p>
+                <p className="text-sm font-medium text-[#8a9b94] mb-4">{product.specifications["Timber / Finish"].replace(" / ", " · ")}</p>
                 {/* Size selector */}
                 <div className="mb-6">
                   <h2 className="text-xs font-semibold uppercase tracking-wide text-[#8a9b94] mb-3">Size (mm)</h2>
@@ -264,7 +341,8 @@ export default function StudioProductDetailClient({ product }: Props) {
                       </button>
                     ))}
                   </div>
-                  <p className="text-xs text-[#8a9b94] mt-2">Sizes in mm, drawn to scale from above. The 3D view and room photo show the largest size ({largestSize.label.replace(/mm/g, "").replace(" Diameter", " dia")}).</p>
+                  <p className="text-sm text-[#3d4f47] mt-3">{selectedSize.dimensions}</p>
+                  <p className="text-xs text-[#8a9b94] mt-1">Sizes in mm, drawn to scale from above. The 3D view and room photo show the largest size ({largestSize.label.replace(/mm/g, "").replace(" Diameter", " dia")}).</p>
                 </div>
 
                 {/* Price + CTA */}
@@ -342,25 +420,26 @@ export default function StudioProductDetailClient({ product }: Props) {
             </div>
             <div>
               <h2 className="text-3xl font-serif text-[#3d4f47] mb-8">Specifications</h2>
-              <div className="grid grid-cols-1 gap-4">
-                {Object.entries({
-                  "Dimensions": selectedSize.dimensions,
-                  "Seating Capacity": selectedSize.seating,
-                  ...product.specifications,
-                }).map(([key, value], i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: i * 0.1 }}
-                    viewport={{ once: true }}
-                    className="flex justify-between items-start p-4 bg-[#f5f1e8] rounded-xl"
+              <dl className="bg-[#f5f1e8] rounded-2xl divide-y divide-[#e5ddd0] overflow-hidden">
+                {product.sizes.map((size) => (
+                  <div
+                    key={size.id}
+                    className={`flex flex-col gap-1 sm:flex-row sm:justify-between sm:items-start sm:gap-4 px-5 py-4 ${size.id === selectedSizeId ? "bg-[#ebe3d3]" : ""}`}
                   >
-                    <span className="font-medium text-[#3d4f47]">{key}</span>
-                    <span className="text-[#5a6b64] text-right">{value}</span>
-                  </motion.div>
+                    <dt className="font-medium text-[#3d4f47]">{size.label}</dt>
+                    <dd className="sm:text-right text-[#5a6b64]">
+                      <div>{size.dimensions}</div>
+                      <div className="text-sm text-[#8a9b94]">Seats {size.seating.replace(" people", "")}</div>
+                    </dd>
+                  </div>
                 ))}
-              </div>
+                {Object.entries(product.specifications).map(([key, value]) => (
+                  <div key={key} className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:items-start sm:gap-4 px-5 py-4">
+                    <dt className="font-medium text-[#3d4f47]">{key}</dt>
+                    <dd className="sm:text-right text-[#5a6b64]">{value}</dd>
+                  </div>
+                ))}
+              </dl>
             </div>
           </motion.div>
         </div>

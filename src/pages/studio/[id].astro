@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import StudioProductDetailClient from '../../components/StudioProductDetailClient';
+import StudioShapeIcon from '../../components/StudioShapeIcon.astro';
 import { allStudioProducts, startingPrice } from '../../data/studio-products';
 
 export function getStaticPaths() {
@@ -24,7 +25,7 @@ const highPrice = Math.max(...sizePrices);
 const productFaqs = [
   {
     question: `What is ${product.name} made from?`,
-    answer: `${product.name} is built with a real oak veneer top over a stable substrate, with solid oak wherever the table bears weight — built to last, not to be replaced.`,
+    answer: `${product.name} is built with ${product.construction} — made to last for years of daily use.`,
   },
   {
     question: `What sizes is ${product.name} available in?`,
@@ -120,7 +121,7 @@ const schema = [
 >
   <StudioProductDetailClient product={product} client:load />
 
-  <section class="py-16 bg-white">
+  <section class="pt-0 pb-16 bg-white">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="reveal bg-[#f5f1e8] rounded-3xl p-6 md:p-10">
         <h2 class="text-3xl font-serif text-[#3d4f47] mb-6">{product.name} FAQs</h2>
@@ -155,12 +156,14 @@ const schema = [
             </div>
             <div class="p-4 flex flex-col justify-center">
               <h3 class="font-serif text-xl text-[#3d4f47]">{other.name}</h3>
-              <p class="text-sm text-[#5a6b64] mt-1">{other.shape} · From {formatPrice(startingPrice(other))}</p>
+              <p class="flex items-center gap-2 text-sm text-[#5a6b64] mt-1"><StudioShapeIcon product={other} class="w-8" /><span>{other.shape}</span></p>
+              <p class="text-sm font-semibold text-[#c8956a] mt-1">From {formatPrice(startingPrice(other))}</p>
             </div>
           </a>
         ))}
       </div>
-      <p class="text-[#5a6b64] mt-10 text-center">Looking for something bespoke? Explore the <a href="/signature/" class="text-[#c8956a] hover:underline">Signature Collection</a>.</p>
+      <p class="mt-8 text-center"><a href="/studio/" class="text-[#3d4f47] font-medium underline underline-offset-4 hover:text-[#c8956a] transition-colors">View all Studio tables</a></p>
+      <p class="text-[#5a6b64] mt-6 text-center">Looking for something bespoke? Explore the <a href="/signature/" class="text-[#c8956a] hover:underline">Signature Collection</a>.</p>
     </div>
   </section>
 </Layout>
