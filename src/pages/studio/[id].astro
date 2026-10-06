@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import StudioProductDetailClient from '../../components/StudioProductDetailClient';
-import { allStudioProducts } from '../../data/studio-products';
+import { allStudioProducts, startingPrice } from '../../data/studio-products';
 
 export function getStaticPaths() {
   return allStudioProducts.map((p) => ({
@@ -11,9 +11,7 @@ export function getStaticPaths() {
 }
 
 const { product } = Astro.props;
-const index = allStudioProducts.findIndex((p) => p.id === product.id);
-const prev = allStudioProducts[(index - 1 + allStudioProducts.length) % allStudioProducts.length];
-const next = allStudioProducts[(index + 1) % allStudioProducts.length];
+const otherProducts = allStudioProducts.filter((p) => p.id !== product.id);
 const productUrl = `/studio/${product.id}/`;
 const pageDescription = `${product.name} — ${product.tagline}. Same design standard as our Signature Collection, at a more accessible price — a set of fixed sizes, ready to order online.`;
 
@@ -47,7 +45,7 @@ const schema = [
     '@type': 'Product',
     name: product.name,
     description: pageDescription,
-    image: [product.images.main, ...product.images.gallery].map((image: string) => new URL(image, Astro.site ?? Astro.url.origin).toString()),
+    image: [...product.images.gallery, product.images.main].map((image: string) => new URL(image, Astro.site ?? Astro.url.origin).toString()),
     category: 'Timber dining table',
     brand: {
       '@type': 'Brand',
@@ -116,29 +114,53 @@ const schema = [
 <Layout
   title={`${product.name} | Studio Collection Dining Table Melbourne | Level Design`}
   description={pageDescription}
-  ogImage={product.images.main}
+  ogImage={product.images.gallery[0] ?? product.images.main}
   ogType="product"
   schema={schema}
 >
-  <StudioProductDetailClient product={product} prev={{ id: prev.id, name: prev.name }} next={{ id: next.id, name: next.name }} client:load />
+  <StudioProductDetailClient product={product} client:load />
 
-  <section class="py-20 bg-white">
+  <section class="py-16 bg-white">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="reveal bg-[#f5f1e8] rounded-3xl p-8 md:p-10">
-        <h2 class="text-3xl font-serif text-[#3d4f47] mb-8">{product.name} FAQs</h2>
-        <div class="space-y-6">
-          {productFaqs.map((item) => (
-            <div class="border-b border-[#d9cfbd] pb-6 last:border-b-0 last:pb-0">
-              <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{item.question}</h3>
-              <p class="text-[#5a6b64] leading-relaxed">{item.answer}</p>
-            </div>
+      <div class="reveal bg-[#f5f1e8] rounded-3xl p-6 md:p-10">
+        <h2 class="text-3xl font-serif text-[#3d4f47] mb-6">{product.name} FAQs</h2>
+        <div class="divide-y divide-[#d9cfbd]">
+          {productFaqs.map((item, i) => (
+            <details class="group py-4" open={i === 0}>
+              <summary class="flex items-center justify-between gap-4 cursor-pointer list-none text-lg font-semibold text-[#3d4f47] [&::-webkit-details-marker]:hidden">
+                {item.question}
+                <svg class="w-5 h-5 flex-shrink-0 text-[#c8956a] transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5" /></svg>
+              </summary>
+              <p class="text-[#5a6b64] leading-relaxed mt-3">{item.answer}</p>
+            </details>
           ))}
         </div>
       </div>
+    </div>
+  </section>
 
-      <div class="reveal mt-12 text-center" style="--delay: 0.15s">
-        <p class="text-[#5a6b64] text-lg mb-6">Comparing options? Explore the full <a href="/studio/" class="text-[#c8956a] hover:underline">Studio Collection</a> or the <a href="/signature/" class="text-[#c8956a] hover:underline">Signature Collection</a> for a bespoke commission.</p>
+  <section id="studio-other-tables" class="py-16 bg-[#faf8f5]">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-serif text-[#3d4f47] mb-8 text-center">Other Studio tables</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {otherProducts.map((other) => (
+          <a href={`/studio/${other.id}/`} class="group flex sm:block bg-white rounded-2xl overflow-hidden border border-[#e5ddd0] hover:border-[#c8956a] transition-colors">
+            <div class="w-28 flex-shrink-0 aspect-square sm:w-full sm:aspect-[4/3] overflow-hidden">
+              <img
+                src={other.images.gallery[0] ?? other.images.main}
+                alt={other.name}
+                loading="lazy"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+            <div class="p-4 flex flex-col justify-center">
+              <h3 class="font-serif text-xl text-[#3d4f47]">{other.name}</h3>
+              <p class="text-sm text-[#5a6b64] mt-1">{other.shape} · From {formatPrice(startingPrice(other))}</p>
+            </div>
+          </a>
+        ))}
       </div>
+      <p class="text-[#5a6b64] mt-10 text-center">Looking for something bespoke? Explore the <a href="/signature/" class="text-[#c8956a] hover:underline">Signature Collection</a>.</p>
     </div>
   </section>
 </Layout>
