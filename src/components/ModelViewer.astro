@@ -6,8 +6,10 @@ interface Props {
   autoRotate?: boolean;
   /** Adds a button that swaps the timber texture for a plain matte finish, so the form and edges are easier to see. */
   textureToggle?: boolean;
+  /** On touch screens, start in scroll mode behind a "Tap to explore" cover so dragging the model doesn't scroll the page. */
+  touchLock?: boolean;
 }
-const { src, studio = false, autoRotate = true, textureToggle = false } = Astro.props;
+const { src, studio = false, autoRotate = true, textureToggle = false, touchLock = false } = Astro.props;
 ---
 <div class="model-viewer-wrapper relative rounded-2xl overflow-hidden" style="background: #3d4f47;">
   <model-viewer
@@ -35,10 +37,10 @@ const { src, studio = false, autoRotate = true, textureToggle = false } = Astro.
     </div>
   </model-viewer>
   <div class="absolute bottom-4 left-0 right-0 flex justify-center pointer-events-none">
-    <span class="bg-black/30 text-white/60 text-xs tracking-widest px-4 py-1.5 rounded-full">Drag to rotate · Scroll to zoom</span>
+    <span data-hint class="bg-black/30 text-white/60 text-xs tracking-widest px-4 py-1.5 rounded-full">Drag to rotate · Scroll to zoom</span>
   </div>
   {textureToggle && (
-    <button type="button" data-texture-toggle disabled class="absolute top-4 right-4 bg-black/40 text-white/80 text-xs tracking-widest px-4 py-1.5 rounded-full hover:bg-black/60 transition-colors disabled:opacity-40 disabled:cursor-default cursor-pointer">Hide texture</button>
+    <button type="button" data-texture-toggle disabled class="absolute top-4 right-4 z-10 bg-black/40 text-white/80 text-xs tracking-widest px-4 py-1.5 rounded-full hover:bg-black/60 transition-colors disabled:opacity-40 disabled:cursor-default cursor-pointer">Hide texture</button>
     <script is:inline>
       (function() {
         var wrapper = document.currentScript.parentElement;
@@ -72,6 +74,43 @@ const { src, studio = false, autoRotate = true, textureToggle = false } = Astro.
           });
           button.textContent = hidden ? 'Show texture' : 'Hide texture';
         });
+      })();
+    </script>
+  )}
+  {touchLock && (
+    <script is:inline>
+      (function() {
+        if (!window.matchMedia('(pointer: coarse)').matches) return;
+        var wrapper = document.currentScript.parentElement;
+        var viewer = wrapper.querySelector('model-viewer');
+        var hint = wrapper.querySelector('[data-hint]');
+        var pill = 'position:absolute;z-index:10;background:rgba(0,0,0,0.4);color:rgba(255,255,255,0.85);font-size:12px;letter-spacing:0.1em;padding:6px 16px;border-radius:9999px;border:0;';
+        // While locked, this cover sits over the model so swipes scroll the page; tapping it hands touches to the model.
+        var cover = document.createElement('div');
+        cover.setAttribute('role', 'button');
+        cover.setAttribute('aria-label', 'Tap to explore in 3D');
+        cover.style.cssText = 'position:absolute;inset:0;z-index:5;cursor:pointer;';
+        var done = document.createElement('button');
+        done.type = 'button';
+        done.textContent = 'Done';
+        done.style.cssText = pill + 'top:16px;left:16px;display:none;cursor:pointer;';
+        wrapper.appendChild(cover);
+        wrapper.appendChild(done);
+        function lock() {
+          viewer.setAttribute('touch-action', 'pan-y');
+          cover.style.display = 'block';
+          done.style.display = 'none';
+          if (hint) hint.textContent = 'Tap to explore in 3D';
+        }
+        function unlock() {
+          viewer.setAttribute('touch-action', 'none');
+          cover.style.display = 'none';
+          done.style.display = 'block';
+          if (hint) hint.textContent = 'Drag to rotate · Pinch to zoom';
+        }
+        cover.addEventListener('click', unlock);
+        done.addEventListener('click', lock);
+        lock();
       })();
     </script>
   )}

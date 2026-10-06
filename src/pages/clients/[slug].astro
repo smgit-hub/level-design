@@ -40,7 +40,7 @@ const { project } = Astro.props;
           return (
             <div class="reveal">
               <h2 class="text-2xl md:text-3xl font-serif text-[#3d4f47] mb-4">{piece.name ?? `Piece ${i + 1}`}</h2>
-              <ModelViewer src={piece.model} studio autoRotate={false} textureToggle />
+              <ModelViewer src={piece.model} studio autoRotate={false} textureToggle touchLock />
               {details.length > 0 && (
                 <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
                   {details.map(([key, value]) => (

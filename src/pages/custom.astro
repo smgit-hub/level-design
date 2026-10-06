@@ -5,6 +5,7 @@ import { Image } from 'astro:assets';
 import SectionHeader from '../components/SectionHeader.astro';
 import IconFeatureGrid from '../components/IconFeatureGrid.astro';
 import FaqAccordion from '../components/FaqAccordion.astro';
+import ModelViewer from '../components/ModelViewer.astro';
 import customImg from '../assets/images/custom/level-design-custom-furniture.webp';
 
 const faqs = [
@@ -235,57 +236,12 @@ const serviceSchema = {
 
     <!-- 3D Design Showcase -->
     <section id="model-section" class="py-24 bg-[#2d3f37] text-white overflow-hidden">
-      <script is:inline>
-        (function() {
-          var loaded = false;
-          var observer = new IntersectionObserver(function(entries) {
-            if (entries[0].isIntersecting && !loaded) {
-              loaded = true;
-              var s = document.createElement('script');
-              s.type = 'module';
-              s.src = 'https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js';
-              document.head.appendChild(s);
-              observer.disconnect();
-            }
-          }, { rootMargin: '200px' });
-          var el = document.getElementById('model-section');
-          if (el) observer.observe(el);
-        })();
-      </script>
-
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
           <!-- 3D Model viewer -->
           <div class="reveal-left order-2 lg:order-1">
-            <div class="relative rounded-2xl overflow-hidden" style="background: #3d4f47;">
-              <model-viewer
-                src="/models/pillar-table-model-v2.glb"
-                auto-rotate
-                auto-rotate-delay="0"
-                rotation-per-second="20deg"
-                camera-controls
-                shadow-intensity="1.2"
-                shadow-softness="0.8"
-                exposure="1.1"
-                style="width:100%; height:480px; background:transparent; --progress-bar-color: transparent; --progress-bar-height: 0px;"
-                loading="lazy"
-              >
-                <div slot="poster" style="display:flex; align-items:center; justify-content:center; width:100%; height:100%; background:#3d4f47;">
-                  <div style="display:flex; flex-direction:column; align-items:center; gap:16px;">
-                    <svg style="width:40px; height:40px; animation:model-spin 1s linear infinite;" viewBox="0 0 24 24" fill="none">
-                      <circle cx="12" cy="12" r="10" stroke="#c8956a" stroke-width="2" stroke-opacity="0.3"/>
-                      <path d="M12 2a10 10 0 0 1 10 10" stroke="#c8956a" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                    <span style="color:#e8dcc8; font-size:13px; letter-spacing:0.1em; opacity:0.7;">Loading model...</span>
-                  </div>
-                </div>
-              </model-viewer>
-              <style>@keyframes model-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }</style>
-              <div class="absolute bottom-4 left-0 right-0 flex justify-center pointer-events-none">
-                <span class="bg-black/30 text-white/60 text-xs tracking-widest px-4 py-1.5 rounded-full">Drag to rotate · Scroll to zoom</span>
-              </div>
-            </div>
+            <ModelViewer src="/models/pillar-table-model-v2.glb" touchLock />
           </div>
 
           <!-- Content -->
