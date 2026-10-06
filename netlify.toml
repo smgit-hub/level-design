@@ -116,3 +116,14 @@
   for = "/models/*"
   [headers.values]
     Cache-Control = "public, max-age=3600"
+
+# Client design preview pages and their files are link-only — keep them out of search results
+[[headers]]
+  for = "/clients/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/models/clients/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"

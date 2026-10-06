@@ -1,0 +1,96 @@
+---
+interface Props {
+  src: string;
+  /** Directional studio lighting and a 3/4 starting angle, so edges and form read clearly on light timber. */
+  studio?: boolean;
+  autoRotate?: boolean;
+  /** Adds a button that swaps the timber texture for a plain matte finish, so the form and edges are easier to see. */
+  textureToggle?: boolean;
+}
+const { src, studio = false, autoRotate = true, textureToggle = false } = Astro.props;
+---
+<div class="model-viewer-wrapper relative rounded-2xl overflow-hidden" style="background: #3d4f47;">
+  <model-viewer
+    src={src}
+    {...(autoRotate ? { 'auto-rotate': true } : { 'interaction-prompt': 'none' })}
+    auto-rotate-delay="0"
+    rotation-per-second="20deg"
+    camera-controls
+    shadow-intensity="1.2"
+    shadow-softness="0.8"
+    exposure={studio ? '2.4' : '1.1'}
+    environment-image={studio ? '/environments/studio-light.jpg' : undefined}
+    camera-orbit={studio ? '-30deg 72deg auto' : undefined}
+    style="width:100%; height:480px; background:transparent; --progress-bar-color: transparent; --progress-bar-height: 0px;"
+    loading="lazy"
+  >
+    <div slot="poster" style="display:flex; align-items:center; justify-content:center; width:100%; height:100%; background:#3d4f47;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:16px;">
+        <svg style="width:40px; height:40px; animation:model-spin 1s linear infinite;" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="#c8956a" stroke-width="2" stroke-opacity="0.3"/>
+          <path d="M12 2a10 10 0 0 1 10 10" stroke="#c8956a" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span style="color:#e8dcc8; font-size:13px; letter-spacing:0.1em; opacity:0.7;">Loading model...</span>
+      </div>
+    </div>
+  </model-viewer>
+  <div class="absolute bottom-4 left-0 right-0 flex justify-center pointer-events-none">
+    <span class="bg-black/30 text-white/60 text-xs tracking-widest px-4 py-1.5 rounded-full">Drag to rotate · Scroll to zoom</span>
+  </div>
+  {textureToggle && (
+    <button type="button" data-texture-toggle disabled class="absolute top-4 right-4 bg-black/40 text-white/80 text-xs tracking-widest px-4 py-1.5 rounded-full hover:bg-black/60 transition-colors disabled:opacity-40 disabled:cursor-default cursor-pointer">Hide texture</button>
+    <script is:inline>
+      (function() {
+        var wrapper = document.currentScript.parentElement;
+        var viewer = wrapper.querySelector('model-viewer');
+        var button = wrapper.querySelector('[data-texture-toggle]');
+        var plain = [0.55, 0.52, 0.47, 1];
+        var saved = null;
+        var hidden = false;
+        // Textures decode after the model's load event, so wait for them before saving the originals to restore.
+        function whenTexturesReady(tries) {
+          var model = viewer.model;
+          var ready = model && model.materials.some(function(m) { return m.pbrMetallicRoughness.baseColorTexture.texture; });
+          if (ready || tries > 40) {
+            saved = model.materials.map(function(m) {
+              return { m: m, base: m.pbrMetallicRoughness.baseColorTexture.texture, normal: m.normalTexture.texture, factor: m.pbrMetallicRoughness.baseColorFactor.slice() };
+            });
+            button.disabled = false;
+          } else {
+            setTimeout(function() { whenTexturesReady(tries + 1); }, 150);
+          }
+        }
+        if (viewer.loaded) whenTexturesReady(0); else viewer.addEventListener('load', function() { whenTexturesReady(0); }, { once: true });
+        button.addEventListener('click', function() {
+          if (!saved) return;
+          hidden = !hidden;
+          saved.forEach(function(s) {
+            var pbr = s.m.pbrMetallicRoughness;
+            pbr.baseColorTexture.setTexture(hidden ? null : s.base);
+            s.m.normalTexture.setTexture(hidden ? null : s.normal);
+            pbr.setBaseColorFactor(hidden ? plain : s.factor);
+          });
+          button.textContent = hidden ? 'Show texture' : 'Hide texture';
+        });
+      })();
+    </script>
+  )}
+  <script is:inline>
+    (function() {
+      var loaded = false;
+      var wrapper = document.currentScript.parentElement;
+      var observer = new IntersectionObserver(function(entries) {
+        if (entries[0].isIntersecting && !loaded) {
+          loaded = true;
+          var s = document.createElement('script');
+          s.type = 'module';
+          s.src = 'https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js';
+          document.head.appendChild(s);
+          observer.disconnect();
+        }
+      }, { rootMargin: '200px' });
+      if (wrapper) observer.observe(wrapper);
+    })();
+  </script>
+</div>
+<style>@keyframes model-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }</style>

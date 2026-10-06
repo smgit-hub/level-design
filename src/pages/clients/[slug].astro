@@ -1,0 +1,71 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ModelViewer from '../../components/ModelViewer.astro';
+import { clientProjects } from '../../data/client-projects';
+
+export function getStaticPaths() {
+  return clientProjects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+---
+
+<Layout
+  title={`Proposed Designs | ${project.clientName} | Level Design`}
+  description={`Proposed 3D designs for ${project.clientName} from Level Design.`}
+  noindex
+>
+  <div>
+
+    <!-- Hero -->
+    <section class="relative bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white pt-36 pb-16 overflow-hidden">
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-[#c8956a] rounded-full blur-3xl"></div>
+      </div>
+      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl">
+          <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">Prepared for {project.clientName}</p>
+          <h1 class="hero-in text-4xl md:text-6xl font-serif" style="--delay: 0.4s">Your Proposed Designs</h1>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16 bg-[#f5f1e8]">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+        {project.pieces.map((piece, i) => {
+          const details = Object.entries(piece.details ?? {});
+          return (
+            <div class="reveal">
+              <h2 class="text-2xl md:text-3xl font-serif text-[#3d4f47] mb-4">{piece.name ?? `Piece ${i + 1}`}</h2>
+              <ModelViewer src={piece.model} studio autoRotate={false} textureToggle />
+              {details.length > 0 && (
+                <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {details.map(([key, value]) => (
+                    <div class="flex justify-between items-start gap-4 p-4 bg-white rounded-xl">
+                      <span class="font-medium text-[#3d4f47]">{key}</span>
+                      <span class="text-[#5a6b64] text-right">{value}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </section>
+
+    <section class="py-20 bg-white">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="reveal text-3xl font-serif text-[#3d4f47] mb-4">Questions or changes?</h2>
+        <p class="reveal text-[#5a6b64] text-lg mb-8">Let us know what you'd like adjusted and we'll update the designs.</p>
+        <a href="/contact/" class="reveal btn-scale inline-flex items-center gap-2 px-8 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl">
+          Get in Touch
+        </a>
+      </div>
+    </section>
+
+  </div>
+</Layout>
