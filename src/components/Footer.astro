@@ -5,9 +5,9 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="bg-[#2d3f37] text-[#e8dcc8]">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <!-- Top: Brand -->
-    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6 mb-12 pb-12 border-b border-[#3d4f47]">
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6 mb-8 pb-8 border-b border-[#3d4f47]">
       <div class="flex items-center gap-3">
         <div class="w-12 h-12 rounded-full bg-[#e8dcc8] flex items-center justify-center p-2 flex-shrink-0">
           <img src="/images/level-logo.png" alt="Level Design" loading="lazy" class="w-full h-full object-contain" />
@@ -23,16 +23,16 @@ const year = new Date().getFullYear();
     </div>
 
     <!-- Newsletter -->
-    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-12 pb-12 border-b border-[#3d4f47]">
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8 pb-8 border-b border-[#3d4f47]">
       <div>
-        <h3 class="text-white text-lg font-semibold mb-1">Stay in the Loop</h3>
+        <h3 class="text-white text-base font-semibold mb-0.5">Stay in the Loop</h3>
         <p class="text-sm text-[#b8ac98]">New designs, seasonal offers, and the occasional sale — no spam, unsubscribe any time.</p>
       </div>
       <NewsletterSignup client:visible />
     </div>
 
     <!-- Middle: Links -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
       <div>
         <h3 class="text-white text-xs font-semibold tracking-widest uppercase mb-4">Explore</h3>
         <ul class="space-y-2">
@@ -81,8 +81,7 @@ const year = new Date().getFullYear();
     </div>
 
     <!-- Bottom Bar -->
-    <div class="pt-8 border-t border-[#3d4f47] flex flex-col items-center gap-1 text-center">
-      <p class="text-xs font-semibold text-white">Level Design</p>
+    <div class="pt-6 border-t border-[#3d4f47] text-center">
       <p class="text-xs text-[#b8ac98]">© 2025 Level Design. All rights reserved.</p>
     </div>
   </div>
