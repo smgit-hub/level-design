@@ -96,14 +96,26 @@ const { src, studio = false, autoRotate = true, textureToggle = false, touchLock
         done.style.cssText = pill + 'top:16px;left:16px;display:none;cursor:pointer;';
         wrapper.appendChild(cover);
         wrapper.appendChild(done);
+        var unlocked = false;
+        // Belt and braces: touch-action covers browsers that honour it; this handler cancels the scroll gesture
+        // itself for those that don't (it must be non-passive to be allowed to cancel).
+        wrapper.addEventListener('touchmove', function(e) {
+          if (unlocked && e.cancelable) e.preventDefault();
+        }, { passive: false });
         function lock() {
+          unlocked = false;
           viewer.setAttribute('touch-action', 'pan-y');
+          wrapper.style.touchAction = '';
           cover.style.display = 'block';
           done.style.display = 'none';
           if (hint) hint.textContent = 'Tap to explore in 3D';
         }
         function unlock() {
+          unlocked = true;
           viewer.setAttribute('touch-action', 'none');
+          // Touch rules are the intersection of an element and its ancestors, so setting it on the wrapper
+          // covers everything inside the viewer, including parts of its shadow DOM.
+          wrapper.style.touchAction = 'none';
           cover.style.display = 'none';
           done.style.display = 'block';
           if (hint) hint.textContent = 'Drag to rotate · Pinch to zoom';
