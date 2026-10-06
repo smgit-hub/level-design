@@ -2,7 +2,6 @@
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
 import SectionHeader from '../components/SectionHeader.astro';
-import IconFeatureGrid from '../components/IconFeatureGrid.astro';
 import aboutImg from '../assets/images/about/level-design-about-image.webp';
 import belleImg from '../assets/images/about/level-design-belle-magazine-custom-table.webp';
 import houzzImg from '../assets/images/about/level-design-houzz-magazine-coffee-table.webp';
@@ -10,17 +9,17 @@ import houzzImg from '../assets/images/about/level-design-houzz-magazine-coffee-
 const valueItems = [
   {
     title: 'Design expertise',
-    desc: 'We bring over a decade of experience in dining table design — understanding proportion, material, construction, and how tables live in real homes.',
+    desc: 'A decade of dining table design — proportion, material, construction, and how tables live in real homes.',
     svg: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
   },
   {
-    title: 'Understanding how people live and entertain',
-    desc: "The best dining table is designed around the people who use it — whether that's a bespoke commission shaped around your brief, or a Studio design chosen to fit how you already live.",
+    title: 'Designed around how you live',
+    desc: "The best table is designed around the people who use it — a bespoke commission shaped around your brief, or a Studio design chosen to fit how you live.",
     svg: '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>',
   },
   {
-    title: 'Material knowledge, built into every table',
-    desc: 'Selecting the right timber and finish is a design decision — guided through a full consultation for bespoke commissions, or built into every Studio design from the start.',
+    title: 'Material knowledge built in',
+    desc: 'Timber and finish are design decisions — guided through a full consultation for commissions, and built into every Studio design.',
     svg: '<circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>',
   },
 ];
@@ -30,19 +29,19 @@ const valueItems = [
   <div>
 
     <!-- Hero -->
-    <section class="relative pt-36 pb-20 min-h-[30rem] flex items-center bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white overflow-hidden">
+    <section class="relative pt-28 pb-12 md:pt-32 md:min-h-[24rem] flex items-center bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white overflow-hidden">
       <div class="absolute inset-0 opacity-10">
         <div class="absolute -top-24 -right-24 w-96 h-96 bg-[#c8956a] rounded-full blur-3xl"></div>
       </div>
       <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl">
           <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">About Level Design</p>
-          <h1 class="hero-in text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">A Dining Table Design Studio Based in Melbourne</h1>
-          <p class="hero-in text-xl text-[#e8dcc8] leading-relaxed mb-8" style="--delay: 0.6s">
+          <h1 class="hero-in text-4xl sm:text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">A Dining Table Design Studio Based in Melbourne</h1>
+          <p class="hero-in text-lg sm:text-xl text-[#e8dcc8] leading-relaxed mb-8" style="--delay: 0.6s">
             For more than 10 years, we've designed bespoke dining tables shaped around the people who commission them — and more recently, brought that same thinking to the Studio Collection: the same craft, at a more accessible price.
           </p>
           <div class="hero-in flex flex-wrap gap-4" style="--delay: 0.8s">
-            {["10+ years of design expertise", "Featured in Belle and Houzz", "Working with homeowners, designers & architects"].map((item) => (
+            {["10+ years of design expertise", "Featured in Belle and Houzz", "Australian made"].map((item) => (
               <div class="px-4 py-2 bg-[#2d3f37] rounded-full text-sm flex items-center gap-2">
                 <svg class="w-4 h-4 text-[#c8956a]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 {item}
@@ -54,7 +53,7 @@ const valueItems = [
     </section>
 
     <!-- Story -->
-    <section class="py-24 bg-white">
+    <section class="py-16 md:py-24 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div class="reveal-left">
@@ -65,8 +64,7 @@ const valueItems = [
             <div class="space-y-6 text-[#5a6b64] text-lg">
               <p>Level Design is a dining table design studio. We work with clients across Melbourne and Australia to design bespoke dining tables shaped around their specific rooms, the way they live, and the way they entertain.</p>
               <p>Every bespoke commission begins with understanding the space — its proportions, its material palette, the people who gather around it, and what they need the table to do. The design follows from that understanding, not from a fixed specification.</p>
-              <p>We work directly with homeowners, and regularly collaborate with interior designers and architects who are specifying furniture for design-led residential projects. Our knowledge of scale, proportion, material, and construction allows us to work closely with each client's brief and bring the right result to life.</p>
-              <p>Alongside these bespoke commissions, we also offer the <a href="/studio/" class="text-[#c8956a] hover:underline">Studio Collection</a> — a small range of ready-to-order tables, built to the same standard of craft, at a more accessible price and with a 6–8 week lead time.</p>
+              <p>Alongside these bespoke commissions, we also offer the <a href="/studio/" class="text-[#c8956a] hover:underline">Studio Collection</a> — a small range of ready-to-order tables, built to the same standard of craft, at a more accessible price and with a 6–8 week lead time. Everything is designed in Melbourne and made with American and Australian hardwoods by skilled local craftspeople.</p>
             </div>
           </div>
           <div class="reveal-right relative">
@@ -81,38 +79,24 @@ const valueItems = [
     </section>
 
     <!-- Values -->
-    <section class="py-24 bg-[#f5f1e8]">
+    <section class="py-16 md:py-24 bg-[#f5f1e8]">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           eyebrow="Our Approach"
           title="What Guides Our Work"
-          wrapperClass="text-center mb-16"
-          titleClass="text-4xl md:text-5xl font-serif text-[#3d4f47]"
+          wrapperClass="text-center mb-10 md:mb-14"
+          titleClass="text-3xl md:text-5xl font-serif text-[#3d4f47]"
         />
-        <IconFeatureGrid items={valueItems} />
-      </div>
-    </section>
-
-    <!-- Timeline -->
-    <section class="py-24 bg-white">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeader
-          eyebrow="The Studio"
-          title="10 Years of Designing Around People and Their Spaces"
-          description="A steady commitment to design-led work, close collaboration with each client, and a genuine understanding of how dining tables are used every day."
-          wrapperClass="text-center mb-16"
-          descriptionClass="text-xl text-[#5a6b64] max-w-3xl mx-auto"
-        />
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            { year: "10+", title: "Years of Practice", desc: "Over a decade designing bespoke dining tables around individual spaces and lifestyles." },
-            { year: "Local", title: "Australian Made", desc: "Designed in Melbourne and made with American and Australian hardwoods by skilled local craftspeople." },
-            { year: "Design-led", title: "From First Conversation", desc: "Every bespoke commission begins with understanding the client's space and brief." },
-          ].map((item, i) => (
-            <div class="reveal text-center p-8 rounded-2xl bg-[#f5f1e8] hover:bg-[#e8dcc8] transition-colors duration-300" style={`--delay: ${i * 0.1}s`}>
-              <div class="text-6xl font-serif text-[#c8956a] mb-4">{item.year}</div>
-              <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{item.title}</h3>
-              <p class="text-[#5a6b64]">{item.desc}</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+          {valueItems.map((item, i) => (
+            <div class="reveal flex gap-4" style={`--delay: ${i * 0.1}s`}>
+              <div class="w-12 h-12 flex-shrink-0 rounded-xl bg-[#3d4f47] flex items-center justify-center">
+                <svg class="text-white w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" set:html={item.svg} />
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold text-[#3d4f47] mb-1">{item.title}</h3>
+                <p class="text-[#5a6b64] text-sm leading-relaxed">{item.desc}</p>
+              </div>
             </div>
           ))}
         </div>
@@ -120,19 +104,19 @@ const valueItems = [
     </section>
 
     <!-- Magazine -->
-    <section class="py-24 bg-[#f5f1e8]">
+    <section class="py-16 md:py-24 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div class="reveal-left order-2 lg:order-1">
-            <div class="relative h-[30rem]">
+            <div class="relative h-[19rem] sm:h-[26rem] lg:h-[30rem]">
               <!-- Belle landscape, bottom-left -->
-              <div class="absolute bottom-0 left-0 w-80 rounded-xl overflow-hidden shadow-xl z-10">
+              <div class="absolute bottom-0 left-0 w-[55%] rounded-xl overflow-hidden shadow-xl z-10">
                 <div class="aspect-[4/3]">
                   <Image src={belleImg} alt="Level Design table featured in Belle magazine" loading="lazy" class="w-full h-full object-cover" />
                 </div>
               </div>
               <!-- Houzz portrait, slightly overlapping belle -->
-              <div class="absolute top-0 left-[296px] w-72 rounded-xl overflow-hidden shadow-xl z-20">
+              <div class="absolute top-0 left-[50%] w-[48%] rounded-xl overflow-hidden shadow-xl z-20">
                 <div class="aspect-[3/4]">
                   <Image src={houzzImg} alt="Level Design table featured in Houzz" loading="lazy" class="w-full h-full object-cover" />
                 </div>
@@ -155,9 +139,9 @@ const valueItems = [
     </form>
 
     <!-- Trade CTA -->
-    <section class="py-24 bg-white">
+    <section class="py-16 md:py-24 bg-[#f5f1e8]">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] rounded-3xl p-12 text-white">
+        <div class="bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] rounded-3xl p-6 md:p-12 text-white">
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div class="reveal">
               <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Designers & Architects</p>
