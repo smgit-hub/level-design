@@ -16,29 +16,9 @@ type FormData = {
   timeline: string;
 };
 
-const faqs = [
-  {
-    question: "How long does a custom table take?",
-    answer: "Typically 8–12 weeks from design approval to delivery, depending on timber availability and complexity.",
-  },
-  {
-    question: "What timbers do you work with?",
-    answer: "We work primarily with hardwoods — American Oak, American Ash, and American Walnut, as well as Tasmanian Oak and Australian timbers including Blackbutt, Spotted Gum, and Victorian Ash. All sustainably sourced.",
-  },
-  {
-    question: "Can you match existing furniture?",
-    answer: "Yes! Bring photos or samples and we'll work to complement your existing pieces in tone and style.",
-  },
-  {
-    question: "Do you ship nationally?",
-    answer: "We deliver Melbourne-wide. For anywhere else in Australia, reach out and we'll work out the details with you.",
-  },
-];
-
 export default function CustomForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const successRef = useRef<HTMLDivElement>(null);
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
@@ -71,7 +51,7 @@ export default function CustomForm() {
   return (
     <>
       {/* Enquiry Form */}
-      <section className="py-24 bg-white">
+      <section id="brief" className="scroll-mt-24 py-16 md:py-24 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -200,57 +180,6 @@ export default function CustomForm() {
               </div>
             )}
           </motion.div>
-        </div>
-      </section>
-
-      {/* FAQs */}
-      <section className="py-24 bg-[#f5f1e8]">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <p className="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Common Questions</p>
-            <h2 className="text-4xl md:text-5xl font-serif text-[#3d4f47]">Frequently Asked Questions</h2>
-          </motion.div>
-
-          <div className="space-y-4">
-            {faqs.map((faq, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="bg-white rounded-2xl overflow-hidden"
-              >
-                <button
-                  onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-[#f5f1e8] transition-colors"
-                >
-                  <span className="font-semibold text-[#3d4f47] pr-4">{faq.question}</span>
-                  <motion.div
-                    animate={{ rotate: openFaq === index ? 180 : 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="text-[#c8956a] flex-shrink-0"
-                  >
-                    <ArrowRight className="rotate-90" size={20} />
-                  </motion.div>
-                </button>
-                <motion.div
-                  initial={false}
-                  animate={{ height: openFaq === index ? "auto" : 0, opacity: openFaq === index ? 1 : 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="overflow-hidden"
-                >
-                  <div className="px-6 pb-5 text-[#5a6b64]">{faq.answer}</div>
-                </motion.div>
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
     </>
