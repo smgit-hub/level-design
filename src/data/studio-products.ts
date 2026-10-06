@@ -1,6 +1,12 @@
 export type StudioSizeVariant = {
   /** Used as the URL/session param and Stripe lookup key — e.g. "2000x900". */
   id: string;
+  /** Tabletop length in mm (the diameter for a round table) — drives the to-scale outline on the product page. */
+  lengthMm: number;
+  /** Tabletop width in mm (the diameter for a round table). */
+  widthMm: number;
+  /** Chairs drawn around the outline — the bottom of the `seating` range — a comfortable layout; the range in the copy is the squeezed-in maximum. */
+  chairs: number;
   /** Short label shown in the size selector — e.g. "2000mm × 900mm". */
   label: string;
   /** Full dimensions string shown in the specifications table. */
@@ -27,6 +33,10 @@ export type StudioProduct = {
   tagline: string;
   description: string;
   category: string;
+  /** Two-word shape cue shown on cards, so four similar oak tables are easy to tell apart. */
+  shape: string;
+  /** Top-down outline drawn on the product page: rectangle (with a corner radius in mm), pill, or round. */
+  outline: { kind: "rect"; cornerRadiusMm: number } | { kind: "pill" } | { kind: "round" };
   features: string[];
   /** Facts that don't vary by size — dimensions/seating live on each entry in `sizes` instead. */
   specifications: Record<string, string>;
@@ -36,7 +46,7 @@ export type StudioProduct = {
   };
   /** Every size this table is offered in, smallest first. */
   sizes: StudioSizeVariant[];
-  /** Path to the .glb model used by the rotate-viewer — one model shared across sizes; it's a representative preview, not scaled per size. */
+  /** Path to the .glb model used by the rotate-viewer — one model shared across sizes, made at the largest size and not scaled per size. */
   model: string;
 };
 
@@ -53,6 +63,8 @@ export const studioProducts: Record<string, StudioProduct> = {
     description:
       "The Line Table pairs a sharp-cornered rectangular top with clean lines — a straightforward, made-to-order design for everyday dining spaces.",
     category: "Studio",
+    shape: "Straight-edged",
+    outline: { kind: "rect", cornerRadiusMm: 40 },
     features: [
       "Rectangular top with a small corner radius",
       "Real oak veneer top, solid oak wherever it bears weight — built to last, not to be replaced",
@@ -62,7 +74,7 @@ export const studioProducts: Record<string, StudioProduct> = {
     ],
     specifications: {
       "Top / Base Style": "Rectangle with small corner radius / Straight legs",
-      "Construction": "Oak veneer top, solid oak legs",
+      "Construction": "Mix of oak veneer and solid oak",
     },
     images: {
       main: "/images/studio/line/level-design-line-studio-dining-table-main.webp",
@@ -71,6 +83,9 @@ export const studioProducts: Record<string, StudioProduct> = {
     sizes: [
       {
         id: "1600x850",
+        lengthMm: 1600,
+        widthMm: 850,
+        chairs: 4,
         label: "1600mm × 850mm",
         dimensions: "1600mm L × 850mm W × 750mm H",
         seating: "4–6 people",
@@ -79,6 +94,9 @@ export const studioProducts: Record<string, StudioProduct> = {
       },
       {
         id: "2000x1000",
+        lengthMm: 2000,
+        widthMm: 1000,
+        chairs: 6,
         label: "2000mm × 1000mm",
         dimensions: "2000mm L × 1000mm W × 750mm H",
         seating: "6–8 people",
@@ -87,6 +105,9 @@ export const studioProducts: Record<string, StudioProduct> = {
       },
       {
         id: "2350x1150",
+        lengthMm: 2350,
+        widthMm: 1150,
+        chairs: 8,
         label: "2350mm × 1150mm",
         dimensions: "2350mm L × 1150mm W × 750mm H",
         seating: "8–10 people",
@@ -103,6 +124,8 @@ export const studioProducts: Record<string, StudioProduct> = {
     description:
       "The Curve Table takes the same rectangular footprint as Line and softens every corner with a large radius — a warmer profile for open-plan living.",
     category: "Studio",
+    shape: "Soft corners",
+    outline: { kind: "rect", cornerRadiusMm: 250 },
     features: [
       "Rectangular top with a large corner radius",
       "Real oak veneer top, solid oak wherever it bears weight — built to last, not to be replaced",
@@ -112,7 +135,7 @@ export const studioProducts: Record<string, StudioProduct> = {
     ],
     specifications: {
       "Top / Base Style": "Rectangle with large corner radius / Straight legs",
-      "Construction": "Oak veneer top, solid oak legs",
+      "Construction": "Mix of oak veneer and solid oak",
     },
     images: {
       main: "/images/studio/curve/level-design-curve-studio-dining-table-main.webp",
@@ -121,6 +144,9 @@ export const studioProducts: Record<string, StudioProduct> = {
     sizes: [
       {
         id: "2000x1000",
+        lengthMm: 2000,
+        widthMm: 1000,
+        chairs: 6,
         label: "2000mm × 1000mm",
         dimensions: "2000mm L × 1000mm W × 750mm H",
         seating: "6–8 people",
@@ -129,6 +155,9 @@ export const studioProducts: Record<string, StudioProduct> = {
       },
       {
         id: "2350x1150",
+        lengthMm: 2350,
+        widthMm: 1150,
+        chairs: 8,
         label: "2350mm × 1150mm",
         dimensions: "2350mm L × 1150mm W × 750mm H",
         seating: "8–10 people",
@@ -145,6 +174,8 @@ export const studioProducts: Record<string, StudioProduct> = {
     description:
       "The Pill Table's stadium-shaped top — straight sides, fully rounded ends — keeps the seating generous while softening the whole silhouette.",
     category: "Studio",
+    shape: "Pill shape",
+    outline: { kind: "pill" },
     features: [
       "Pill-shaped top with fully rounded ends",
       "Real oak veneer top, solid oak wherever it bears weight — built to last, not to be replaced",
@@ -154,7 +185,7 @@ export const studioProducts: Record<string, StudioProduct> = {
     ],
     specifications: {
       "Top / Base Style": "Pill shape / Straight legs",
-      "Construction": "Oak veneer top, solid oak legs",
+      "Construction": "Mix of oak veneer and solid oak",
     },
     images: {
       main: "/images/studio/pill/level-design-pill-studio-dining-table-main.webp",
@@ -163,6 +194,9 @@ export const studioProducts: Record<string, StudioProduct> = {
     sizes: [
       {
         id: "2000x1000",
+        lengthMm: 2000,
+        widthMm: 1000,
+        chairs: 6,
         label: "2000mm × 1000mm",
         dimensions: "2000mm L × 1000mm W × 750mm H",
         seating: "6–8 people",
@@ -171,6 +205,9 @@ export const studioProducts: Record<string, StudioProduct> = {
       },
       {
         id: "2350x1150",
+        lengthMm: 2350,
+        widthMm: 1150,
+        chairs: 8,
         label: "2350mm × 1150mm",
         dimensions: "2350mm L × 1150mm W × 750mm H",
         seating: "8–10 people",
@@ -187,6 +224,8 @@ export const studioProducts: Record<string, StudioProduct> = {
     description:
       "The Round Table brings the same design standard to a circular top — an easy fit for smaller dining spaces and everyday conversation.",
     category: "Studio",
+    shape: "Round",
+    outline: { kind: "round" },
     features: [
       "Round top, no head of table",
       "Real oak veneer top, solid oak wherever it bears weight — built to last, not to be replaced",
@@ -196,7 +235,7 @@ export const studioProducts: Record<string, StudioProduct> = {
     ],
     specifications: {
       "Top / Base Style": "Round / Central pedestal",
-      "Construction": "Oak veneer top, solid oak base",
+      "Construction": "Mix of oak veneer and solid oak",
     },
     images: {
       main: "/images/studio/round/level-design-round-studio-dining-table-main.webp",
@@ -205,14 +244,20 @@ export const studioProducts: Record<string, StudioProduct> = {
     sizes: [
       {
         id: "1200",
+        lengthMm: 1200,
+        widthMm: 1200,
+        chairs: 4,
         label: "1200mm Diameter",
         dimensions: "1200mm Diameter × 750mm H",
-        seating: "4 people",
+        seating: "4–5 people",
         price: 209900,
         stripePriceId: "price_REPLACE_ME_round_1200",
       },
       {
         id: "1500",
+        lengthMm: 1500,
+        widthMm: 1500,
+        chairs: 6,
         label: "1500mm Diameter",
         dimensions: "1500mm Diameter × 750mm H",
         seating: "6–8 people",
