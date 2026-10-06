@@ -33,6 +33,8 @@ export type StudioProduct = {
   tagline: string;
   description: string;
   category: string;
+  /** Plain-language construction, used in the FAQ: "<name> is built with <construction> — made to last for years of daily use." */
+  construction: string;
   /** Two-word shape cue shown on cards, so four similar oak tables are easy to tell apart. */
   shape: string;
   /** Top-down outline drawn on the product page: rectangle (with a corner radius in mm), pill, or round. */
@@ -63,18 +65,20 @@ export const studioProducts: Record<string, StudioProduct> = {
     description:
       "The Line Table pairs a sharp-cornered rectangular top with clean lines — a straightforward, made-to-order design for everyday dining spaces.",
     category: "Studio",
+    construction: "a real oak veneer top over a stable substrate, with a fully solid oak base",
     shape: "Straight-edged",
     outline: { kind: "rect", cornerRadiusMm: 40 },
     features: [
       "Rectangular top with a small corner radius",
-      "Real oak veneer top, solid oak wherever it bears weight — built to last, not to be replaced",
+      "Real oak veneer top with a fully solid oak base — made to last for years of daily use",
       "View and rotate in 3D before you buy",
       "Three fixed sizes, ready to order online",
       "6–8 week lead time, faster than a bespoke commission",
     ],
     specifications: {
       "Top / Base Style": "Rectangle with small corner radius / Straight legs",
-      "Construction": "Mix of oak veneer and solid oak",
+      "Timber / Finish": "American oak / Clear matte",
+      "Construction": "Oak veneer top over a stable substrate, solid oak base",
     },
     images: {
       main: "/images/studio/line/level-design-line-studio-dining-table-main.webp",
@@ -120,22 +124,24 @@ export const studioProducts: Record<string, StudioProduct> = {
   curve: {
     id: "curve",
     name: "Curve Table",
-    tagline: "The same clean rectangle, softened at every corner",
+    tagline: "A rectangular top with generously rounded corners",
     description:
-      "The Curve Table takes the same rectangular footprint as Line and softens every corner with a large radius — a warmer profile for open-plan living.",
+      "The Curve Table is a rectangular top with a large radius at every corner — a softer, warmer profile for open-plan living.",
     category: "Studio",
+    construction: "real oak veneer over a stable substrate, top and base",
     shape: "Soft corners",
     outline: { kind: "rect", cornerRadiusMm: 250 },
     features: [
       "Rectangular top with a large corner radius",
-      "Real oak veneer top, solid oak wherever it bears weight — built to last, not to be replaced",
+      "Real oak veneer — made to last for years of daily use",
       "View and rotate in 3D before you buy",
       "Two fixed sizes, ready to order online",
       "6–8 week lead time, faster than a bespoke commission",
     ],
     specifications: {
       "Top / Base Style": "Rectangle with large corner radius / Straight legs",
-      "Construction": "Mix of oak veneer and solid oak",
+      "Timber / Finish": "American oak / Clear matte",
+      "Construction": "Oak veneer over a stable substrate",
     },
     images: {
       main: "/images/studio/curve/level-design-curve-studio-dining-table-main.webp",
@@ -174,18 +180,20 @@ export const studioProducts: Record<string, StudioProduct> = {
     description:
       "The Pill Table's stadium-shaped top — straight sides, fully rounded ends — keeps the seating generous while softening the whole silhouette.",
     category: "Studio",
+    construction: "real oak veneer over a stable substrate, top and base",
     shape: "Pill shape",
     outline: { kind: "pill" },
     features: [
       "Pill-shaped top with fully rounded ends",
-      "Real oak veneer top, solid oak wherever it bears weight — built to last, not to be replaced",
+      "Real oak veneer — made to last for years of daily use",
       "View and rotate in 3D before you buy",
       "Two fixed sizes, ready to order online",
       "6–8 week lead time, faster than a bespoke commission",
     ],
     specifications: {
       "Top / Base Style": "Pill shape / Straight legs",
-      "Construction": "Mix of oak veneer and solid oak",
+      "Timber / Finish": "American oak / Clear matte",
+      "Construction": "Oak veneer over a stable substrate",
     },
     images: {
       main: "/images/studio/pill/level-design-pill-studio-dining-table-main.webp",
@@ -224,18 +232,20 @@ export const studioProducts: Record<string, StudioProduct> = {
     description:
       "The Round Table brings the same design standard to a circular top — an easy fit for smaller dining spaces and everyday conversation.",
     category: "Studio",
+    construction: "real oak veneer over a stable substrate, top and base",
     shape: "Round",
     outline: { kind: "round" },
     features: [
       "Round top, no head of table",
-      "Real oak veneer top, solid oak wherever it bears weight — built to last, not to be replaced",
+      "Real oak veneer — made to last for years of daily use",
       "View and rotate in 3D before you buy",
       "Two fixed sizes, ready to order online",
       "6–8 week lead time, faster than a bespoke commission",
     ],
     specifications: {
       "Top / Base Style": "Round / Central pedestal",
-      "Construction": "Mix of oak veneer and solid oak",
+      "Timber / Finish": "American oak / Clear matte",
+      "Construction": "Oak veneer over a stable substrate",
     },
     images: {
       main: "/images/studio/round/level-design-round-studio-dining-table-main.webp",
