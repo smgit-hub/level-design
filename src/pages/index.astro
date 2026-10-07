@@ -3,12 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import { products } from '../data/signature-products';
 import { allStudioProducts, startingPrice as getStartingPrice } from '../data/studio-products';
 import StudioShapeIcon from '../components/StudioShapeIcon.astro';
-import { Image } from 'astro:assets';
 import SectionHeader from '../components/SectionHeader.astro';
 import IconFeatureGrid from '../components/IconFeatureGrid.astro';
-import review1 from '../assets/images/home/level-design-customer-review-1.webp';
-import review2 from '../assets/images/home/level-design-customer-review-2.webp';
-import review3 from '../assets/images/home/level-design-customer-review-3.webp';
 
 const formatPrice = (cents: number) =>
   new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 }).format(cents / 100);
@@ -234,44 +230,44 @@ const whyChooseItems = [
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
             {
-              name: "Sarah Mitchell",
-              role: "Interior Designer, South Yarra",
+              role: "Interior Designer, Fitzroy",
               content: "The craftsmanship is exceptional. Our Pillar Table has become the centrepiece of our dining room.",
               tableLabel: "Pillar Table — American Oak",
               projectId: "pillar",
-              img: review1,
-              pos: "object-center"
+              // Same lead image as the Pillar project on the Projects page: the fourth photo on the Pillar page
+              img: products.pillar.images.gallery[2],
+              pos: "object-[center_55%]",
+              zoom: "scale-[1.18] origin-bottom group-hover:scale-[1.23]"
             },
             {
-              name: "Emma Thompson",
-              role: "Architect, Fitzroy",
+              role: "Interior Designer, South Yarra",
               content: "I recommend Level Design to all my clients. Their attention to detail and quality is unmatched.",
               tableLabel: "Venn Table — American Oak",
               projectId: "venn",
-              img: review3,
-              pos: "object-bottom"
+              img: products.venn.images.main,
+              pos: "object-center",
+              zoom: "scale-[1.18] origin-bottom group-hover:scale-[1.23]"
             },
             {
-              name: "James Chen",
               role: "Homeowner, Brighton",
               content: "Working with Level Design was a dream. They understood our vision and delivered beyond expectations.",
               tableLabel: "Luna Table — Tasmanian Oak",
               projectId: "luna",
-              img: review2,
-              pos: "object-center"
+              // Same lead image as the Luna project on the Projects page: the third photo on the Luna page
+              img: products.luna.images.gallery[1],
+              pos: "object-[center_55%]"
             },
           ].map((t, i) => (
             <a href={`/projects/#project-${t.projectId}`} class="reveal group rounded-2xl bg-white shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden block border border-transparent hover:border-[#e8dcc8]" style={`--delay: ${i * 0.1}s`}>
               <div class="aspect-[4/3] overflow-hidden">
-                <Image src={t.img} alt={`${t.name}'s dining space`} loading="lazy" class={`w-full h-full object-cover ${t.pos} group-hover:scale-105 transition-transform duration-500`} />
+                <img src={t.img} alt={t.tableLabel.split(' — ')[0]} loading="lazy" width="1536" height="1024" class={`w-full h-full object-cover ${t.pos} ${t.zoom ?? 'group-hover:scale-105'} transition-transform duration-500`} />
               </div>
               <div class="p-8 relative">
                 <p class="text-xs font-semibold tracking-widest uppercase text-[#c8956a] mb-3">{t.tableLabel}</p>
                 <p class="text-[#3d4f47] text-lg font-serif italic leading-relaxed mb-4">"{t.content}"</p>
                 <div class="border-t border-[#e8dcc8] pt-4 flex items-center justify-between">
                   <div>
-                    <div class="font-semibold text-[#3d4f47] text-sm">{t.name}</div>
-                    <div class="text-xs text-[#5a6b64] mt-0.5">{t.role}</div>
+                    <div class="font-semibold text-[#3d4f47] text-sm">{t.role}</div>
                   </div>
                   <span class="text-[#c8956a] text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">View project →</span>
                 </div>
@@ -280,7 +276,9 @@ const whyChooseItems = [
           ))}
         </div>
 
-        <div class="reveal text-center mt-12">
+        <p class="reveal text-center text-xs text-[#8a9b94] mt-8">Client names withheld for privacy.</p>
+
+        <div class="reveal text-center mt-6">
           <a href="/projects/" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl">
             View All Projects →
           </a>

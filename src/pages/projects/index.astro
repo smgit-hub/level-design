@@ -5,12 +5,11 @@ import { products } from '../../data/signature-products';
 const projects = [
   {
     id: 'pillar',
-    client: 'Sarah Mitchell',
     role: 'Interior Designer',
-    location: 'South Yarra, Melbourne',
+    location: 'Fitzroy, Melbourne',
     design: products.pillar,
     overview:
-      'This project centred on a large open-plan dining and living space in South Yarra where the dining table needed to anchor the room without overpowering it. The client — an interior designer — wanted a table that could seat ten comfortably for regular entertaining while reading as a considered design object in its own right.',
+      'This project centred on a large open-plan dining and living space in Fitzroy where the dining table needed to anchor the room without overpowering it. The client — an interior designer — wanted a table that could seat ten comfortably for regular entertaining while reading as a considered design object in its own right.',
     considerations:
       'The key challenge was scale. The room was generous but the ceiling height was modest, which meant a table with a low visual profile was important. A pedestal base — rather than four corner legs — was chosen to keep the floor plane open and allow flexible seating arrangements. The pill-shaped top with a bevelled edge softened the overall mass and gave the design a quieter, more refined presence.',
     materials:
@@ -18,16 +17,21 @@ const projects = [
     outcome:
       'The Pillar Table was made to 2400mm × 1100mm, comfortably seating between eight and ten people. The client describes it as the centrepiece of the room — a table that invites people to sit, stay, and come back.',
     quote: 'The craftsmanship is exceptional. Our Pillar Table has become the centrepiece of our dining room.',
-    images: products.pillar.images,
+    // Leads with the fourth photo on the Pillar page (the last gallery image); the table's usual main photo joins the gallery. The homepage card uses the same lead image.
+    images: {
+      main: products.pillar.images.gallery[2],
+      gallery: [products.pillar.images.main, products.pillar.images.gallery[0], products.pillar.images.gallery[1]],
+    },
+    heroPos: 'object-[center_55%]',
+    heroZoom: 'scale-[1.18] origin-bottom',
   },
   {
     id: 'venn',
-    client: 'Emma Thompson',
-    role: 'Architect',
-    location: 'Fitzroy, Melbourne',
+    role: 'Interior Designer',
+    location: 'South Yarra, Melbourne',
     design: products.venn,
     overview:
-      'For this new build in Fitzroy, the client came with a specific seating requirement and a clear sense of how the space would be used. All of the design work went into resolving the correct size, proportion, and shape — ensuring the table would feel sculptural and considered, while remaining practical for a household that entertains regularly.',
+      'For this new build in South Yarra, the client came with a specific seating requirement and a clear sense of how the space would be used. All of the design work went into resolving the correct size, proportion, and shape — ensuring the table would feel sculptural and considered, while remaining practical for a household that entertains regularly.',
     considerations:
       'An organic-form top was chosen deliberately to contrast with the rectilinear geometry of the architecture. The soft, flowing edges of the Venn Table give it a warmth and approachability that a more structured rectangular design would not have provided. The oval pedestal bases echo the organic quality of the top without creating visual noise.',
     materials:
@@ -36,10 +40,10 @@ const projects = [
       'The Venn Table was made at 2500mm × 1400mm, giving the client a generous surface that seats eight with room to spare for the table settings she enjoys putting together for guests. The organic top has been photographed extensively since delivery and remains one of our most-requested designs.',
     quote: 'I recommend Level Design to all my clients. Their attention to detail and quality is unmatched.',
     images: products.venn.images,
+    heroZoom: 'scale-[1.18] origin-bottom',
   },
   {
     id: 'luna',
-    client: 'James Chen',
     role: 'Homeowner',
     location: 'Brighton, Melbourne',
     design: products.luna,
@@ -52,7 +56,12 @@ const projects = [
     outcome:
       'The Luna Table was made at 1400mm diameter — a size that seats six comfortably and leaves enough floor space around the table for the room to breathe. The client describes the experience of working through the design as collaborative and reassuring — arriving at a result that exceeded what they had imagined was possible.',
     quote: 'Working with Level Design was a dream. They understood our vision and delivered beyond expectations.',
-    images: products.luna.images,
+    // Leads with the third photo on the Luna page (the close-up of the angled legs); the table's usual main photo joins the gallery. The homepage card uses the same lead image.
+    images: {
+      main: products.luna.images.gallery[1],
+      gallery: [products.luna.images.main, products.luna.images.gallery[0], products.luna.images.gallery[2]],
+    },
+    heroPos: 'object-[center_55%]',
   },
 ];
 
@@ -83,7 +92,7 @@ const schema = {
           <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">Project Portfolio</p>
           <h1 class="hero-in text-4xl sm:text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Every Bespoke Table Begins with a Unique Brief</h1>
           <p class="hero-in text-lg sm:text-xl text-[#e8dcc8] mb-8 max-w-2xl" style="--delay: 0.6s">
-            A selection of dining table projects designed around our clients' spaces, lifestyles, and the way they entertain.
+            A selection of dining table projects designed around our clients' spaces, lifestyles, and the way they entertain. Client names are withheld for privacy.
           </p>
         </div>
       </div>
@@ -106,12 +115,12 @@ const schema = {
 
           <!-- Main image + overview -->
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
-            <div class="reveal">
+            <div class="reveal rounded-2xl overflow-hidden">
               <img
                 src={project.images.main}
-                alt={`${project.design.name} — ${project.client}`}
+                alt={project.design.name}
                 loading="lazy"
-                class="w-full rounded-2xl object-cover aspect-[4/3]"
+                class={`w-full object-cover aspect-[4/3] ${project.heroPos ?? 'object-center'} ${project.heroZoom ?? ''}`}
               />
             </div>
             <div class="reveal" style="--delay: 0.1s">
@@ -120,7 +129,7 @@ const schema = {
               <blockquote class="border-l-2 border-[#c8956a] pl-6">
                 <p class="text-[#3d4f47] text-xl font-serif italic leading-relaxed mb-4">"{project.quote}"</p>
                 <footer class="text-sm text-[#5a6b64]">
-                  <span class="font-semibold text-[#3d4f47]">{project.client}</span> — {project.role}, {project.location}
+                  <span class="font-semibold text-[#3d4f47]">{project.role}</span>, {project.location}
                 </footer>
               </blockquote>
             </div>
