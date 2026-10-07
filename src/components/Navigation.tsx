@@ -48,11 +48,11 @@ export default function Navigation({ currentPath }: Props) {
       <div className="w-full px-4 sm:px-6 lg:px-10">
         <div className="grid grid-cols-[1fr_auto] md:grid-cols-[1fr_auto_1fr] items-center h-16">
 
-          {/* Logo: the mark is drawn straight onto the header in cream (masked from the PNG's alpha), with the name in the site's serif */}
+          {/* Logo: the mark is drawn straight onto the header (masked from the PNG's alpha) in the same off-white as the name, so the lockup is one colour and sits a step above the cream menu links */}
           <a href="/" aria-label="Level Design home" className="flex items-center gap-2.5 group min-w-0 justify-self-start">
             <span
               aria-hidden="true"
-              className="block flex-shrink-0 w-11 h-[31px] bg-[#e8dcc8] transition-opacity duration-200 group-hover:opacity-80"
+              className="block flex-shrink-0 w-11 h-[31px] bg-[#f5f1e8] transition-opacity duration-200 group-hover:opacity-80"
               style={{
                 WebkitMaskImage: "url(/images/level-logo.png)",
                 maskImage: "url(/images/level-logo.png)",
