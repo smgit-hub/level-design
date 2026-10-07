@@ -3,11 +3,15 @@
  *
  *   npm run stripe:setup            create or update everything in the mode of the key in your env file
  *   npm run stripe:setup -- --dry   print what would happen and change nothing
- *   npm run stripe:setup -- --live  required to touch a live-mode key (sk_live_…)
+ *   npm run stripe:setup -- --live  required to touch a live-mode key (rk_live_… / sk_live_…)
  *
  * One Stripe Product per size (so the checkout line item reads "Line Table — 2000mm × 1000mm") with one AUD
  * Price each, found again by its lookup key. Safe to re-run: unchanged prices are left alone, and a changed
  * amount gets a new Price that takes over the lookup key (the old one is archived).
+ *
+ * The Stripe account is shared with other sites, so every object this creates is namespaced: Product ids and
+ * Price lookup keys all start with "studio_", and nothing outside that prefix is read, changed or archived.
+ * A restricted key (rk_…) is enough: Products = Write and Prices = Write. Delete that key once setup is done.
  */
 import Stripe from "stripe";
 import { allStudioProducts } from "../src/data/studio-products.ts";
@@ -19,10 +23,11 @@ const allowLive = args.has("--live");
 
 const key = process.env.STRIPE_SECRET_KEY;
 if (!key) {
-  console.error("STRIPE_SECRET_KEY is empty. Put your *test* secret key (sk_test_…) in your env file, then run this again.");
+  console.error("STRIPE_SECRET_KEY is empty. Put your *test* restricted key (rk_test_…) in your env file, then run this again.");
   process.exit(1);
 }
-const isLive = key.startsWith("sk_live_");
+// Both secret (sk_live_…) and restricted (rk_live_…) live keys count as live.
+const isLive = /^(sk|rk)_live_/.test(key);
 if (isLive && !allowLive) {
   console.error("That is a LIVE-mode key. Re-run with --live if you really mean to create live Products and Prices.");
   process.exit(1);

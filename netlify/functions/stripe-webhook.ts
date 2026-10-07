@@ -7,7 +7,10 @@ import Stripe from "stripe";
  * pulls the full order, and emails the details through Brevo so you can arrange delivery.
  *
  * Environment variables (Netlify dashboard in production, your local env file in development):
- *   STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET   from Stripe (the webhook secret starts whsec_)
+ *   STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET   from Stripe (the webhook secret starts whsec_). A restricted key is enough:
+ *                                              Checkout Sessions = Read (the checkout function also needs Write, Prices/Products = Read).
+ *
+ * The Stripe account is shared with other sites, so only sessions tagged metadata.source = "leveldesign-studio" are acted on.
  *   BREVO_API_KEY                              already used by the newsletter signup
  *   BREVO_SENDER_EMAIL                         a sender you have verified in Brevo
  *   ORDER_NOTIFICATION_EMAIL                   where order emails go
@@ -63,13 +66,17 @@ export async function handler(event: NetlifyEvent) {
 
   try {
     const base = stripeEvent.data.object as Stripe.Checkout.Session;
+    // This Stripe account also serves other websites and products, and Stripe sends every checkout to every
+    // webhook endpoint — so only act on sessions this site's checkout created.
+    if (base.metadata?.source !== "leveldesign-studio") {
+      return { statusCode: 200, body: "Not a Studio order — ignored." };
+    }
     if (base.payment_status !== "paid") {
       return { statusCode: 200, body: "Not paid yet." }; // an async payment will fire async_payment_succeeded later
     }
 
-    const session = await stripe.checkout.sessions.retrieve(base.id, {
-      expand: ["line_items", "shipping_cost.shipping_rate", "payment_intent"],
-    });
+    // Needs only read access to Checkout Sessions (no extra permissions for shipping rates or payment intents).
+    const session = await stripe.checkout.sessions.retrieve(base.id, { expand: ["line_items"] });
     // Stripe moved shipping details between API versions; read whichever is present.
     const s = session as Stripe.Checkout.Session & {
       shipping_details?: { name?: string | null; address?: Stripe.Address | null } | null;
@@ -80,17 +87,20 @@ export async function handler(event: NetlifyEvent) {
     const customer = session.customer_details;
 
     const item = session.line_items?.data[0];
-    const rate = session.shipping_cost?.shipping_rate as Stripe.ShippingRate | null | undefined;
-    const isRemote = (rate?.display_name ?? "").startsWith("Remote");
+    // The delivery option is identified by its price, which is set in create-checkout-session.ts.
+    const shippingCents = session.shipping_cost?.amount_total;
+    const deliveryName =
+      shippingCents === 19900 ? "Melbourne Metro" : shippingCents === 44900 ? "Other capital cities & VIC regional" : shippingCents === 0 ? "Remote (WA / NT / TAS / far regional)" : "Delivery";
+    const isRemote = shippingCents === 0;
     const live = session.livemode;
-    const paymentIntentId = typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id;
+    const paymentIntentId = typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id; // an id; no expansion needed
 
     const lines = [
       `${live ? "" : "[TEST ORDER] "}New Studio Collection order`,
       "",
       `Item:      ${item?.description ?? session.metadata?.order ?? "—"}`,
       `Table:     ${money(item?.amount_total)}`,
-      `Delivery:  ${rate?.display_name ?? "—"}  ${money(session.shipping_cost?.amount_total)}`,
+      `Delivery:  ${deliveryName}  ${money(shippingCents)}`,
       `Paid:      ${money(session.amount_total)}`,
       "",
       ...(isRemote ? ["⚠ REMOTE DELIVERY: no delivery fee was charged. Confirm the fee with the customer and invoice it separately.", ""] : []),

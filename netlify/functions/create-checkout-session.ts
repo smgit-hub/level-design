@@ -49,7 +49,8 @@ export async function handler(event: { httpMethod: string; body: string | null; 
       line_items: [{ price: stripePrice.id, quantity: 1 }],
       // Delivery needs a phone number, and the order email needs to know exactly what was bought.
       phone_number_collection: { enabled: true },
-      metadata: { productId: product.id, sizeId: size.id, order: orderLabel },
+      // "source" lets the order-email webhook ignore checkouts from the other sites that share this Stripe account.
+      metadata: { source: "leveldesign-studio", productId: product.id, sizeId: size.id, order: orderLabel },
       payment_intent_data: { description: `Studio Collection — ${orderLabel}`, metadata: { productId: product.id, sizeId: size.id } },
       shipping_address_collection: { allowed_countries: ["AU"] },
       shipping_options: [
