@@ -18,13 +18,17 @@ export type StudioSizeVariant = {
    * AUD, in cents — optional "was" price shown struck through next to `price` to run a
    * sale (e.g. Black Friday, EOFY, Christmas). Leave unset outside of a sale window.
    * To run a sale: set this to the current regular price, drop `price` to the sale
-   * amount, and point `stripePriceId` at a Stripe Price object for that sale amount
-   * (Stripe Prices are immutable, so the sale needs its own Price object). Revert both
-   * — and switch `stripePriceId` back — once the sale ends.
+   * amount, then run `npm run stripe:setup` — it creates a new Stripe Price at the new amount and moves this
+   * size's lookup key to it (Stripe Prices are immutable). Revert and re-run once the sale ends.
    */
   compareAtPrice?: number;
-  /** Stripe Price ID for this size, managed in the Stripe dashboard. */
-  stripePriceId: string;
+  /**
+   * Stripe Price lookup key for this size (`studio_<product>_<size>`). The checkout function resolves the live
+   * Price from this key, so the same code works in test and live mode and no Price IDs live in the repo.
+   * `npm run stripe:setup` creates the Products and Prices in Stripe with these keys, and the checkout refuses to
+   * run if the Stripe amount ever differs from `price` above.
+   */
+  stripeLookupKey: string;
 };
 
 export type StudioProduct = {
@@ -54,9 +58,7 @@ export type StudioProduct = {
 
 export const startingPrice = (product: StudioProduct) => Math.min(...product.sizes.map((s) => s.price));
 
-// TODO(sean): every `price`, `stripePriceId`, and image/model path below is a
-// placeholder. Replace with real values before this range goes live — see
-// the plan file for what's needed.
+// Prices live here; `npm run stripe:setup` mirrors them into Stripe (see scripts/create-stripe-prices.ts).
 export const studioProducts: Record<string, StudioProduct> = {
   line: {
     id: "line",
@@ -94,7 +96,7 @@ export const studioProducts: Record<string, StudioProduct> = {
         dimensions: "1600mm L × 850mm W × 750mm H",
         seating: "4–6 people",
         price: 174900,
-        stripePriceId: "price_REPLACE_ME_line_1600x850",
+        stripeLookupKey: "studio_line_1600x850",
       },
       {
         id: "2000x1000",
@@ -105,7 +107,7 @@ export const studioProducts: Record<string, StudioProduct> = {
         dimensions: "2000mm L × 1000mm W × 750mm H",
         seating: "6–8 people",
         price: 199900,
-        stripePriceId: "price_REPLACE_ME_line_2000x1000",
+        stripeLookupKey: "studio_line_2000x1000",
       },
       {
         id: "2350x1150",
@@ -116,7 +118,7 @@ export const studioProducts: Record<string, StudioProduct> = {
         dimensions: "2350mm L × 1150mm W × 750mm H",
         seating: "8–10 people",
         price: 249900,
-        stripePriceId: "price_REPLACE_ME_line_2350x1150",
+        stripeLookupKey: "studio_line_2350x1150",
       },
     ],
     model: "/models/studio/line.glb",
@@ -157,7 +159,7 @@ export const studioProducts: Record<string, StudioProduct> = {
         dimensions: "2000mm L × 1000mm W × 750mm H",
         seating: "6–8 people",
         price: 199900,
-        stripePriceId: "price_REPLACE_ME_curve_2000x1000",
+        stripeLookupKey: "studio_curve_2000x1000",
       },
       {
         id: "2350x1150",
@@ -168,7 +170,7 @@ export const studioProducts: Record<string, StudioProduct> = {
         dimensions: "2350mm L × 1150mm W × 750mm H",
         seating: "8–10 people",
         price: 249900,
-        stripePriceId: "price_REPLACE_ME_curve_2350x1150",
+        stripeLookupKey: "studio_curve_2350x1150",
       },
     ],
     model: "/models/studio/curve.glb",
@@ -209,7 +211,7 @@ export const studioProducts: Record<string, StudioProduct> = {
         dimensions: "2000mm L × 1000mm W × 750mm H",
         seating: "6–8 people",
         price: 214900,
-        stripePriceId: "price_REPLACE_ME_pill_2000x1000",
+        stripeLookupKey: "studio_pill_2000x1000",
       },
       {
         id: "2350x1150",
@@ -220,7 +222,7 @@ export const studioProducts: Record<string, StudioProduct> = {
         dimensions: "2350mm L × 1150mm W × 750mm H",
         seating: "8–10 people",
         price: 269900,
-        stripePriceId: "price_REPLACE_ME_pill_2350x1150",
+        stripeLookupKey: "studio_pill_2350x1150",
       },
     ],
     model: "/models/studio/pill.glb",
@@ -261,7 +263,7 @@ export const studioProducts: Record<string, StudioProduct> = {
         dimensions: "1200mm Diameter × 750mm H",
         seating: "4–5 people",
         price: 184900,
-        stripePriceId: "price_REPLACE_ME_round_1200",
+        stripeLookupKey: "studio_round_1200",
       },
       {
         id: "1500",
@@ -272,7 +274,7 @@ export const studioProducts: Record<string, StudioProduct> = {
         dimensions: "1500mm Diameter × 750mm H",
         seating: "6–8 people",
         price: 244900,
-        stripePriceId: "price_REPLACE_ME_round_1500",
+        stripeLookupKey: "studio_round_1500",
       },
     ],
     model: "/models/studio/round.glb",

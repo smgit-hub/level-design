@@ -10,6 +10,8 @@ dist/
 .env.local
 .env.production
 .env.*
+# ...but the example file (names only, no values) is meant to be committed
+!.env.example
 
 # OS files
 .DS_Store

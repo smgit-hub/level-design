@@ -19,8 +19,7 @@ export async function handler(event: { httpMethod: string; body: string | null; 
     return { statusCode: 400, body: JSON.stringify({ error: "Invalid request body." }) };
   }
 
-  // Price is always looked up server-side from the size's Stripe Price ID —
-  // never trust a client-supplied amount.
+  // The amount is never taken from the browser: the Price is resolved server-side from the size's lookup key.
   const product = productId ? studioProducts[productId] : undefined;
   const size = product?.sizes.find((s) => s.id === sizeId);
   if (!product || !size) {
@@ -31,9 +30,27 @@ export async function handler(event: { httpMethod: string; body: string | null; 
   const origin = event.headers.origin || process.env.URL || "https://leveldesign.com.au";
 
   try {
+    // Resolve the live Price (test or live mode, whichever key is in use) from the lookup key that
+    // `npm run stripe:setup` created, and refuse to sell if Stripe's amount ever differs from the site's.
+    const { data: prices } = await stripe.prices.list({ lookup_keys: [size.stripeLookupKey], active: true, limit: 1 });
+    const stripePrice = prices[0];
+    if (!stripePrice) {
+      console.error(`No active Stripe Price for lookup key ${size.stripeLookupKey} — run \`npm run stripe:setup\`.`);
+      return { statusCode: 500, body: JSON.stringify({ error: "This size isn't available to order online right now." }) };
+    }
+    if (stripePrice.unit_amount !== size.price || stripePrice.currency !== "aud") {
+      console.error(`Stripe Price ${stripePrice.id} (${stripePrice.unit_amount} ${stripePrice.currency}) does not match the site price (${size.price} aud) for ${size.stripeLookupKey} — run \`npm run stripe:setup\`.`);
+      return { statusCode: 500, body: JSON.stringify({ error: "This size isn't available to order online right now." }) };
+    }
+
+    const orderLabel = `${product.name} — ${size.label}`;
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
-      line_items: [{ price: size.stripePriceId, quantity: 1 }],
+      line_items: [{ price: stripePrice.id, quantity: 1 }],
+      // Delivery needs a phone number, and the order email needs to know exactly what was bought.
+      phone_number_collection: { enabled: true },
+      metadata: { productId: product.id, sizeId: size.id, order: orderLabel },
+      payment_intent_data: { description: `Studio Collection — ${orderLabel}`, metadata: { productId: product.id, sizeId: size.id } },
       shipping_address_collection: { allowed_countries: ["AU"] },
       shipping_options: [
         {

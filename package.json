@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "stripe:setup": "node --env-file=.env scripts/create-stripe-prices.ts"
   },
   "dependencies": {
     "@astrojs/react": "^4.0.0",
