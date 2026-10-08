@@ -101,7 +101,7 @@ function customerEmail(o: CustomerEmailInput) {
     <p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#5a6b64;">If anything about your order needs to change, or you have a question, just reply to this email.</p>
     <p style="margin:0;font-family:${serif};font-size:18px;color:#3d4f47;">The Level Design team</p>
   </td></tr>
-  <tr><td style="background:#f5f1e8;padding:18px 32px;text-align:center;font-size:13px;color:#5a6b64;"><a href="https://leveldesign.com.au" style="color:#c8956a;text-decoration:none;">leveldesign.com.au</a></td></tr>
+  <tr><td style="background:#f5f1e8;padding:18px 32px;text-align:center;font-size:13px;line-height:1.7;color:#5a6b64;"><a href="https://leveldesign.com.au" style="color:#c8956a;text-decoration:none;">leveldesign.com.au</a> &nbsp;·&nbsp; <a href="https://leveldesign.com.au/terms/" style="color:#c8956a;text-decoration:none;">Terms of Sale</a><br>Level Design Australia Pty Ltd &nbsp;·&nbsp; ABN 85 633 988 486</td></tr>
 </table>
 </td></tr></table>
 </body></html>`;
@@ -129,6 +129,8 @@ function customerEmail(o: CustomerEmailInput) {
     "",
     "The Level Design team",
     "https://leveldesign.com.au",
+    "Terms of Sale: https://leveldesign.com.au/terms/",
+    "Level Design Australia Pty Ltd, ABN 85 633 988 486",
   ].join("\n");
 
   return { html, text };

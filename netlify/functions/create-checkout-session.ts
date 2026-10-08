@@ -73,6 +73,10 @@ export async function handler(event: { httpMethod: string; body: string | null; 
           },
         },
       ],
+      // Terms are linked here, per checkout, rather than in the Stripe account's settings, which every site on the account shares.
+      custom_text: {
+        submit: { message: `Made to order in Melbourne, with a lead time of 6–8 weeks. By paying you agree to our [Terms of Sale](${origin}/terms/).` },
+      },
       success_url: `${origin}/studio/success/?table=${encodeURIComponent(product.name)}`,
       cancel_url: `${origin}/studio/${product.id}/`,
     });
