@@ -1,12 +1,16 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { allStudioProducts } from '../../data/studio-products';
 
-const table = Astro.url.searchParams.get('table');
+// The site is built statically, so the page can't read ?table= on the server — a small script below fills in the
+// table name from it, and only accepts one of our own product names.
+const tableNames = allStudioProducts.map((product) => product.name);
 ---
 
 <Layout
-  title="Order Confirmed | Studio Collection | Level Design"
+  title="Order Confirmed | Level Design"
   description="Thank you for your Studio Collection order from Level Design."
+  noindex
 >
   <section class="pt-40 pb-24 bg-[#faf8f5] min-h-[60vh] flex items-center">
     <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -15,9 +19,12 @@ const table = Astro.url.searchParams.get('table');
           <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
         </svg>
       </div>
-      <h1 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-4">Thank You{table ? ` — ${table} is on its way` : ''}!</h1>
-      <p class="text-xl text-[#5a6b64] mb-8">
-        Your order is confirmed and a receipt has been sent to your email. We'll be in touch shortly to arrange delivery.
+      <h1 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-4">Thank you — your order is confirmed.</h1>
+      <p class="text-xl text-[#5a6b64] mb-4">
+        We've emailed your order confirmation. If you can't see it, check your spam folder.
+      </p>
+      <p class="text-lg text-[#5a6b64] mb-8">
+        Your <span id="order-table">table</span> is made to order, with a lead time of 6–8 weeks. We'll be in touch to arrange delivery as it nears completion. If you have any questions, just reply to your confirmation email.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <a href="/studio/" class="px-8 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl font-medium">
@@ -30,3 +37,11 @@ const table = Astro.url.searchParams.get('table');
     </div>
   </section>
 </Layout>
+
+<script is:inline define:vars={{ tableNames }}>
+  (() => {
+    const table = new URLSearchParams(window.location.search).get('table');
+    const el = document.getElementById('order-table');
+    if (el && table && tableNames.includes(table)) el.textContent = table;
+  })();
+</script>
