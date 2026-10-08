@@ -86,16 +86,6 @@ nav div.xl\:flex a {
   font-size: 0.75rem;
 }
 
-/* ── Calm motion: short travel, long ease ── */
-.reveal { transform: translateY(14px); transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); transition-delay: var(--delay, 0s); }
-.reveal-left, .reveal-right { transform: translateY(14px); }
-:is(.reveal, .reveal-left, .reveal-right).visible { opacity: 1; transform: none; }
-
 /* ── Whitespace between sections ── */
 section.py-24 { padding-block: var(--section-y); }
 section:is(.py-20, .py-16) { padding-block: var(--section-y-sm); }
-
-/* Reduce motion: the rule in global.css would be overridden by the .reveal rules above, so repeat it here */
-@media (prefers-reduced-motion: reduce) {
-  .reveal, .reveal-left, .reveal-right { opacity: 1; transform: none; transition: none; }
-}
