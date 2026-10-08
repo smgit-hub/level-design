@@ -29,7 +29,7 @@ const schema = {
   '@type': 'ContactPage',
   name: 'Contact Level Design',
   description:
-    'Contact Level Design for custom timber dining table enquiries in Melbourne, Victoria, and Australia-wide projects by enquiry.',
+    'Contact Level Design with questions about a Studio table or your order, delivery quotes, and custom timber dining table projects in Melbourne, Victoria, and Australia-wide by enquiry.',
   about: {
     '@type': 'Service',
     name: 'Melbourne custom dining table enquiries',
@@ -42,14 +42,17 @@ const schema = {
 ---
 
 <Layout
-  title="Contact Level Design | Melbourne Dining Table Enquiries"
-  description="Start a custom dining table project or ask about a Studio table. Melbourne-based makers, with Australia-wide projects by enquiry."
+  title="Contact Level Design | Questions, Orders & Projects"
+  description="Ask about a Studio table or your order, get a delivery quote, or start a custom project. Melbourne-based makers, with Australia-wide delivery."
   schema={schema}
 >
   <!-- Hidden form for Netlify detection -->
   <form name="contact-enquiry" data-netlify="true" data-netlify-honeypot="bot-field" style="display:none">
+    <input name="topic" />
     <input name="name" /><input name="email" /><input name="phone" />
-    <input name="preferredTable" /><input name="dimensions" />
+    <input name="preferredTable" /><input name="orderReference" /><input name="deliveryPostcode" />
+    <textarea name="message"></textarea>
+    <input name="dimensions" />
     <textarea name="projectDetails"></textarea>
     <input name="timberPreference" /><input name="budgetRange" /><input name="timeline" />
   </form>
@@ -63,10 +66,10 @@ const schema = {
 
       <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl">
-          <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">Let's Build Yours</p>
-          <h1 class="hero-in text-4xl sm:text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Start Your Table Project</h1>
+          <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">Contact</p>
+          <h1 class="hero-in text-4xl sm:text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Get in Touch</h1>
           <p class="hero-in text-lg sm:text-xl text-[#e8dcc8] mb-8" style="--delay: 0.6s">
-            Share your Melbourne or Victorian project, space, style, and timeline. We will come back with the right direction and a tailored quote.
+            A question about a Studio table or your order, delivery to your area, or a custom project — send us a message and we'll come back to you.
           </p>
           <div class="hero-in flex flex-wrap gap-4" style="--delay: 0.8s">
             {["Response within 2 business days", "One-on-one design support"].map((item) => (
@@ -77,6 +80,20 @@ const schema = {
             ))}
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- Form -->
+    <section class="py-16 md:py-20 bg-white">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionHeader
+          eyebrow="Send a Message"
+          title="How Can We Help?"
+          description="Tell us what it's about and we'll take it from there. For a custom project, we'll suggest the best direction for dimensions, design and finish."
+          wrapperClass="text-center mb-12"
+          descriptionClass="text-xl text-[#5a6b64]"
+        />
+        <ContactForm client:visible />
       </div>
     </section>
 
@@ -170,7 +187,7 @@ const schema = {
             </div>
             <!-- Tips -->
             <div class="p-8 md:p-12">
-              <h3 class="text-2xl font-serif mb-2">Helpful to Include in Your Enquiry</h3>
+              <h3 class="text-2xl font-serif mb-2">Helpful to Include in a Project Enquiry</h3>
               <p class="text-[#e8dcc8] mb-8">The more we know, the better we can help</p>
               <div class="space-y-4">
                 {[
@@ -188,20 +205,6 @@ const schema = {
             </div>
           </div>
         </div>
-      </div>
-    </section>
-
-    <!-- Form -->
-    <section class="pb-24 bg-white">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeader
-          eyebrow="Get Started"
-          title="Request a Quote"
-          description="We'll review your requirements and suggest the best direction for dimensions, design, and finish."
-          wrapperClass="text-center mb-12"
-          descriptionClass="text-xl text-[#5a6b64]"
-        />
-        <ContactForm client:visible />
       </div>
     </section>
 
