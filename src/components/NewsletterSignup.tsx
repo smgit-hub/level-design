@@ -29,7 +29,7 @@ export default function NewsletterSignup() {
   };
 
   if (status === "success") {
-    return <p className="text-sm text-[#e8dcc8]">Thanks for subscribing — keep an eye on your inbox.</p>;
+    return <p role="status" className="text-sm text-[#e8dcc8]">Thanks for subscribing — keep an eye on your inbox.</p>;
   }
 
   return (
@@ -53,7 +53,11 @@ export default function NewsletterSignup() {
           {status === "loading" ? "Subscribing…" : "Subscribe"}
         </button>
       </div>
-      {status === "error" && <p className="text-sm text-red-300 mt-2">{errorMessage}</p>}
+      {status === "error" && <p role="alert" className="text-sm text-red-300 mt-2">{errorMessage}</p>}
+      <p className="text-xs text-[#b8ac98] mt-2">
+        By subscribing you agree to receive our emails and can unsubscribe at any time. See our{" "}
+        <a href="/privacy/" className="underline underline-offset-2 hover:text-white">Privacy Policy</a>.
+      </p>
     </form>
   );
 }

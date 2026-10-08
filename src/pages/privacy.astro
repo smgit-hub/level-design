@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Privacy Policy" description="How Level Design Australia Pty Ltd collects, uses, and protects your information.">
+<Layout title="Privacy Policy | Level Design" description="How Level Design Australia Pty Ltd collects, uses, and protects your information.">
   <div>
 
     <!-- Hero -->
@@ -62,9 +62,9 @@ import Layout from '../layouts/Layout.astro';
               {[
                 "Your name, email address, phone number, and any details you include in an enquiry.",
                 "Optional information such as table preferences, dimensions, timing, or design notes.",
-                "If you purchase a Studio Collection table, your order details, delivery address, and transaction amount. Your payment card details are collected and processed directly by our payment provider, Stripe — we do not receive or store your full card details.",
+                "If you purchase a Studio Collection table, your name, email address, phone number, delivery address, order details and the amount paid. Your payment card details are collected and processed directly by our payment provider, Stripe — we do not receive or store your full card details.",
                 "If you subscribe to our newsletter, your email address.",
-                "Basic website usage information that may be collected by analytics, hosting, or security tools.",
+                "Information about how you use this website, collected by Google Analytics (pages viewed, device and browser, approximate location) and by our hosting and security tools.",
               ].map((item) => (
                 <li class="flex gap-3">
                   <span class="text-[#c8956a] mt-1">•</span>
@@ -81,7 +81,7 @@ import Layout from '../layouts/Layout.astro';
               {[
                 "Respond to enquiries and provide quotes or project information.",
                 "Communicate with you about your table, custom project, or related request.",
-                "Process and fulfil orders placed through the Studio Collection, including arranging delivery.",
+                "Process and fulfil orders placed through the Studio Collection, including arranging delivery, and send you an order confirmation and updates about your order.",
                 "Send newsletter emails about new designs, offers, and sales, if you've subscribed — you can unsubscribe at any time.",
                 "Improve website performance, usability, and security.",
                 "Maintain internal business records and customer service history.",
@@ -96,12 +96,28 @@ import Layout from '../layouts/Layout.astro';
 
           <div>
             <h2 class="text-3xl font-serif text-[#3d4f47] mb-4">When information may be shared</h2>
-            <p class="text-[#5a6b64] text-lg">We do not sell personal information. We may share limited information with trusted service providers where reasonably necessary to operate the website, respond to enquiries, manage projects, process payments, send newsletter emails, or meet legal obligations.</p>
+            <p class="text-[#5a6b64] text-lg mb-4">We do not sell personal information. We share limited information with the service providers we use to run the website and fulfil orders, only as far as is reasonably necessary:</p>
+            <ul class="space-y-3 text-[#5a6b64] text-lg mb-4">
+              {[
+                "Stripe — processes payments for Studio Collection orders.",
+                "Brevo — sends our order confirmation emails and, if you subscribe, our newsletter.",
+                "Netlify — hosts this website and runs the order and enquiry forms.",
+                "Google (Analytics) — measures how the website is used.",
+                "A delivery provider, who is given your name, delivery address and phone number so your table can be delivered.",
+              ].map((item) => (
+                <li class="flex gap-3">
+                  <span class="text-[#c8956a] mt-1">•</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p class="text-[#5a6b64] text-lg">We may also disclose information where the law requires it. Some of these providers store or process information outside Australia, including in the United States and Europe. We take reasonable steps to make sure they handle personal information in line with the Australian Privacy Principles.</p>
           </div>
 
           <div>
             <h2 class="text-3xl font-serif text-[#3d4f47] mb-4">Payments</h2>
             <p class="text-[#5a6b64] text-lg">When you purchase a table through the Studio Collection, payment is processed by Stripe, a third-party payment processor. Stripe collects and handles your payment card details directly — we do not receive or store your full card number, expiry, or security code. Stripe may process this information in accordance with its own privacy policy, available at <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer" class="text-[#c8956a] hover:underline">stripe.com/privacy</a>.</p>
+            <p class="text-[#5a6b64] text-lg mt-4">When you order, we also receive your name, email address, phone number and delivery address, and we use Brevo to send you an order confirmation. We use your phone number and address only to arrange delivery and contact you about your order. Order emails are not marketing — you will only receive our newsletter if you subscribe to it.</p>
           </div>
 
           <div>
@@ -116,7 +132,12 @@ import Layout from '../layouts/Layout.astro';
 
           <div>
             <h2 class="text-3xl font-serif text-[#3d4f47] mb-4">Cookies and analytics</h2>
-            <p class="text-[#5a6b64] text-lg">This website may use cookies or similar technologies for functionality, analytics, and performance monitoring. You can manage cookies through your browser settings.</p>
+            <p class="text-[#5a6b64] text-lg">This website uses Google Analytics on every page. It sets cookies and collects information about your visit, such as the pages you view, your device and browser, and your approximate location, so we can understand how the website is used and improve it. This information is not used to identify you personally. You can block or delete cookies in your browser settings, or install Google's opt-out browser add-on at <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" class="text-[#c8956a] hover:underline">tools.google.com/dlpage/gaoptout</a>.</p>
+          </div>
+
+          <div>
+            <h2 class="text-3xl font-serif text-[#3d4f47] mb-4">How long we keep information</h2>
+            <p class="text-[#5a6b64] text-lg">We keep order records for as long as we need them to deliver your table, support you afterwards, and meet our tax and legal record-keeping obligations (generally seven years). Enquiries are kept while they are active and for a reasonable time afterwards. Newsletter details are kept until you unsubscribe.</p>
           </div>
 
           <div>
@@ -127,6 +148,8 @@ import Layout from '../layouts/Layout.astro';
           <div>
             <h2 class="text-3xl font-serif text-[#3d4f47] mb-4">Contact</h2>
             <p class="text-[#5a6b64] text-lg">For privacy-related requests, please use the <a href="/contact/" class="text-[#c8956a] hover:underline">contact page</a> and include enough detail for us to identify your enquiry.</p>
+            <p class="text-[#5a6b64] text-lg mt-4">If you have a complaint about how we have handled your personal information, contact us and we will respond within a reasonable time. If you are not satisfied with our response, you can contact the Office of the Australian Information Commissioner at <a href="https://www.oaic.gov.au" target="_blank" rel="noopener noreferrer" class="text-[#c8956a] hover:underline">oaic.gov.au</a>.</p>
+            <p class="text-[#5a6b64] text-lg mt-4">Level Design Australia Pty Ltd · ABN 85 633 988 486 · Last updated 8 October 2026.</p>
           </div>
 
         </div>
