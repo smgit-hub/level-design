@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import { studioProducts } from "../../src/data/studio-products";
+import { deliveryForPostcode } from "../../src/data/delivery-zones";
 
 /**
  * Stripe → "you've got an order" email.
@@ -41,7 +42,6 @@ type CustomerEmailInput = {
   paid: string;
   recipient: string;
   addressLines: string[];
-  isRemote: boolean;
 };
 
 /** The customer's order confirmation, as styled HTML (the site's cream, green and copper) plus a plain-text version. */
@@ -52,12 +52,7 @@ function customerEmail(o: CustomerEmailInput) {
   const steps = [
     ["Your table is made", "Each Studio table is made to order, with a lead time of 6–8 weeks."],
     ["We arrange delivery", "We'll be in touch to agree a delivery date as your table nears completion."],
-    [
-      "It arrives",
-      o.isRemote
-        ? "Delivery to your area is arranged individually. We'll confirm the cost with you, and invoice it separately, before your table is sent."
-        : "Your table is delivered to the address above.",
-    ],
+    ["It arrives", "Your table is delivered to the address above."],
   ];
   const row = (label: string, value: string, bold = false) =>
     `<tr><td style="padding:6px 0;color:#5a6b64;font-size:15px;">${esc(label)}</td><td align="right" style="padding:6px 0;color:#3d4f47;font-size:15px;${bold ? "font-weight:600;" : ""}">${esc(value)}</td></tr>`;
@@ -203,8 +198,10 @@ export async function handler(event: NetlifyEvent) {
     // The delivery option is identified by its price, which is set in create-checkout-session.ts.
     const shippingCents = session.shipping_cost?.amount_total;
     const deliveryName =
-      shippingCents === 19900 ? "Melbourne Metro" : shippingCents === 44900 ? "Other capital cities & VIC regional" : shippingCents === 0 ? "Remote (WA / NT / TAS / far regional)" : "Delivery";
-    const isRemote = shippingCents === 0;
+      shippingCents === 19900 ? "Melbourne Metro" : shippingCents === 44900 ? "Brisbane, Sydney, Canberra, Adelaide & regional VIC" : "Delivery";
+    // The fee was set from the postcode typed on the product page; the address typed at checkout can still differ.
+    const addressZone = addr?.postal_code ? deliveryForPostcode(addr.postal_code)?.zone : undefined;
+    const zoneMismatch = !!session.metadata?.deliveryZone && !!addressZone && addressZone !== session.metadata.deliveryZone;
     const live = session.livemode;
     // A short reference both emails share, so a customer quoting it can be matched to the full Stripe session id below.
     const reference = `LD-${session.id.slice(-8).toUpperCase()}`;
@@ -218,7 +215,12 @@ export async function handler(event: NetlifyEvent) {
       `Delivery:  ${deliveryName}  ${money(shippingCents)}`,
       `Paid:      ${money(session.amount_total)}`,
       "",
-      ...(isRemote ? ["⚠ REMOTE DELIVERY: no delivery fee was charged. Confirm the fee with the customer and invoice it separately.", ""] : []),
+      ...(zoneMismatch
+        ? [
+            `⚠ CHECK DELIVERY: the fee was set for postcode ${session.metadata?.deliveryPostcode ?? "?"} (${session.metadata?.deliveryZone}), but the delivery address is ${addr?.postal_code} (${addressZone}). Confirm the delivery fee with the customer.`,
+            "",
+          ]
+        : []),
       "Customer",
       `  ${customer?.name ?? "—"}`,
       `  ${customer?.email ?? "—"}`,
@@ -271,13 +273,12 @@ export async function handler(event: NetlifyEvent) {
           details: [size?.dimensions, size?.seating && `Seats ${size.seating}`, product?.specifications["Timber / Finish"]].filter(Boolean) as string[],
           tablePrice: money(item?.amount_total),
           deliveryName,
-          deliveryPrice: isRemote ? "To be confirmed" : money(shippingCents),
+          deliveryPrice: money(shippingCents),
           paid: money(session.amount_total),
           recipient: shipping?.name ?? customer.name ?? "",
           addressLines: addr
             ? [[addr.line1, addr.line2].filter(Boolean).join(", "), [addr.city, addr.state, addr.postal_code].filter(Boolean).join(" ")]
             : [],
-          isRemote,
         });
         const sent = await sendEmail({
           sender: { email: BREVO_SENDER_EMAIL, name: "Level Design" },

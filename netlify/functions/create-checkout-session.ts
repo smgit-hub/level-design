@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import { studioProducts } from "../../src/data/studio-products";
+import { deliveryForPostcode } from "../../src/data/delivery-zones";
 
 export async function handler(event: { httpMethod: string; body: string | null; headers: Record<string, string | undefined> }) {
   if (event.httpMethod !== "POST") {
@@ -13,8 +14,9 @@ export async function handler(event: { httpMethod: string; body: string | null; 
 
   let productId: string | undefined;
   let sizeId: string | undefined;
+  let postcode: string | undefined;
   try {
-    ({ productId, sizeId } = JSON.parse(event.body || "{}"));
+    ({ productId, sizeId, postcode } = JSON.parse(event.body || "{}"));
   } catch {
     return { statusCode: 400, body: JSON.stringify({ error: "Invalid request body." }) };
   }
@@ -24,6 +26,15 @@ export async function handler(event: { httpMethod: string; body: string | null; 
   const size = product?.sizes.find((s) => s.id === sizeId);
   if (!product || !size) {
     return { statusCode: 404, body: JSON.stringify({ error: "Unknown product or size." }) };
+  }
+
+  // The delivery fee comes from the postcode, decided here — not from anything the buyer can pick at checkout.
+  const delivery = deliveryForPostcode(String(postcode ?? ""));
+  if (!delivery) {
+    return { statusCode: 400, body: JSON.stringify({ error: "Enter a 4-digit delivery postcode." }) };
+  }
+  if (delivery.priceCents === null) {
+    return { statusCode: 422, body: JSON.stringify({ error: "We quote delivery to that postcode individually — please get in touch." }) };
   }
 
   const stripe = new Stripe(stripeSecretKey);
@@ -50,29 +61,15 @@ export async function handler(event: { httpMethod: string; body: string | null; 
       // Delivery needs a phone number, and the order email needs to know exactly what was bought.
       phone_number_collection: { enabled: true },
       // "source" lets the order-email webhook ignore checkouts from the other sites that share this Stripe account.
-      metadata: { source: "leveldesign-studio", productId: product.id, sizeId: size.id, order: orderLabel },
+      metadata: { source: "leveldesign-studio", productId: product.id, sizeId: size.id, order: orderLabel, deliveryZone: delivery.zone, deliveryPostcode: String(postcode).trim() },
       payment_intent_data: { description: `Studio Collection — ${orderLabel}`, metadata: { productId: product.id, sizeId: size.id } },
       shipping_address_collection: { allowed_countries: ["AU"] },
       shipping_options: [
         {
           shipping_rate_data: {
             type: "fixed_amount",
-            fixed_amount: { amount: 19900, currency: "aud" },
-            display_name: "Melbourne Metro Delivery",
-          },
-        },
-        {
-          shipping_rate_data: {
-            type: "fixed_amount",
-            fixed_amount: { amount: 44900, currency: "aud" },
-            display_name: "Other Capital Cities & VIC Regional Delivery",
-          },
-        },
-        {
-          shipping_rate_data: {
-            type: "fixed_amount",
-            fixed_amount: { amount: 0, currency: "aud" },
-            display_name: "Remote Delivery (WA / NT / TAS / far regional) — fee confirmed and invoiced separately",
+            fixed_amount: { amount: delivery.priceCents, currency: "aud" },
+            display_name: delivery.label,
           },
         },
       ],
