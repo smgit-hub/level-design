@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import { allStudioProducts, startingPrice as getStartingPrice } from '../../data/studio-products';
 import StudioShapeIcon from '../../components/StudioShapeIcon.astro';
+import FaqAccordion from '../../components/FaqAccordion.astro';
 
 const formatPrice = (cents: number) =>
   new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 }).format(cents / 100);
@@ -146,14 +147,7 @@ const schema = {
       <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="reveal bg-[#f5f1e8] rounded-3xl p-8 md:p-10">
           <h2 class="text-3xl font-serif text-[#3d4f47] mb-8">Studio Collection FAQs</h2>
-          <div class="space-y-6">
-            {faqs.map((item) => (
-              <div class="border-b border-[#d9cfbd] pb-6 last:border-b-0 last:pb-0">
-                <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{item.question}</h3>
-                <p class="text-[#5a6b64] leading-relaxed">{item.answer}</p>
-              </div>
-            ))}
-          </div>
+          <FaqAccordion items={faqs} />
         </div>
       </div>
     </section>
