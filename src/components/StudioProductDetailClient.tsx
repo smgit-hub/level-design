@@ -23,6 +23,7 @@ declare global {
         "touch-action"?: string;
         "environment-image"?: string;
         "camera-orbit"?: string;
+        alt?: string;
       };
     }
   }
@@ -186,11 +187,24 @@ export default function StudioProductDetailClient({ product }: Props) {
 
   useEffect(() => {
     if (document.getElementById(MODEL_VIEWER_SCRIPT_ID)) return;
-    const script = document.createElement("script");
-    script.id = MODEL_VIEWER_SCRIPT_ID;
-    script.type = "module";
-    script.src = "https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js";
-    document.head.appendChild(script);
+    const inject = () => {
+      if (document.getElementById(MODEL_VIEWER_SCRIPT_ID)) return;
+      const script = document.createElement("script");
+      script.id = MODEL_VIEWER_SCRIPT_ID;
+      script.type = "module";
+      script.src = "https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js";
+      document.head.appendChild(script);
+    };
+    // The viewer script and the 3D model are 1–2 MB together. Wait until the page and its photos have loaded and the
+    // browser is idle, so they don't compete with the content people see first (the photo below stands in meanwhile).
+    const schedule = () => {
+      const idle = (window as unknown as { requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number }).requestIdleCallback;
+      if (idle) idle.call(window, inject, { timeout: 2500 });
+      else window.setTimeout(inject, 1200);
+    };
+    if (document.readyState === "complete") schedule();
+    else window.addEventListener("load", schedule, { once: true });
+    return () => window.removeEventListener("load", schedule);
   }, []);
 
   // Set synchronously so a fast double-click can't start two checkouts before `disabled` has rendered.
@@ -267,15 +281,14 @@ export default function StudioProductDetailClient({ product }: Props) {
               <div className="sticky top-24">
                 <div className="flex items-center gap-2 mb-3">
                   {views.length > 1 && (
-                    <div className="flex gap-2" role="tablist" aria-label="Product views">
+                    <div className="flex gap-2" role="group" aria-label="Product views">
                       {views.map((view) => (
                         <button
                           key={view.id}
                           type="button"
-                          role="tab"
-                          aria-selected={selectedView === view.id}
+                          aria-pressed={selectedView === view.id}
                           onClick={() => setSelectedView(view.id)}
-                          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 cursor-pointer ${
+                          className={`min-h-11 px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 cursor-pointer ${
                             selectedView === view.id
                               ? "bg-[#3d4f47] text-white"
                               : "bg-white text-[#3d4f47] border border-[#e5ddd0] hover:border-[#c8956a]"
@@ -288,7 +301,7 @@ export default function StudioProductDetailClient({ product }: Props) {
                   )}
                   <a
                     href="/studio/"
-                    className="ml-auto inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium text-[#3d4f47] border border-[#3d4f47] hover:bg-[#3d4f47] hover:text-white transition-colors duration-200"
+                    className="ml-auto inline-flex items-center gap-1.5 min-h-11 px-4 py-2 rounded-full text-sm font-medium text-[#3d4f47] border border-[#3d4f47] hover:bg-[#3d4f47] hover:text-white transition-colors duration-200"
                   >
                     <ArrowLeft size={14} />
                     <span>Studio<span className="hidden sm:inline"> Collection</span></span>
@@ -303,6 +316,7 @@ export default function StudioProductDetailClient({ product }: Props) {
                     <model-viewer
                       ref={modelRef}
                       src={product.model}
+                      alt={`${product.name} in 3D — drag to rotate`}
                       touch-action={touchUnlocked ? "none" : "pan-y"}
                       auto-rotate-delay="0"
                       rotation-per-second="12deg"
@@ -316,8 +330,14 @@ export default function StudioProductDetailClient({ product }: Props) {
                       loading="eager"
                       style={{ width: "100%", height: "100%", background: "transparent" }}
                     >
-                      <div slot="poster" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%", background: "#3d4f47" }}>
-                        <span style={{ color: "#e8dcc8", fontSize: 13, letterSpacing: "0.1em", opacity: 0.7 }}>Loading 3D model…</span>
+                      <div slot="poster" style={{ position: "relative", width: "100%", height: "100%", background: "#3d4f47" }}>
+                        <img
+                          src={product.images.gallery[0] ?? product.images.main}
+                          alt=""
+                          {...{ fetchpriority: "high" }}
+                          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.55)" }}
+                        />
+                        <span style={{ position: "absolute", left: 0, right: 0, bottom: 16, textAlign: "center", color: "#f5f1e8", fontSize: 13, letterSpacing: "0.1em" }}>Loading 3D model…</span>
                       </div>
                     </model-viewer>
                   ) : (
