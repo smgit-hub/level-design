@@ -1,0 +1,101 @@
+/* ───────────────────────────────────────────────────────────────────────────
+   The site's look: Fraunces headings and DM Sans text, with sharp-cornered buttons, flat borderless cards, quiet capital
+   labels and navigation, generous whitespace and calm motion.
+
+   Most of the markup uses Tailwind utility classes (rounded-2xl, shadow-lg, font-serif…), so this file restyles them in
+   one place rather than touching every page. Change a token below, or a rule, and the whole site follows.
+
+   Fonts are self-hosted from /public/fonts (the Content-Security-Policy only allows our own origin).
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@font-face { font-family: "Fraunces"; font-style: normal; font-weight: 300 700; font-display: swap; src: url(/fonts/fraunces.woff2) format("woff2"); }
+@font-face { font-family: "Fraunces"; font-style: italic; font-weight: 300 700; font-display: swap; src: url(/fonts/fraunces-italic.woff2) format("woff2"); }
+@font-face { font-family: "DM Sans"; font-style: normal; font-weight: 300 700; font-display: swap; src: url(/fonts/dm-sans.woff2) format("woff2"); }
+
+:root {
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+  --h-weight: 400;
+  --h-tracking: -0.025em;
+  --h-leading: 1.04;
+  --r-card: 6px;      /* cards, panels, images */
+  --r-field: 4px;     /* inputs and small boxes */
+  --r-btn: 4px;       /* buttons and pill links */
+  --r-chip: 4px;      /* small badges */
+  --shadow: none;
+  --shadow-hover: 0 1px 0 rgb(61 79 71 / 0.12);
+  --label-tracking: 0.14em;
+  --section-y: clamp(5rem, 9vw, 8.5rem);
+  --section-y-sm: clamp(3.5rem, 6vw, 5.5rem);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Headings ── */
+.font-serif {
+  font-family: var(--font-display);
+  font-weight: var(--h-weight);
+  letter-spacing: var(--h-tracking);
+  line-height: var(--h-leading);
+  font-variation-settings: "opsz" 72;
+}
+h1.font-serif { font-size: clamp(2.75rem, 6.2vw, 6rem); }
+h2.font-serif { font-size: clamp(2rem, 4.4vw, 3.75rem); }
+h3.font-serif { line-height: 1.12; }
+.hero-parallax h1.font-serif { font-size: clamp(2.75rem, 5.4vw, 5.25rem); }
+
+/* The brand text sits in a box that clips overflow (truncate): it needs a normal line height or descenders like the g are cut off */
+:is(nav, footer) a[aria-label="Level Design home"] .font-serif {
+  line-height: 1.45;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+/* Small labels (eyebrows) are quiet, wide-set capitals */
+p.uppercase {
+  letter-spacing: var(--label-tracking);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* ── Shape language ── */
+:is(.rounded-3xl, .rounded-2xl) { border-radius: var(--r-card); }
+:is(.rounded-xl, .rounded-lg) { border-radius: var(--r-field); }
+/* Buttons and pill links (the round icon buttons keep their circle) */
+:is(a, button).rounded-full:not([class*="w-8"]):not([class*="w-9"]):not([class*="w-1"]):not([class*="w-2"]) { border-radius: var(--r-btn); }
+span.rounded-full { border-radius: var(--r-chip); }
+
+/* ── Flat surfaces ── */
+:is(.shadow-sm, .shadow-lg, .shadow-xl, .shadow-2xl) { box-shadow: var(--shadow); }
+[class*="hover:shadow"]:hover { box-shadow: var(--shadow-hover); }
+.btn-scale:hover, .btn-scale:active { transform: none; }
+
+/* Photo cards sit straight on the page, without a white box */
+a.group.overflow-hidden.bg-white { background-color: transparent; }
+a.group.overflow-hidden.bg-white > div:last-child { padding-inline: 0; }
+
+/* ── Navigation: small capitals ── */
+nav div.xl\:flex a {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+}
+
+/* ── Calm motion: short travel, long ease ── */
+.reveal { transform: translateY(14px); transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); transition-delay: var(--delay, 0s); }
+.reveal-left, .reveal-right { transform: translateY(14px); }
+:is(.reveal, .reveal-left, .reveal-right).visible { opacity: 1; transform: none; }
+
+/* ── Whitespace between sections ── */
+section.py-24 { padding-block: var(--section-y); }
+section:is(.py-20, .py-16) { padding-block: var(--section-y-sm); }
+
+/* Reduce motion: the rule in global.css would be overridden by the .reveal rules above, so repeat it here */
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal-left, .reveal-right { opacity: 1; transform: none; transition: none; }
+}
