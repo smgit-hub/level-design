@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, CheckCircle, RotateCcw, Truck } from "lucide-react";
+import { deliveryForPostcode, isValidPostcode } from "../data/delivery-zones";
 import type { StudioProduct } from "../data/studio-products";
 import { trackEvent } from "../lib/analytics";
 import StudioTableOutline from "./StudioTableOutline";
@@ -43,6 +44,30 @@ const SWEEP_MS = 5000;
 export default function StudioProductDetailClient({ product }: Props) {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkoutError, setCheckoutError] = useState(false);
+  // Delivery is priced from the postcode, so the buyer is asked for it before checkout. Remembered for next time.
+  const [postcode, setPostcode] = useState("");
+  const [postcodeHint, setPostcodeHint] = useState(false);
+  const postcodeRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("ld-delivery-postcode");
+      if (saved && isValidPostcode(saved)) setPostcode(saved);
+    } catch {
+      /* storage unavailable — fine, the field just starts empty */
+    }
+  }, []);
+  const delivery = deliveryForPostcode(postcode);
+  const canCheckout = !!delivery && delivery.priceCents !== null;
+  const onPostcodeChange = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, 4);
+    setPostcode(digits);
+    if (digits.length === 4) setPostcodeHint(false);
+    try {
+      if (isValidPostcode(digits)) localStorage.setItem("ld-delivery-postcode", digits);
+    } catch {
+      /* ignore */
+    }
+  };
   const views = [
     { id: "model", label: "3D view" },
     ...product.images.gallery.map((src, i) => ({ id: src, label: product.images.gallery.length === 1 ? "Room view" : `Photo ${i + 1}` })),
@@ -186,6 +211,13 @@ export default function StudioProductDetailClient({ product }: Props) {
 
   const handleBuyNow = async () => {
     if (checkingOut.current) return;
+    if (!canCheckout) {
+      // No delivery postcode yet (or one we quote individually): take them to the field instead of starting checkout.
+      setPostcodeHint(true);
+      postcodeRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+      postcodeRef.current?.focus({ preventScroll: true });
+      return;
+    }
     checkingOut.current = true;
     setCheckoutError(false);
     setIsCheckingOut(true);
@@ -196,7 +228,7 @@ export default function StudioProductDetailClient({ product }: Props) {
       const response = await fetch("/.netlify/functions/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: product.id, sizeId: selectedSize.id }),
+        body: JSON.stringify({ productId: product.id, sizeId: selectedSize.id, postcode }),
         signal: controller.signal,
       });
       if (!response.ok) throw new Error("Checkout session creation failed");
@@ -381,6 +413,40 @@ export default function StudioProductDetailClient({ product }: Props) {
                   )}
                 </div>
 
+                {/* Delivery postcode: the delivery fee is set from it */}
+                <div className="mb-5">
+                  <label htmlFor="delivery-postcode" className="block text-xs font-semibold uppercase tracking-wide text-[#66756e] mb-2">
+                    Delivery postcode
+                  </label>
+                  <input
+                    id="delivery-postcode"
+                    ref={postcodeRef}
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="postal-code"
+                    maxLength={4}
+                    placeholder="e.g. 3000"
+                    value={postcode}
+                    onChange={(e) => onPostcodeChange(e.target.value)}
+                    aria-describedby="delivery-postcode-note"
+                    className="w-36 px-4 py-3 rounded-xl border-2 border-[#e5ddd0] bg-white text-[#3d4f47] focus:outline-none focus:border-[#c8956a] focus:ring-2 focus:ring-[#c8956a]/30"
+                  />
+                  <p id="delivery-postcode-note" aria-live="polite" className="text-sm mt-2 text-[#5a6b64]">
+                    {!delivery && (postcodeHint ? <span className="text-red-700">Enter your delivery postcode to see the delivery fee.</span> : "Enter your postcode to see the delivery fee.")}
+                    {delivery && delivery.priceCents !== null && (
+                      <>
+                        Delivery to {postcode}: <strong className="text-[#3d4f47]">{formatPrice(delivery.priceCents)}</strong> · Total <strong className="text-[#3d4f47]">{formatPrice(selectedSize.price + delivery.priceCents)}</strong>
+                      </>
+                    )}
+                    {delivery && delivery.priceCents === null && (
+                      <>
+                        We quote delivery to {postcode} individually.{" "}
+                        <a href="/contact/" className="text-[#3d4f47] underline underline-offset-2 hover:text-[#c8956a]">Get in touch</a> and we'll send you a price.
+                      </>
+                    )}
+                  </p>
+                </div>
+
                 <div className="flex flex-col sm:flex-row gap-4">
                   <button
                     ref={buyRef}
@@ -400,7 +466,10 @@ export default function StudioProductDetailClient({ product }: Props) {
 
                 <div className="flex items-start gap-3 mt-5 text-sm text-[#5a6b64]">
                   <Truck className="text-[#c8956a] flex-shrink-0 mt-0.5" size={18} />
-                  <span>Delivery from $199 (Melbourne Metro) · 6–8 week lead time · Secure checkout</span>
+                  <span>
+                    Made to order in Melbourne · 6–8 week lead time · Secure checkout ·{" "}
+                    <a href="/terms/" className="underline underline-offset-2 hover:text-[#c8956a]">Delivery, returns &amp; care</a>
+                  </span>
                 </div>
                 <a
                   href="/contact/"
