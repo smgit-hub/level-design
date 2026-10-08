@@ -139,8 +139,8 @@ export default function ProductDetailClient({ product, prev, next }: Props) {
                 <div className="grid grid-cols-3 gap-4 mb-8">
                   {[
                     { icon: Ruler, label: "Custom Sizing" },
-                    { icon: Truck, label: "Free Delivery" },
-                    { icon: Shield, label: "Quality Guaranteed" },
+                    { icon: Truck, label: "Made to Order" },
+                    { icon: Shield, label: "Designed in Melbourne" },
                   ].map(({ icon: Icon, label }) => (
                     <div key={label} className="text-center p-4 bg-white rounded-xl">
                       <Icon className="text-[#c8956a] mx-auto mb-2" size={24} />
