@@ -260,25 +260,25 @@ export async function handler(event: NetlifyEvent) {
     // The customer's confirmation. The order email above is the one that matters, so a failure here is logged but does
     // not return an error — that would make Stripe retry and send you the order email again.
     if (customer?.email) {
-      const product = session.metadata?.productId ? studioProducts[session.metadata.productId] : undefined;
-      const size = product?.sizes.find((s) => s.id === session.metadata?.sizeId);
-      const confirmation = customerEmail({
-        firstName: customer.name?.trim().split(/\s+/)[0],
-        reference,
-        tableName: product?.name ?? item?.description ?? "Studio Collection table",
-        // e.g. "2000mm L × 1000mm W × 750mm H · Seats 6–8 people · American oak / Clear matte"
-        details: [size?.dimensions, size?.seating && `Seats ${size.seating}`, product?.specifications["Timber / Finish"]].filter(Boolean) as string[],
-        tablePrice: money(item?.amount_total),
-        deliveryName,
-        deliveryPrice: isRemote ? "To be confirmed" : money(shippingCents),
-        paid: money(session.amount_total),
-        recipient: shipping?.name ?? customer.name ?? "",
-        addressLines: addr
-          ? [[addr.line1, addr.line2].filter(Boolean).join(", "), [addr.city, addr.state, addr.postal_code].filter(Boolean).join(" ")]
-          : [],
-        isRemote,
-      });
       try {
+        const product = session.metadata?.productId ? studioProducts[session.metadata.productId] : undefined;
+        const size = product?.sizes.find((s) => s.id === session.metadata?.sizeId);
+        const confirmation = customerEmail({
+          firstName: customer.name?.trim().split(/\s+/)[0],
+          reference,
+          tableName: product?.name ?? item?.description ?? "Studio Collection table",
+          // e.g. "2000mm L × 1000mm W × 750mm H · Seats 6–8 people · American oak / Clear matte"
+          details: [size?.dimensions, size?.seating && `Seats ${size.seating}`, product?.specifications["Timber / Finish"]].filter(Boolean) as string[],
+          tablePrice: money(item?.amount_total),
+          deliveryName,
+          deliveryPrice: isRemote ? "To be confirmed" : money(shippingCents),
+          paid: money(session.amount_total),
+          recipient: shipping?.name ?? customer.name ?? "",
+          addressLines: addr
+            ? [[addr.line1, addr.line2].filter(Boolean).join(", "), [addr.city, addr.state, addr.postal_code].filter(Boolean).join(" ")]
+            : [],
+          isRemote,
+        });
         const sent = await sendEmail({
           sender: { email: BREVO_SENDER_EMAIL, name: "Level Design" },
           to: [{ email: customer.email, name: customer.name ?? undefined }],
