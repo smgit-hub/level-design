@@ -13,6 +13,7 @@ const navLinks = [
   { path: "/custom/", label: "Custom Design" },
   { path: "/projects/", label: "Projects" },
   { path: "/about/", label: "About" },
+  { path: "/contact/", label: "Contact" },
 ];
 
 export default function Navigation({ currentPath }: Props) {
@@ -52,7 +53,7 @@ export default function Navigation({ currentPath }: Props) {
       }`}
     >
       <div className="w-full px-4 sm:px-6 lg:px-10">
-        <div className="grid grid-cols-[1fr_auto] md:grid-cols-[1fr_auto_1fr] items-center h-16">
+        <div className="grid grid-cols-[1fr_auto] xl:grid-cols-[1fr_auto_1fr] items-center h-16">
 
           {/* Logo: the mark is drawn straight onto the header (masked from the PNG's alpha) in the same off-white as the name, so the lockup is one colour and sits a step above the cream menu links */}
           <a href="/" aria-label="Level Design home" className="flex items-center gap-2.5 group min-w-0 justify-self-start">
@@ -74,7 +75,7 @@ export default function Navigation({ currentPath }: Props) {
           </a>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-8 justify-self-center">
+          <div className="hidden xl:flex items-center gap-8 justify-self-center">
             {navLinks.map((link) => (
               <a
                 key={link.path}
@@ -105,13 +106,13 @@ export default function Navigation({ currentPath }: Props) {
             }
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="hidden md:flex items-center gap-2 px-5 py-2 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 text-sm font-medium shadow-sm justify-self-end"
+            className="hidden xl:flex items-center gap-2 px-5 py-2 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 text-sm font-medium shadow-sm justify-self-end"
           >
             {ctaLabel}
           </motion.a>
 
           {/* Mobile CTA + toggle */}
-          <div className="md:hidden flex items-center gap-3 justify-self-end">
+          <div className="xl:hidden flex items-center gap-3 justify-self-end">
             <a
               href={ctaHref}
               onClick={() =>
@@ -146,7 +147,7 @@ export default function Navigation({ currentPath }: Props) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden mx-4 mb-4 overflow-hidden rounded-2xl border border-white/15 bg-[#1f2f29]/88 shadow-2xl backdrop-blur-xl"
+            className="xl:hidden mx-4 mb-4 overflow-hidden rounded-2xl border border-white/15 bg-[#1f2f29]/88 shadow-2xl backdrop-blur-xl"
           >
             <div className="px-4 py-4 space-y-3">
               {navLinks.map((link) => (
