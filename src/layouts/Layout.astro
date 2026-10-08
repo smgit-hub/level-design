@@ -8,6 +8,8 @@ interface Props {
   title?: string;
   description?: string;
   preloadImage?: string;
+  /** Phone-sized version of preloadImage, when the page serves a different image to phones. */
+  preloadImageMobile?: string;
   /** Keeps the page out of search results (order confirmations, etc.). */
   noindex?: boolean;
   ogImage?: string;
@@ -19,6 +21,7 @@ const {
   title = 'Level Design',
   description = 'Handcrafted timber dining tables designed and made in Melbourne, Australia. 9 signature designs, fully customisable to your space.',
   preloadImage,
+  preloadImageMobile,
   noindex = false,
   ogImage = '/images/home/level-design-handcrafted-furniture-hero.webp',
   ogType = 'website',
@@ -133,7 +136,8 @@ const schemaNodes = [baseSchema, websiteSchema, ...(Array.isArray(schema) ? sche
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
-    {preloadImage && <link rel="preload" as="image" href={preloadImage} />}
+    {preloadImage && <link rel="preload" as="image" href={preloadImage} media={preloadImageMobile ? '(min-width: 768px)' : undefined} fetchpriority="high" />}
+    {preloadImageMobile && <link rel="preload" as="image" href={preloadImageMobile} media="(max-width: 767px)" fetchpriority="high" />}
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="me" href={googleBusinessProfileURL} />
     {schemaNodes.map((node) => (
