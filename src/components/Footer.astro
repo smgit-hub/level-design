@@ -8,17 +8,20 @@ const year = new Date().getFullYear();
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <!-- Top: Brand -->
     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6 mb-8 pb-8 border-b border-[#3d4f47]">
-      <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-full bg-[#e8dcc8] flex items-center justify-center p-2 flex-shrink-0">
-          <img src="/images/level-logo.png" alt="Level Design" loading="lazy" class="w-full h-full object-contain" />
-        </div>
-        <div>
-          <p class="text-white text-lg font-semibold leading-tight">Level Design</p>
-          <p class="text-xs text-[#b8ac98]">Dining table design studio, Melbourne</p>
-        </div>
-      </div>
+      <a href="/" aria-label="Level Design home" class="flex items-center gap-3 group w-fit">
+        <!-- Same lockup as the header: the mark is masked from the PNG's alpha and drawn in the off-white of the name -->
+        <span
+          aria-hidden="true"
+          class="block flex-shrink-0 w-14 h-10 bg-[#f5f1e8] transition-opacity duration-200 group-hover:opacity-80"
+          style="-webkit-mask: url(/images/level-logo.png) center / contain no-repeat; mask: url(/images/level-logo.png) center / contain no-repeat;"
+        ></span>
+        <span>
+          <span class="block font-serif text-2xl tracking-wide text-[#f5f1e8] leading-tight transition-opacity duration-200 group-hover:opacity-80">Level Design</span>
+          <span class="block text-xs text-[#b8ac98] mt-0.5">Dining tables, Melbourne</span>
+        </span>
+      </a>
       <p class="text-sm text-[#b8ac98] max-w-xs sm:text-right">
-        Dining tables designed around your space, lifestyle, and the way you entertain.
+        Designed in Melbourne for over 10 years, and expertly made to last.
       </p>
     </div>
 
@@ -37,10 +40,10 @@ const year = new Date().getFullYear();
         <h3 class="text-white text-xs font-semibold tracking-widest uppercase mb-4">Explore</h3>
         <ul class="space-y-2">
           {[
-            { href: '/signature/', label: 'Signature Collection' },
             { href: '/studio/', label: 'Studio Collection' },
-            { href: '/projects/', label: 'Projects' },
+            { href: '/signature/', label: 'Signature Collection' },
             { href: '/custom/', label: 'Custom Design' },
+            { href: '/projects/', label: 'Projects' },
             { href: '/melbourne-custom-dining-tables/', label: 'Melbourne Tables' },
           ].map(({ href, label }) => (
             <li><a href={href} class="text-sm text-[#b8ac98] hover:text-white transition-colors">{label}</a></li>
@@ -48,11 +51,11 @@ const year = new Date().getFullYear();
         </ul>
       </div>
       <div>
-        <h3 class="text-white text-xs font-semibold tracking-widest uppercase mb-4">Studio</h3>
+        <h3 class="text-white text-xs font-semibold tracking-widest uppercase mb-4">Company</h3>
         <ul class="space-y-2">
           {[
             { href: '/about/', label: 'About' },
-            { href: '/contact/', label: 'Start a Project' },
+            { href: '/contact/', label: 'Contact' },
           ].map(({ href, label }) => (
             <li><a href={href} class="text-sm text-[#b8ac98] hover:text-white transition-colors">{label}</a></li>
           ))}
@@ -82,7 +85,7 @@ const year = new Date().getFullYear();
 
     <!-- Bottom Bar -->
     <div class="pt-6 border-t border-[#3d4f47] text-center">
-      <p class="text-xs text-[#b8ac98]">© 2025 Level Design. All rights reserved.</p>
+      <p class="text-xs text-[#b8ac98]">© {year} Level Design. All rights reserved.</p>
     </div>
   </div>
 </footer>
