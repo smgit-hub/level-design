@@ -168,14 +168,36 @@ export default function StudioProductDetailClient({ product }: Props) {
     document.head.appendChild(script);
   }, []);
 
+  // Set synchronously so a fast double-click can't start two checkouts before `disabled` has rendered.
+  const checkingOut = useRef(false);
+
+  // Coming back from Stripe with the Back button restores this page from the browser's cache with the button still
+  // stuck on "Redirecting…", so reset it when the page is shown again.
+  useEffect(() => {
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        checkingOut.current = false;
+        setIsCheckingOut(false);
+      }
+    };
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, []);
+
   const handleBuyNow = async () => {
+    if (checkingOut.current) return;
+    checkingOut.current = true;
     setCheckoutError(false);
     setIsCheckingOut(true);
+    // Give up after 20 seconds instead of leaving the button stuck if the function hangs.
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 20000);
     try {
       const response = await fetch("/.netlify/functions/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ productId: product.id, sizeId: selectedSize.id }),
+        signal: controller.signal,
       });
       if (!response.ok) throw new Error("Checkout session creation failed");
       const { url } = await response.json();
@@ -188,8 +210,11 @@ export default function StudioProductDetailClient({ product }: Props) {
       });
       window.location.href = url;
     } catch {
+      checkingOut.current = false;
       setCheckoutError(true);
       setIsCheckingOut(false);
+    } finally {
+      window.clearTimeout(timeout);
     }
   };
 
@@ -367,8 +392,9 @@ export default function StudioProductDetailClient({ product }: Props) {
                   </button>
                 </div>
                 {checkoutError && (
-                  <p className="text-sm text-red-600 text-center mt-4">
-                    Something went wrong starting checkout — please try again or email us directly at hello@leveldesign.com.au
+                  <p role="alert" className="text-sm text-red-700 text-center mt-4">
+                    Something went wrong starting checkout — please try again or email us directly at{" "}
+                    <a href="mailto:hello@leveldesign.com.au" className="underline underline-offset-2">hello@leveldesign.com.au</a>
                   </p>
                 )}
 
