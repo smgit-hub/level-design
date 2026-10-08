@@ -20,6 +20,7 @@ type FormData = {
 const tableOptions = [
   "Pillar Table", "Luna Table", "Yama Table", "Venn Table",
   "Cort Table", "Morgan Table", "Bruno Table", "Helm Table", "Nina Table",
+  "Line Table (Studio)", "Curve Table (Studio)", "Pill Table (Studio)", "Round Table (Studio)",
   "Custom Design", "Not sure yet",
 ];
 
