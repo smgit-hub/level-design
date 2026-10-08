@@ -462,7 +462,7 @@ export default function StudioProductDetailClient({ product }: Props) {
                     {delivery && delivery.priceCents === null && (
                       <>
                         We quote delivery to {postcode} individually.{" "}
-                        <a href="/contact/" className="text-[#3d4f47] underline underline-offset-2 hover:text-[#c8956a]">Get in touch</a> and we'll send you a price.
+                        <a href="/contact/?topic=delivery" className="text-[#3d4f47] underline underline-offset-2 hover:text-[#c8956a]">Get in touch</a> and we'll send you a price.
                       </>
                     )}
                   </p>
@@ -481,7 +481,7 @@ export default function StudioProductDetailClient({ product }: Props) {
                 {checkoutError && (
                   <p role="alert" className="text-sm text-red-700 text-center mt-4">
                     Something went wrong starting checkout — please try again, or{" "}
-                    <a href="/contact/" className="underline underline-offset-2">get in touch</a> and we'll help.
+                    <a href="/contact/?topic=studio" className="underline underline-offset-2">get in touch</a> and we'll help.
                   </p>
                 )}
 
@@ -493,7 +493,7 @@ export default function StudioProductDetailClient({ product }: Props) {
                   </span>
                 </div>
                 <a
-                  href="/contact/"
+                  href="/contact/?topic=studio"
                   onClick={() =>
                     trackEvent("select_content", {
                       content_type: "cta",
