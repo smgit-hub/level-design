@@ -8,10 +8,10 @@ interface Props {
 }
 
 const navLinks = [
-  { path: "/signature/", label: "Signature Collection" },
   { path: "/studio/", label: "Studio Collection" },
-  { path: "/projects/", label: "Projects" },
+  { path: "/signature/", label: "Signature Collection" },
   { path: "/custom/", label: "Custom Design" },
+  { path: "/projects/", label: "Projects" },
   { path: "/about/", label: "About" },
 ];
 
@@ -154,17 +154,17 @@ export default function Navigation({ currentPath }: Props) {
                 </a>
               ))}
               <a
-                href={ctaHref}
+                href="/custom/#brief"
                 onClick={() =>
                   trackEvent("select_content", {
                     content_type: "cta",
-                    item_id: "shop_now_nav_mobile",
+                    item_id: "custom_brief_nav_mobile",
                     page_path: window.location.pathname,
                   })
                 }
                 className="block px-4 py-3 text-center bg-[#c8956a] text-white font-medium rounded-lg hover:bg-[#b8856a] transition-colors"
               >
-                {ctaLabel}
+                Start a Custom Design
               </a>
             </div>
           </motion.div>
