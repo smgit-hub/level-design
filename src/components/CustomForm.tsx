@@ -20,11 +20,12 @@ export default function CustomForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isError, setIsError] = useState(false);
   const successRef = useRef<HTMLDivElement>(null);
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>();
 
   useEffect(() => {
     if (isSubmitted && successRef.current) {
       successRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      successRef.current.focus({ preventScroll: true });
     }
   }, [isSubmitted]);
 
@@ -49,8 +50,8 @@ export default function CustomForm() {
   };
 
   return (
-    <>
     <MotionConfig reducedMotion="user">
+    <>
       {/* Enquiry Form */}
       <section id="brief" className="scroll-mt-24 py-16 md:py-24 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -81,69 +82,69 @@ export default function CustomForm() {
                 <div style={{ display: "none" }} aria-hidden="true"><input name="bot-field" tabIndex={-1} autoComplete="off" /></div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-[#3d4f47] mb-2">Name *</label>
-                    <input
+                    <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="custom-name">Name *</label>
+                    <input id="custom-name" aria-invalid={!!errors.name} aria-describedby={errors.name ? "custom-name-error" : undefined}
                       {...register("name", { required: "Name is required" })}
                       type="text"
                       placeholder="Your name"
-                      className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors"
                     />
-                    {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>}
+                    {errors.name && <p id="custom-name-error" role="alert" className="mt-1 text-sm text-red-700">{errors.name.message}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#3d4f47] mb-2">Email *</label>
-                    <input
+                    <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="custom-email">Email *</label>
+                    <input id="custom-email" aria-invalid={!!errors.email} aria-describedby={errors.email ? "custom-email-error" : undefined}
                       {...register("email", {
                         required: "Email is required",
                         pattern: { value: EMAIL_PATTERN, message: "Invalid email" },
                       })}
                       type="email"
                       placeholder="your@email.com"
-                      className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors"
                     />
-                    {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
+                    {errors.email && <p id="custom-email-error" role="alert" className="mt-1 text-sm text-red-700">{errors.email.message}</p>}
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#3d4f47] mb-2">Phone (optional)</label>
-                  <input {...register("phone")} type="tel" placeholder="Your phone number"
-                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors" />
+                  <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="custom-phone">Phone (optional)</label>
+                  <input id="custom-phone" {...register("phone")} type="tel" placeholder="Your phone number"
+                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors" />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#3d4f47] mb-2">Dimensions & Space Details</label>
-                  <input {...register("dimensions")} type="text" placeholder="e.g. 2400mm × 1000mm, seats 8"
-                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors" />
+                  <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="custom-dimensions">Dimensions & Space Details</label>
+                  <input id="custom-dimensions" {...register("dimensions")} type="text" placeholder="e.g. 2400mm × 1000mm, seats 8"
+                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors" />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#3d4f47] mb-2">Project Details *</label>
-                  <textarea
+                  <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="custom-projectDetails">Project Details *</label>
+                  <textarea id="custom-projectDetails" aria-invalid={!!errors.projectDetails} aria-describedby={errors.projectDetails ? "custom-projectDetails-error" : undefined}
                     {...register("projectDetails", { required: "Please tell us about your project" })}
                     rows={6}
                     placeholder="Tell us about your space, style preferences, timber choices, and any inspiration..."
-                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors resize-none"
+                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors resize-none"
                   />
-                  {errors.projectDetails && <p className="mt-1 text-sm text-red-600">{errors.projectDetails.message}</p>}
+                  {errors.projectDetails && <p id="custom-projectDetails-error" role="alert" className="mt-1 text-sm text-red-700">{errors.projectDetails.message}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#3d4f47] mb-2">Timber Preference</label>
-                  <input {...register("timberPreference")} type="text" placeholder="e.g. American Oak, American Ash"
-                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors" />
+                  <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="custom-timberPreference">Timber Preference</label>
+                  <input id="custom-timberPreference" {...register("timberPreference")} type="text" placeholder="e.g. American Oak, American Ash"
+                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors" />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#3d4f47] mb-2">Budget Range</label>
-                  <input {...register("budgetRange")} type="text" placeholder="e.g. $5000 – $10000"
-                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors" />
+                  <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="custom-budgetRange">Budget Range</label>
+                  <input id="custom-budgetRange" {...register("budgetRange")} type="text" placeholder="e.g. $5000 – $10000"
+                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors" />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#3d4f47] mb-2">Timeline</label>
-                  <select {...register("timeline")}
-                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors">
+                  <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="custom-timeline">Timeline</label>
+                  <select id="custom-timeline" {...register("timeline")}
+                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors">
                     <option value="">Select timeframe</option>
                     <option value="urgent">Urgent (within 6 weeks)</option>
                     <option value="standard">Standard (2–3 months)</option>
@@ -153,8 +154,8 @@ export default function CustomForm() {
                 </div>
 
                 <div className="pt-4">
-                  <button type="submit"
-                    className="w-full px-8 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center justify-center gap-2 cursor-pointer">
+                  <button type="submit" disabled={isSubmitting}
+                    className="w-full px-8 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">
                     Send Enquiry
                     <ArrowRight size={20} />
                   </button>
@@ -163,7 +164,7 @@ export default function CustomForm() {
                 </div>
               </form>
             ) : (
-              <div ref={successRef} className="text-center py-12">
+              <div ref={successRef} role="status" tabIndex={-1} className="text-center py-12 outline-none">
                 <div className="w-20 h-20 rounded-full bg-[#c8956a] flex items-center justify-center mx-auto mb-6">
                   <CheckCircle className="text-white" size={40} />
                 </div>
@@ -184,6 +185,6 @@ export default function CustomForm() {
         </div>
       </section>
     </>
-  );
     </MotionConfig>
+  );
 }
