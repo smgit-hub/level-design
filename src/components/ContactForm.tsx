@@ -29,12 +29,12 @@ const topics: { value: Topic; label: string; hint: string }[] = [
   { value: "other", label: "Something else", hint: "Anything we haven't covered" },
 ];
 
-const studioTableOptions = ["Line Table", "Curve Table", "Pill Table", "Round Table", "Not sure yet"];
+const studioTableOptions = ["Line Table", "Pill Table", "Round Table", "Curve Table", "Not sure yet"];
 
 const projectTableOptions = [
   "Pillar Table", "Luna Table", "Yama Table", "Venn Table",
   "Cort Table", "Morgan Table", "Bruno Table", "Helm Table", "Nina Table",
-  "Line Table (Studio)", "Curve Table (Studio)", "Pill Table (Studio)", "Round Table (Studio)",
+  "Line Table (Studio)", "Pill Table (Studio)", "Round Table (Studio)", "Curve Table (Studio)",
   "Custom Design", "Not sure yet",
 ];
 
