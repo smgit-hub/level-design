@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion, MotionConfig } from "motion/react";
 import { useState, useEffect, useRef } from "react";
 import { ArrowRight, CheckCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -58,6 +58,7 @@ export default function ContactForm() {
 
   return (
     <motion.div
+    <MotionConfig reducedMotion="user">
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.2 }}
@@ -180,4 +181,5 @@ export default function ContactForm() {
       )}
     </motion.div>
   );
+    </MotionConfig>
 }

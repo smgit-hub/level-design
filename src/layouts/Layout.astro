@@ -154,9 +154,10 @@ const schemaNodes = [baseSchema, websiteSchema, ...(Array.isArray(schema) ? sche
     </script>
   </head>
   <body class="bg-[#f5f1e8] text-[#3d4f47]">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-full focus:bg-white focus:text-[#3d4f47] focus:shadow-lg">Skip to main content</a>
     <Navigation client:load currentPath={currentPath} transition:persist />
     <div class="overflow-x-hidden">
-      <main>
+      <main id="main" tabindex="-1" class="outline-none">
         <slot />
       </main>
       <Footer />
@@ -189,7 +190,7 @@ const schemaNodes = [baseSchema, websiteSchema, ...(Array.isArray(schema) ? sche
   function initHeroParallax() {
     if (heroScrollHandler) window.removeEventListener('scroll', heroScrollHandler);
     const hero = document.querySelector<HTMLElement>('.hero-parallax');
-    if (!hero) return;
+    if (!hero || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     heroScrollHandler = () => {
       const progress = Math.max(0, Math.min(1, -hero!.getBoundingClientRect().top / hero!.offsetHeight));
       hero!.style.opacity = String(1 - progress);

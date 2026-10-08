@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion, MotionConfig } from "motion/react";
 import { useState, useEffect, useRef } from "react";
 import { CheckCircle, ArrowRight } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -50,6 +50,7 @@ export default function CustomForm() {
 
   return (
     <>
+    <MotionConfig reducedMotion="user">
       {/* Enquiry Form */}
       <section id="brief" className="scroll-mt-24 py-16 md:py-24 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -184,4 +185,5 @@ export default function CustomForm() {
       </section>
     </>
   );
+    </MotionConfig>
 }

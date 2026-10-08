@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion, MotionConfig } from "motion/react";
 import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle, Ruler, Truck, Shield } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -60,6 +60,7 @@ export default function ProductDetailClient({ product, prev, next }: Props) {
 
   return (
     <div className="bg-[#faf8f5]">
+    <MotionConfig reducedMotion="user">
       {/* Product header */}
       <section className="pt-28 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -361,4 +362,5 @@ export default function ProductDetailClient({ product, prev, next }: Props) {
       </section>
     </div>
   );
+    </MotionConfig>
 }

@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, MotionConfig } from "motion/react";
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { trackEvent } from "../lib/analytics";
@@ -33,13 +33,19 @@ export default function Navigation({ currentPath }: Props) {
       setIsMobileMenuOpen(false);
     };
     document.addEventListener("astro:page-load", handlePageLoad);
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsMobileMenuOpen(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("astro:page-load", handlePageLoad);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
   return (
+    <MotionConfig reducedMotion="user">
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled ? "bg-[#3d4f47]/95 backdrop-blur-md shadow-lg" : "bg-transparent"
@@ -115,14 +121,16 @@ export default function Navigation({ currentPath }: Props) {
                   page_path: window.location.pathname,
                 })
               }
-              className="px-4 py-2 bg-[#c8956a] text-white rounded-full text-sm font-medium shadow-sm whitespace-nowrap active:bg-[#b8856a]"
+              className="inline-flex items-center min-h-11 px-4 bg-[#c8956a] text-white rounded-full text-sm font-medium shadow-sm whitespace-nowrap"
             >
               {ctaLabel}
             </a>
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-[#e8dcc8] hover:text-white transition-colors"
+              className="flex items-center justify-center w-11 h-11 -mr-2 text-[#e8dcc8] hover:text-white transition-colors"
               aria-label="Toggle menu"
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-menu"
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -134,6 +142,7 @@ export default function Navigation({ currentPath }: Props) {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
+            id="mobile-menu"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
@@ -144,7 +153,7 @@ export default function Navigation({ currentPath }: Props) {
                 <a
                   key={link.path}
                   href={link.path}
-                  className={`block px-4 py-2 rounded-lg transition-colors ${
+                  className={`block px-4 py-3 rounded-lg transition-colors ${
                     activePath === link.path
                       ? "bg-white/12 text-white"
                       : "text-[#e8dcc8] hover:bg-white/10"
@@ -171,5 +180,6 @@ export default function Navigation({ currentPath }: Props) {
         )}
       </AnimatePresence>
     </nav>
+    </MotionConfig>
   );
 }

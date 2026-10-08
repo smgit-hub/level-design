@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion, MotionConfig } from "motion/react";
 import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, CheckCircle, RotateCcw, Truck } from "lucide-react";
 import { deliveryForPostcode, isValidPostcode } from "../data/delivery-zones";
@@ -251,6 +251,7 @@ export default function StudioProductDetailClient({ product }: Props) {
   };
 
   return (
+    <MotionConfig reducedMotion="user">
     <div className="bg-[#faf8f5]">
       {/* Product header */}
       <section className="pt-28 pb-12">
@@ -561,5 +562,6 @@ export default function StudioProductDetailClient({ product }: Props) {
         </button>
       </div>
     </div>
+    </MotionConfig>
   );
 }
