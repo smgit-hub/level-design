@@ -459,8 +459,8 @@ export default function StudioProductDetailClient({ product }: Props) {
                 </div>
                 {checkoutError && (
                   <p role="alert" className="text-sm text-red-700 text-center mt-4">
-                    Something went wrong starting checkout — please try again or email us directly at{" "}
-                    <a href="mailto:hello@leveldesign.com.au" className="underline underline-offset-2">hello@leveldesign.com.au</a>
+                    Something went wrong starting checkout — please try again, or{" "}
+                    <a href="/contact/" className="underline underline-offset-2">get in touch</a> and we'll help.
                   </p>
                 )}
 

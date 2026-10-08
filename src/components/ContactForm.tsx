@@ -157,7 +157,7 @@ export default function ContactForm() {
               <ArrowRight size={20} />
             </button>
             <p className="text-sm text-[#5a6b64] text-center mt-4">We'll only use this to contact you about your table.</p>
-          {isError && <p className="text-sm text-red-600 text-center mt-2">Something went wrong — please try again or email us directly at hello@leveldesign.com.au</p>}
+          {isError && <p className="text-sm text-red-600 text-center mt-2">Something went wrong — please try again in a moment.</p>}
           </div>
         </form>
       ) : (
