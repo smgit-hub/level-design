@@ -14,13 +14,11 @@ export function getStaticPaths() {
 const { product } = Astro.props;
 const otherProducts = allStudioProducts.filter((p) => p.id !== product.id);
 const productUrl = `/studio/${product.id}/`;
-const pageDescription = `${product.name} — ${product.tagline}. Same design standard as our Signature Collection, at a more accessible price — a set of fixed sizes, ready to order online.`;
 
 const formatPrice = (cents: number) =>
   new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 }).format(cents / 100);
-const sizePrices = product.sizes.map((s) => s.price);
-const lowPrice = Math.min(...sizePrices);
-const highPrice = Math.max(...sizePrices);
+const lowPrice = startingPrice(product);
+const pageDescription = `${product.name} — ${product.tagline}. Made to order in Melbourne, from ${formatPrice(lowPrice)}. Fixed sizes, secure online checkout.`;
 
 const productFaqs = [
   {
@@ -47,7 +45,7 @@ const schema = [
     name: product.name,
     description: pageDescription,
     image: [...product.images.gallery, product.images.main].map((image: string) => new URL(image, Astro.site ?? Astro.url.origin).toString()),
-    category: 'Timber dining table',
+    category: 'Oak dining table',
     brand: {
       '@type': 'Brand',
       name: 'Level Design',
@@ -58,15 +56,25 @@ const schema = [
     },
     url: new URL(productUrl, Astro.site ?? Astro.url.origin).toString(),
     material: product.specifications['Construction'],
-    offers: {
-      '@type': 'AggregateOffer',
-      lowPrice: (lowPrice / 100).toFixed(2),
-      highPrice: (highPrice / 100).toFixed(2),
-      offerCount: product.sizes.length,
+    // One offer per size. Each table is made to order, so the lead time is given as handling time (6–8 weeks).
+    offers: product.sizes.map((size) => ({
+      '@type': 'Offer',
+      name: `${product.name} — ${size.label}`,
+      sku: size.stripeLookupKey,
+      price: (size.price / 100).toFixed(2),
       priceCurrency: 'AUD',
       availability: 'https://schema.org/InStock',
+      itemCondition: 'https://schema.org/NewCondition',
       url: new URL(productUrl, Astro.site ?? Astro.url.origin).toString(),
-    },
+      shippingDetails: {
+        '@type': 'OfferShippingDetails',
+        shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'AU' },
+        deliveryTime: {
+          '@type': 'ShippingDeliveryTime',
+          handlingTime: { '@type': 'QuantitativeValue', minValue: 42, maxValue: 56, unitCode: 'DAY' },
+        },
+      },
+    })),
     additionalProperty: Object.entries(product.specifications).map(([name, value]) => ({
       '@type': 'PropertyValue',
       name,
@@ -113,7 +121,7 @@ const schema = [
 ---
 
 <Layout
-  title={`${product.name} | Studio Collection Dining Table Melbourne | Level Design`}
+  title={`${product.name} — Oak Dining Table, Melbourne | Level Design`}
   description={pageDescription}
   ogImage={product.images.gallery[0] ?? product.images.main}
   ogType="product"

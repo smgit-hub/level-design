@@ -16,7 +16,7 @@ const index = allProducts.findIndex((p) => p.id === product.id);
 const prev = allProducts[(index - 1 + allProducts.length) % allProducts.length];
 const next = allProducts[(index + 1) % allProducts.length];
 const productUrl = `/signature/${product.id}/`;
-const pageDescription = `${product.name} — ${product.tagline}. Handcrafted timber dining table designed and made in Melbourne, Australia. Custom sizing available.`;
+const pageDescription = `${product.name} — ${product.tagline}. Designed and made in Melbourne, with custom sizing available.`;
 const productFaqs = [
   {
     question: `Can ${product.name} be made in a different size, timber, or finish?`,
@@ -28,28 +28,24 @@ const productFaqs = [
   },
 ];
 const schema = [
+  // Signature designs are bespoke and have no fixed price, so they are described as a page about a design. Marking them
+  // up as a Product with no price would be flagged by Google as incomplete.
   {
     '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: product.name,
+    '@type': 'WebPage',
+    name: `${product.name} — Signature Collection`,
     description: pageDescription,
-    image: [product.images.main, ...product.images.gallery].map((image: string) => new URL(image, Astro.site ?? Astro.url.origin).toString()),
-    category: 'Timber dining table',
-    brand: {
-      '@type': 'Brand',
-      name: 'Level Design',
-    },
-    manufacturer: {
-      '@type': 'Organization',
-      name: 'Level Design',
-    },
     url: new URL(productUrl, Astro.site ?? Astro.url.origin).toString(),
-    material: product.specifications['Timber / Finish Shown'],
-    additionalProperty: Object.entries(product.specifications).map(([name, value]) => ({
-      '@type': 'PropertyValue',
-      name,
-      value,
-    })),
+    primaryImageOfPage: {
+      '@type': 'ImageObject',
+      url: new URL(product.images.main, Astro.site ?? Astro.url.origin).toString(),
+    },
+    about: {
+      '@type': 'Thing',
+      name: `${product.name} dining table design`,
+      description: product.description,
+    },
+    publisher: { '@type': 'Organization', name: 'Level Design Australia Pty Ltd' },
   },
   {
     '@context': 'https://schema.org',
@@ -91,7 +87,7 @@ const schema = [
 ---
 
 <Layout
-  title={`${product.name} | Handcrafted Dining Table Melbourne | Level Design`}
+  title={`${product.name} | Custom Dining Table, Melbourne | Level Design`}
   description={pageDescription}
   ogImage={product.images.main}
   ogType="product"
