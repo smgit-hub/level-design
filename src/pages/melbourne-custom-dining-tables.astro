@@ -16,7 +16,7 @@ const faqs = [
   {
     question: 'Which Melbourne areas do you work with?',
     answer:
-      'We work with clients across Melbourne and wider Victoria, including inner Melbourne, Bayside, the Mornington Peninsula, the Bass Coast and Phillip Island, Geelong, and regional areas by enquiry.',
+      'We work across Melbourne, including Toorak, South Yarra, Armadale, Malvern, Kew, Hawthorn, Fitzroy, Northcote, Caulfield, Blackburn, Eltham, Brighton and most of the suburbs in between. We also work with clients on the Mornington Peninsula, the Bass Coast and Phillip Island, in Geelong, and in regional Victoria by enquiry. If you don\'t see your suburb listed, just ask — we very likely work there.',
   },
   {
     question: 'Can I order a dining table online instead of commissioning one?',
@@ -59,6 +59,7 @@ const schema = [
     },
     areaServed: [
       { '@type': 'City', name: 'Melbourne' },
+      ...['Toorak', 'South Yarra', 'Armadale', 'Malvern', 'Kew', 'Hawthorn', 'Fitzroy', 'Brighton', 'Northcote', 'Caulfield', 'Blackburn', 'Eltham'].map((name) => ({ '@type': 'Place', name: `${name}, Victoria` })),
       { '@type': 'AdministrativeArea', name: 'Bass Coast' },
       { '@type': 'Place', name: 'Phillip Island' },
       { '@type': 'AdministrativeArea', name: 'Victoria' },
@@ -131,8 +132,8 @@ const schema = [
           </div>
           <div class="reveal-right rounded-2xl bg-[#f5f1e8] divide-y divide-[#e5ddd0]" style="--delay: 0.1s">
             {[
-              { label: 'Inner Melbourne', detail: 'Apartments, terraces, and compact dining zones' },
-              { label: 'Bayside', detail: 'Family dining rooms and coastal-inspired interiors' },
+              { label: 'Inner & Middle Melbourne', detail: 'Toorak, South Yarra, Armadale, Malvern, Kew, Hawthorn, Fitzroy, Northcote, Caulfield, Blackburn, Eltham and the suburbs in between. Family homes, period renovations and architect-designed residences.' },
+              { label: 'Bayside', detail: 'Brighton and the bayside suburbs: family dining rooms and coastal-inspired interiors' },
               { label: 'Mornington Peninsula', detail: 'Statement tables for relaxed entertaining' },
               { label: 'Bass Coast & Phillip Island', detail: 'Holiday homes and coastal living — Cowes, San Remo, Wonthaggi and Inverloch' },
               { label: 'Regional Victoria', detail: 'Projects by enquiry, with delivery planning' },
