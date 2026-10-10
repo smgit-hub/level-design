@@ -8,13 +8,22 @@ interface Props {
 }
 
 const navLinks = [
-  { path: "/studio/", label: "Studio Collection" },
   { path: "/signature/", label: "Signature Collection" },
+  { path: "/studio/", label: "Studio Collection", isNew: true },
   { path: "/custom/", label: "Custom Design" },
   { path: "/projects/", label: "Projects" },
   { path: "/about/", label: "About" },
   { path: "/contact/", label: "Contact" },
 ];
+
+/** A small "New" tag beside a menu item, in the light copper that reads on the dark header */
+function NewBadge() {
+  return (
+    <span className="ml-2 align-middle rounded-full bg-[#d9b48d] px-1.5 py-0.5 text-[9px] font-bold uppercase leading-none tracking-wide text-[#1f2f29]">
+      New
+    </span>
+  );
+}
 
 export default function Navigation({ currentPath }: Props) {
   const isHomepage = currentPath === "/";
@@ -83,6 +92,7 @@ export default function Navigation({ currentPath }: Props) {
                 className="relative text-[#e8dcc8] hover:text-white transition-colors duration-200 py-2"
               >
                 {link.label}
+                {link.isNew && <NewBadge />}
                 {activePath === link.path && (
                   <motion.div
                     layoutId="activeNav"
@@ -161,6 +171,7 @@ export default function Navigation({ currentPath }: Props) {
                   }`}
                 >
                   {link.label}
+                  {link.isNew && <NewBadge />}
                 </a>
               ))}
               <a
