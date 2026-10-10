@@ -19,6 +19,10 @@ const serviceAreas = [
     detail: 'Statement timber dining tables for relaxed living, entertaining, and coastal-inspired interiors.',
   },
   {
+    area: 'Bass Coast and Phillip Island',
+    detail: 'Tables for holiday homes, coastal renovations, and permanent seaside living, with Studio delivery from $199.',
+  },
+  {
     area: 'Regional Victoria',
     detail: 'Projects by enquiry, with delivery planning discussed during the quoting process.',
   },
@@ -158,10 +162,10 @@ const schema = {
             <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Service Areas</p>
             <h2 class="text-3xl md:text-4xl font-serif text-[#3d4f47] mb-4">Melbourne and Victorian Table Projects</h2>
             <p class="text-[#5a6b64] text-lg leading-relaxed">
-              Level Design is Melbourne-based and works with homeowners, interior designers, and architects on custom timber dining tables across Melbourne and wider Victoria. If your project is outside these areas, send through the details and we can advise on delivery options.
+              Level Design is Melbourne-based and works with homeowners, interior designers, and architects on custom timber dining tables across Melbourne, the Bass Coast and wider Victoria. If your project is outside these areas, send through the details and we can advise on delivery options.
             </p>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {serviceAreas.map((item, i) => (
               <div class="rounded-2xl bg-white p-6" style={`--delay: ${i * 0.1}s`}>
                 <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{item.area}</h3>

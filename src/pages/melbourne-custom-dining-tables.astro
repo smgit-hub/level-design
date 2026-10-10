@@ -16,7 +16,7 @@ const faqs = [
   {
     question: 'Which Melbourne areas do you work with?',
     answer:
-      'We work with clients across Melbourne and wider Victoria, including inner Melbourne, Bayside, the Mornington Peninsula, Geelong, and regional areas by enquiry.',
+      'We work with clients across Melbourne and wider Victoria, including inner Melbourne, Bayside, the Mornington Peninsula, the Bass Coast and Phillip Island, Geelong, and regional areas by enquiry.',
   },
   {
     question: 'Can I order a dining table online instead of commissioning one?',
@@ -59,6 +59,8 @@ const schema = [
     },
     areaServed: [
       { '@type': 'City', name: 'Melbourne' },
+      { '@type': 'AdministrativeArea', name: 'Bass Coast' },
+      { '@type': 'Place', name: 'Phillip Island' },
       { '@type': 'AdministrativeArea', name: 'Victoria' },
       { '@type': 'Country', name: 'Australia' },
     ],
@@ -132,6 +134,7 @@ const schema = [
               { label: 'Inner Melbourne', detail: 'Apartments, terraces, and compact dining zones' },
               { label: 'Bayside', detail: 'Family dining rooms and coastal-inspired interiors' },
               { label: 'Mornington Peninsula', detail: 'Statement tables for relaxed entertaining' },
+              { label: 'Bass Coast & Phillip Island', detail: 'Holiday homes and coastal living — Cowes, San Remo, Wonthaggi and Inverloch' },
               { label: 'Regional Victoria', detail: 'Projects by enquiry, with delivery planning' },
             ].map((area) => (
               <div class="px-6 py-4">
