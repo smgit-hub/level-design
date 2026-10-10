@@ -44,8 +44,8 @@ body {
   line-height: var(--h-leading);
   font-variation-settings: "opsz" 72;
 }
-h1.font-serif { font-size: clamp(2.75rem, 6.2vw, 6rem); }
-h2.font-serif { font-size: clamp(2rem, 4.4vw, 3.75rem); }
+h1.font-serif { font-size: clamp(2.25rem, 3.9vw, 3.5rem); }   /* page headings: the homepage hero below is the largest */
+h2.font-serif { font-size: clamp(1.875rem, 3.2vw, 3rem); }
 h3.font-serif { line-height: 1.12; }
 .hero-parallax h1.font-serif { font-size: clamp(2.75rem, 5.4vw, 5.25rem); }
 
