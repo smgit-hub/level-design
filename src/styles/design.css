@@ -66,8 +66,8 @@ p.uppercase {
 /* ── Shape language ── */
 :is(.rounded-3xl, .rounded-2xl) { border-radius: var(--r-card); }
 :is(.rounded-xl, .rounded-lg) { border-radius: var(--r-field); }
-/* Buttons and pill links (the round icon buttons keep their circle) */
-:is(a, button).rounded-full:not([class*="w-8"]):not([class*="w-9"]):not([class*="w-1"]):not([class*="w-2"]) { border-radius: var(--r-btn); }
+/* Buttons and pill links (the round icon buttons keep their circle, and anything marked .pill stays a true pill) */
+:is(a, button).rounded-full:not(.pill):not([class*="w-8"]):not([class*="w-9"]):not([class*="w-1"]):not([class*="w-2"]) { border-radius: var(--r-btn); }
 span.rounded-full { border-radius: var(--r-chip); }
 
 /* ── Flat surfaces ── */
