@@ -520,7 +520,7 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
                 <div className="flex items-start gap-3 mt-5 text-sm text-[#5a6b64]">
                   <Truck className="text-[#c8956a] flex-shrink-0 mt-0.5" size={18} />
                   <span>
-                    Made to order in Melbourne · 6–8 week lead time · Secure checkout ·{" "}
+                    Made to order in Melbourne · 6–8 week lead time · Delivered and assembled in your room · Secure checkout ·{" "}
                     <a href="/terms/" className="underline underline-offset-2 hover:text-[#c8956a]">Delivery, returns &amp; care</a>
                   </span>
                 </div>

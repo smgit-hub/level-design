@@ -52,7 +52,7 @@ function customerEmail(o: CustomerEmailInput) {
   const steps = [
     ["Your table is made", "Each Studio table is made to order, with a lead time of 6–8 weeks."],
     ["We arrange delivery", "We'll be in touch to agree a delivery date as your table nears completion."],
-    ["It arrives", "Your table is delivered to the address above."],
+    ["It arrives", "We deliver your table to the address above in two parts, the top and the base, and assemble it in your room."],
   ];
   const row = (label: string, value: string, bold = false) =>
     `<tr><td style="padding:6px 0;color:#5a6b64;font-size:15px;">${esc(label)}</td><td align="right" style="padding:6px 0;color:#3d4f47;font-size:15px;${bold ? "font-weight:600;" : ""}">${esc(value)}</td></tr>`;
