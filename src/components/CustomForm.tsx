@@ -65,7 +65,7 @@ export default function CustomForm() {
             <p className="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Get Started</p>
             <h2 className="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-6">Start Your Custom Brief</h2>
             <p className="text-xl text-[#5a6b64]">
-              Tell us about your space and vision. We'll respond within 48 hours with initial thoughts and next steps.
+              Tell us about your space and vision. We'll respond within 2 business days with initial thoughts and next steps.
             </p>
           </motion.div>
 
