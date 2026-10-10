@@ -6,7 +6,7 @@ const formatPrice = (cents: number) =>
   new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 }).format(cents / 100);
 
 const deliveryZones = [
-  { area: 'Melbourne Metro', fee: formatPrice(MELBOURNE_DELIVERY_CENTS) },
+  { area: 'Melbourne Metro and the Bass Coast', fee: formatPrice(MELBOURNE_DELIVERY_CENTS) },
   { area: 'Regional Victoria, and metropolitan Sydney, Canberra, Brisbane and Adelaide', fee: formatPrice(STANDARD_DELIVERY_CENTS) },
   { area: 'Everywhere else, including Perth, Hobart, Darwin, Tasmania and regional areas outside Victoria', fee: 'Quoted individually before you order' },
 ];

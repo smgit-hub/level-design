@@ -1,5 +1,5 @@
 /**
- * Delivery for Studio Collection orders, decided from the delivery postcode.
+ * Delivery for Studio Collection orders, decided from the delivery postcode. Melbourne Metro and the Bass Coast share the lower fee.
  *
  * Used by the product page (to show the fee before checkout), by the checkout function (which sets the fee itself, so a
  * buyer can't pick a cheaper rate than their address allows) and by the order-email webhook (which flags it if the
@@ -20,7 +20,7 @@ export type DeliveryOption = {
 export const MELBOURNE_DELIVERY_CENTS = 19900;
 export const STANDARD_DELIVERY_CENTS = 44900;
 
-const MELBOURNE_METRO_NAME = "Melbourne Metro Delivery";
+const MELBOURNE_METRO_NAME = "Melbourne Metro & Bass Coast Delivery";
 const STANDARD_NAME = "Brisbane, Sydney, Canberra, Adelaide & Regional VIC Delivery";
 
 type Range = readonly [number, number];
@@ -33,6 +33,15 @@ const MELBOURNE_METRO: Range[] = [
   [3750, 3811],
   [3910, 3920],
   [3975, 3978],
+];
+
+/** The Bass Coast: Phillip Island (Cowes, Rhyll, Newhaven), San Remo, Corinella and Grantville, Bass, Dalyston, Wonthaggi, Kilcunda, Inverloch, Cape Paterson and Glen Alvie. We work there, so it is priced like Melbourne Metro. */
+const BASS_COAST: Range[] = [
+  [3922, 3925],
+  [3979, 3979],
+  [3984, 3984],
+  [3991, 3992],
+  [3995, 3996],
 ];
 
 /** The rest of Victoria (everything else in the 3000s, plus the 8000s PO box range). */
@@ -62,7 +71,7 @@ export const isValidPostcode = (value: string) => /^\d{4}$/.test(value.trim());
 export function deliveryForPostcode(postcode: string): DeliveryOption | null {
   if (!isValidPostcode(postcode)) return null;
   const n = Number(postcode.trim());
-  if (inRanges(n, MELBOURNE_METRO)) return { zone: "melbourne", priceCents: MELBOURNE_DELIVERY_CENTS, label: MELBOURNE_METRO_NAME };
+  if (inRanges(n, MELBOURNE_METRO) || inRanges(n, BASS_COAST)) return { zone: "melbourne", priceCents: MELBOURNE_DELIVERY_CENTS, label: MELBOURNE_METRO_NAME };
   if (inRanges(n, VICTORIA) || inRanges(n, OTHER_CAPITALS)) return { zone: "standard", priceCents: STANDARD_DELIVERY_CENTS, label: STANDARD_NAME };
   return { zone: "quote", priceCents: null, label: "Delivery quoted individually" };
 }

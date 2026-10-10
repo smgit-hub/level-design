@@ -200,7 +200,7 @@ export async function handler(event: NetlifyEvent) {
     // The delivery option is identified by its price, which is set in create-checkout-session.ts.
     const shippingCents = session.shipping_cost?.amount_total;
     const deliveryName =
-      shippingCents === 19900 ? "Melbourne Metro" : shippingCents === 44900 ? "Brisbane, Sydney, Canberra, Adelaide & regional VIC" : "Delivery";
+      shippingCents === 19900 ? "Melbourne Metro & Bass Coast" : shippingCents === 44900 ? "Brisbane, Sydney, Canberra, Adelaide & regional VIC" : "Delivery";
     // The fee was set from the postcode typed on the product page; the address typed at checkout can still differ.
     const addressZone = addr?.postal_code ? deliveryForPostcode(addr.postal_code)?.zone : undefined;
     const zoneMismatch = !!session.metadata?.deliveryZone && !!addressZone && addressZone !== session.metadata.deliveryZone;
