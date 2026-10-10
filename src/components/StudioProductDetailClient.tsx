@@ -494,7 +494,7 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
                     {delivery && delivery.priceCents === null && (
                       <>
                         We quote delivery to {postcode} individually.{" "}
-                        <a href="/contact/?topic=delivery" className="text-[#3d4f47] underline underline-offset-2 hover:text-[#c8956a]">Get in touch</a> and we'll send you a price.
+                        <a href="/contact/?topic=studio" className="text-[#3d4f47] underline underline-offset-2 hover:text-[#c8956a]">Get in touch</a> and we'll send you a price.
                       </>
                     )}
                   </p>

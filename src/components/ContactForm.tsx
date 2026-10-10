@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { trackEvent } from "../lib/analytics";
 import { EMAIL_PATTERN, toFormUrlEncoded } from "../lib/forms";
 
-type Topic = "studio" | "delivery" | "project" | "trade" | "other";
+type Topic = "studio" | "project" | "trade" | "other";
 
 type FormData = {
   name: string;
@@ -24,8 +24,7 @@ type FormData = {
 };
 
 const topics: { value: Topic; label: string; hint: string }[] = [
-  { value: "studio", label: "A Studio table or my order", hint: "Questions before or after buying" },
-  { value: "delivery", label: "Delivery to my area", hint: "A delivery quote or question" },
+  { value: "studio", label: "A Studio table, delivery or my order", hint: "Questions before or after buying, or a delivery quote" },
   { value: "project", label: "A custom or Signature project", hint: "Tell us about your space and brief" },
   { value: "trade", label: "Interior designer or architect", hint: "Working on a client's project" },
   { value: "other", label: "Something else", hint: "Anything we haven't covered" },
@@ -53,9 +52,11 @@ export default function ContactForm() {
   // Fields that aren't on screen for the chosen topic are dropped, so they're neither validated nor sent.
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({ shouldUnregister: true });
 
-  // Links elsewhere on the site can open this page with a topic already chosen, e.g. /contact/?topic=delivery
+  // Links elsewhere on the site can open this page with a topic already chosen, e.g. /contact/?topic=studio.
+  // "delivery" was its own topic once; older links and bookmarks still land on the Studio form.
   useEffect(() => {
-    const requested = new URLSearchParams(window.location.search).get("topic");
+    const raw = new URLSearchParams(window.location.search).get("topic");
+    const requested = raw === "delivery" ? "studio" : raw;
     if (topics.some((t) => t.value === requested)) setTopic(requested as Topic);
   }, []);
 
@@ -188,6 +189,21 @@ export default function ContactForm() {
                     </select>
                   </div>
                   <div>
+                    <label className={labelClass} htmlFor="contact-deliveryPostcode">Delivery postcode (optional)</label>
+                    <input
+                      id="contact-deliveryPostcode"
+                      {...invalid("deliveryPostcode")}
+                      {...register("deliveryPostcode", { pattern: { value: /^\d{4}$/, message: "Enter a 4-digit postcode" } })}
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="postal-code"
+                      maxLength={4}
+                      placeholder="e.g. 6000"
+                      className={inputClass}
+                    />
+                    {err("deliveryPostcode")}
+                  </div>
+                  <div className="md:col-span-2">
                     <label className={labelClass} htmlFor="contact-orderReference">Order reference (optional)</label>
                     <input id="contact-orderReference" {...register("orderReference")} type="text" placeholder="e.g. LD-1A2B3C4D" className={inputClass} />
                   </div>
@@ -198,36 +214,6 @@ export default function ContactForm() {
                 <div>
                   <label className={labelClass} htmlFor="contact-practice">Practice or studio (optional)</label>
                   <input id="contact-practice" {...register("practice")} type="text" autoComplete="organization" placeholder="Your practice or studio name" className={inputClass} />
-                </div>
-              )}
-
-              {topic === "delivery" && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className={labelClass} htmlFor="contact-deliveryPostcode">Delivery postcode *</label>
-                    <input
-                      id="contact-deliveryPostcode"
-                      {...invalid("deliveryPostcode")}
-                      {...register("deliveryPostcode", {
-                        required: "Please enter your delivery postcode",
-                        pattern: { value: /^\d{4}$/, message: "Enter a 4-digit postcode" },
-                      })}
-                      type="text"
-                      inputMode="numeric"
-                      autoComplete="postal-code"
-                      maxLength={4}
-                      placeholder="e.g. 6000"
-                      className={inputClass}
-                    />
-                    {err("deliveryPostcode")}
-                  </div>
-                  <div>
-                    <label className={labelClass} htmlFor="contact-preferredTable">Which table? (optional)</label>
-                    <select id="contact-preferredTable" {...register("preferredTable")} className={inputClass}>
-                      <option value="">Select a table...</option>
-                      {studioTableOptions.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
-                    </select>
-                  </div>
                 </div>
               )}
 
@@ -287,12 +273,10 @@ export default function ContactForm() {
                     rows={6}
                     placeholder={
                       topic === "studio"
-                        ? "Ask us anything about a table, sizes, timing or your order..."
-                        : topic === "delivery"
-                          ? "Which table and size are you after, and is there anything we should know about access or timing?"
-                          : topic === "trade"
-                            ? "Tell us about the project: the room, your client's brief and palette, timing, and anything you need from us."
-                            : "How can we help?"
+                        ? "Ask us anything about a table, sizes, timing, delivery to your area or your order..."
+                        : topic === "trade"
+                          ? "Tell us about the project: the room, your client's brief and palette, timing, and anything you need from us."
+                          : "How can we help?"
                     }
                     className={`${inputClass} resize-none`}
                   />
