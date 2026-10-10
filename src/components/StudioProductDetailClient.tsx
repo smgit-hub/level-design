@@ -1,6 +1,6 @@
 import { motion, MotionConfig } from "motion/react";
 import { useState, useEffect, useRef } from "react";
-import { ArrowLeft, CheckCircle, RotateCcw, Truck } from "lucide-react";
+import { ArrowLeft, CheckCircle, ChevronLeft, ChevronRight, RotateCcw, Truck } from "lucide-react";
 import { deliveryForPostcode, isValidPostcode } from "../data/delivery-zones";
 import type { StudioProduct } from "../data/studio-products";
 import { trackEvent } from "../lib/analytics";
@@ -31,6 +31,8 @@ declare global {
 
 interface Props {
   product: StudioProduct;
+  /** Every Studio table, in display order, for the switcher above the viewer. */
+  tables: { id: string; name: string }[];
 }
 
 const formatPrice = (cents: number) =>
@@ -42,7 +44,11 @@ const START_ORBIT = "-63deg 71deg 90%";
 // How long the opening sweep runs before the table glides back to START_ORBIT.
 const SWEEP_MS = 5000;
 
-export default function StudioProductDetailClient({ product }: Props) {
+export default function StudioProductDetailClient({ product, tables }: Props) {
+  // The tables either side of this one, wrapping round, for the arrows above the viewer
+  const position = tables.findIndex((table) => table.id === product.id);
+  const previousTable = tables.length > 1 ? tables[(position - 1 + tables.length) % tables.length] : null;
+  const nextTable = tables.length > 1 ? tables[(position + 1) % tables.length] : null;
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkoutError, setCheckoutError] = useState(false);
   // Delivery is priced from the postcode, so the buyer is asked for it before checkout. Remembered for next time.
@@ -80,7 +86,6 @@ export default function StudioProductDetailClient({ product }: Props) {
   // Sizes are listed smallest first, and the 3D model and room photo are made at the largest.
   const largestSize = product.sizes[product.sizes.length - 1];
   // "2350mm × 1150mm" -> "2350 × 1150mm"; "1500mm Diameter" -> "1500mm dia".
-  const largestSizeText = largestSize.label.includes("×") ? largestSize.label.replace("mm", "") : largestSize.label.replace(" Diameter", " dia");
   const selectedSize = product.sizes.find((s) => s.id === selectedSizeId) ?? product.sizes[0];
 
   // On touch screens the viewer starts in scroll mode behind a "Tap to explore" cover, so dragging the
@@ -268,8 +273,46 @@ export default function StudioProductDetailClient({ product }: Props) {
     <MotionConfig reducedMotion="user">
     <div className="bg-[#faf8f5]">
       {/* Product header */}
-      <section className="pt-28 pb-12">
+      <section className="pt-20 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Back to the collection, and the tables either side of this one: quiet text links in the header's small capitals.
+              A row of its own across both columns, so the image and the title start at the same height. */}
+          <div className="flex items-center justify-between gap-4 -mt-2 mb-1">
+            <a
+              href="/studio/"
+              className="group inline-flex items-center gap-2 min-h-11 text-xs font-medium uppercase tracking-[0.12em] text-[#5a6b64] hover:text-[#3d4f47] transition-colors duration-200"
+            >
+              <ArrowLeft size={14} aria-hidden="true" className="transition-transform duration-200 group-hover:-translate-x-0.5" />
+              <span>Studio<span className="hidden sm:inline"> Collection</span></span>
+            </a>
+            {previousTable && nextTable && (
+              <div className="flex items-center gap-5 sm:gap-7">
+                {[
+                  { table: previousTable, label: "Previous table", Icon: ChevronLeft, side: "previous" },
+                  { table: nextTable, label: "Next table", Icon: ChevronRight, side: "next" },
+                ].map(({ table, label, Icon, side }) => (
+                  <a
+                    key={label}
+                    href={`/studio/${table.id}/`}
+                    aria-label={`${label}: ${table.name}`}
+                    title={`${label}: ${table.name}`}
+                    onClick={() =>
+                      trackEvent("select_content", {
+                        content_type: "studio_table_arrows",
+                        item_id: table.id,
+                        page_path: window.location.pathname,
+                      })
+                    }
+                    className="group inline-flex items-center gap-1.5 min-h-11 text-xs font-medium uppercase tracking-[0.12em] text-[#5a6b64] hover:text-[#3d4f47] transition-colors duration-200"
+                  >{/* The table's name shows from small tablets up; on phones the arrow stands alone */}
+                    {side === "previous" && <Icon size={16} aria-hidden="true" className="transition-transform duration-200 group-hover:-translate-x-0.5" />}
+                    <span className="hidden sm:inline">{table.name.replace(/ Table$/, "")}</span>
+                    {side === "next" && <Icon size={16} aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5" />}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
           <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-12">
 
             {/* Image gallery */}
@@ -279,34 +322,6 @@ export default function StudioProductDetailClient({ product }: Props) {
               transition={{ duration: 0.6 }}
             >
               <div className="sticky top-24">
-                <div className="flex items-center gap-2 mb-3">
-                  {views.length > 1 && (
-                    <div className="flex gap-2" role="group" aria-label="Product views">
-                      {views.map((view) => (
-                        <button
-                          key={view.id}
-                          type="button"
-                          aria-pressed={selectedView === view.id}
-                          onClick={() => setSelectedView(view.id)}
-                          className={`min-h-11 px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 cursor-pointer ${
-                            selectedView === view.id
-                              ? "bg-[#3d4f47] text-white"
-                              : "bg-white text-[#3d4f47] border border-[#e5ddd0] hover:border-[#c8956a]"
-                          }`}
-                        >
-                          {view.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                  <a
-                    href="/studio/"
-                    className="ml-auto inline-flex items-center gap-1.5 min-h-11 px-4 py-2 rounded-full text-sm font-medium text-[#3d4f47] border border-[#3d4f47] hover:bg-[#3d4f47] hover:text-white transition-colors duration-200"
-                  >
-                    <ArrowLeft size={14} />
-                    <span>Studio<span className="hidden sm:inline"> Collection</span></span>
-                  </a>
-                </div>
                 <div
                   ref={viewerBoxRef}
                   style={touchUnlocked ? { touchAction: "none" } : undefined}
@@ -347,9 +362,26 @@ export default function StudioProductDetailClient({ product }: Props) {
                       className="w-full h-full object-cover transition-opacity duration-300"
                     />
                   )}
-                  <span className="absolute top-3 right-3 bg-black/50 text-white/85 text-xs tracking-wide px-3 py-1 rounded-full pointer-events-none">
-                    Shown at {largestSizeText}
-                  </span>
+                  {views.length > 1 && (
+                    <div role="group" aria-label="Product views" className="absolute top-3 left-3 z-10 flex gap-2">
+                      {views.map((view) => (
+                        <button
+                          key={view.id}
+                          type="button"
+                          aria-pressed={selectedView === view.id}
+                          onClick={() => setSelectedView(view.id)}
+                          // Small true pills (the "pill" class keeps them round); the ::before stretches the tap area to a comfortable size
+                          className={`pill relative px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide transition-colors duration-200 cursor-pointer before:absolute before:-inset-x-1 before:-inset-y-2 before:content-[''] ${
+                            selectedView === view.id
+                              ? "bg-white text-[#3d4f47]"
+                              : "bg-black/40 text-white backdrop-blur-sm border border-white/30 hover:bg-black/55"
+                          }`}
+                        >
+                          {view.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                   {selectedView === "model" && (
                     <span className="absolute bottom-3 left-3 bg-black/50 text-white/80 text-xs tracking-wide px-3 py-1 rounded-full pointer-events-none">
                       {isTouch ? (touchUnlocked ? "Drag to rotate · Pinch to zoom" : "Tap to explore in 3D") : "Drag to rotate · Scroll to zoom"}
@@ -378,7 +410,7 @@ export default function StudioProductDetailClient({ product }: Props) {
                     <button
                       type="button"
                       onClick={() => setTouchUnlocked(false)}
-                      className="absolute top-3 left-3 z-10 bg-black/50 text-white/85 text-xs tracking-wide px-3 py-1 rounded-full cursor-pointer"
+                      className="absolute top-3 right-3 z-10 min-h-10 bg-black/50 text-white/85 text-xs tracking-wide px-4 rounded-full cursor-pointer"
                     >
                       Done
                     </button>
