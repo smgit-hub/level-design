@@ -116,7 +116,7 @@ export default function Navigation({ currentPath }: Props) {
             }
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="hidden xl:flex items-center gap-2 px-5 py-2 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 text-sm font-medium shadow-sm justify-self-end"
+            className="hidden xl:flex items-center gap-2 px-5 py-2.5 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 text-xs font-medium uppercase tracking-[0.14em] justify-self-end"
           >
             {ctaLabel}
           </motion.a>
@@ -132,7 +132,7 @@ export default function Navigation({ currentPath }: Props) {
                   page_path: window.location.pathname,
                 })
               }
-              className="inline-flex items-center min-h-11 px-4 bg-[#c8956a] text-white rounded-full text-sm font-medium shadow-sm whitespace-nowrap"
+              className="relative inline-flex items-center px-3.5 py-2.5 bg-[#c8956a] text-white rounded-full text-[11px] font-medium uppercase tracking-[0.12em] whitespace-nowrap before:absolute before:inset-x-0 before:-inset-y-1 before:content-['']"
             >
               {ctaLabel}
             </a>
