@@ -209,7 +209,8 @@ export default function ProductDetailClient({ product, prev, next }: Props) {
       </section>
 
       {/* Specifications */}
-      <section className="py-16 bg-white">
+      {/* White, like the enquiry section below it, so only a little bottom padding here: the two used to stack into a 170px gap */}
+      <section className="pt-[var(--section-y-sm)] pb-4 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
