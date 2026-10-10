@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { trackEvent } from "../lib/analytics";
 import { EMAIL_PATTERN, toFormUrlEncoded } from "../lib/forms";
 
-type Topic = "studio" | "delivery" | "project" | "other";
+type Topic = "studio" | "delivery" | "project" | "trade" | "other";
 
 type FormData = {
   name: string;
@@ -13,6 +13,7 @@ type FormData = {
   phone: string;
   preferredTable: string;
   orderReference: string;
+  practice: string;
   deliveryPostcode: string;
   message: string;
   dimensions: string;
@@ -26,6 +27,7 @@ const topics: { value: Topic; label: string; hint: string }[] = [
   { value: "studio", label: "A Studio table or my order", hint: "Questions before or after buying" },
   { value: "delivery", label: "Delivery to my area", hint: "A delivery quote or question" },
   { value: "project", label: "A custom or Signature project", hint: "Tell us about your space and brief" },
+  { value: "trade", label: "Interior designer or architect", hint: "Working on a client's project" },
   { value: "other", label: "Something else", hint: "Anything we haven't covered" },
 ];
 
@@ -192,6 +194,13 @@ export default function ContactForm() {
                 </div>
               )}
 
+              {topic === "trade" && (
+                <div>
+                  <label className={labelClass} htmlFor="contact-practice">Practice or studio (optional)</label>
+                  <input id="contact-practice" {...register("practice")} type="text" autoComplete="organization" placeholder="Your practice or studio name" className={inputClass} />
+                </div>
+              )}
+
               {topic === "delivery" && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
@@ -281,7 +290,9 @@ export default function ContactForm() {
                         ? "Ask us anything about a table, sizes, timing or your order..."
                         : topic === "delivery"
                           ? "Which table and size are you after, and is there anything we should know about access or timing?"
-                          : "How can we help?"
+                          : topic === "trade"
+                            ? "Tell us about the project: the room, your client's brief and palette, timing, and anything you need from us."
+                            : "How can we help?"
                     }
                     className={`${inputClass} resize-none`}
                   />
