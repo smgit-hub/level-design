@@ -310,46 +310,55 @@ export default function ProductDetailClient({ product, prev, next }: Props) {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="enquiry-phone">Phone (optional)</label>
-                  <input id="enquiry-phone" {...register("phone")} type="tel" placeholder="Your phone number"
-                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="enquiry-dimensions">Dimensions & Space Details</label>
-                  <input id="enquiry-dimensions" {...register("dimensions")} type="text" placeholder="e.g. 2400mm × 1000mm, seats 8"
-                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="enquiry-projectDetails">Project Details *</label>
+                  <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="enquiry-projectDetails">Your message *</label>
                   <textarea id="enquiry-projectDetails" aria-invalid={!!errors.projectDetails} aria-describedby={errors.projectDetails ? "enquiry-projectDetails-error" : undefined}
                     {...register("projectDetails", { required: "Please tell us about your project" })}
-                    rows={6}
-                    placeholder="Tell us about your space, style preferences, timber choices, and any inspiration..."
+                    rows={4}
+                    placeholder="Tell us about your space and what you have in mind..."
                     className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors resize-none"
                   />
                   {errors.projectDetails && <p id="enquiry-projectDetails-error" role="alert" className="mt-1 text-sm text-red-700">{errors.projectDetails.message}</p>}
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="enquiry-timberPreference">Timber Preference</label>
-                  <input id="enquiry-timberPreference" {...register("timberPreference")} type="text" placeholder="e.g. American Oak, American Ash"
-                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="enquiry-budgetRange">Budget Range</label>
-                  <input id="enquiry-budgetRange" {...register("budgetRange")} type="text" placeholder="e.g. $5000 – $10000"
-                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="enquiry-timeline">Timeline</label>
-                  <select id="enquiry-timeline" {...register("timeline")}
-                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors">
-                    <option value="">Select timeframe</option>
-                    <option value="urgent">Urgent (within 6 weeks)</option>
-                    <option value="standard">Standard (2–3 months)</option>
-                    <option value="flexible">Flexible (3+ months)</option>
-                    <option value="planning">Just planning</option>
-                  </select>
-                </div>
+                {/* The extra detail is optional, so it is tucked away: most people only need to leave their name, email and a message */}
+                <details className="group rounded-lg border border-[#e8dcc8] bg-white">
+                  <summary className="flex items-center justify-between gap-4 cursor-pointer list-none px-4 py-3 text-sm font-medium text-[#3d4f47] [&::-webkit-details-marker]:hidden">
+                    <span>Add more detail <span className="font-normal text-[#5a6b64]">(optional: phone, size, timber, budget, timing)</span></span>
+                    <svg className="w-4 h-4 flex-shrink-0 text-[#c8956a] transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5" /></svg>
+                  </summary>
+                  <div className="space-y-6 px-4 pb-5 pt-2">
+                          <div>
+                            <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="enquiry-phone">Phone (optional)</label>
+                            <input id="enquiry-phone" {...register("phone")} type="tel" placeholder="Your phone number"
+                              className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors" />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="enquiry-dimensions">Dimensions & Space Details</label>
+                            <input id="enquiry-dimensions" {...register("dimensions")} type="text" placeholder="e.g. 2400mm × 1000mm, seats 8"
+                              className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors" />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="enquiry-timberPreference">Timber Preference</label>
+                            <input id="enquiry-timberPreference" {...register("timberPreference")} type="text" placeholder="e.g. American Oak, American Ash"
+                              className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors" />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="enquiry-budgetRange">Budget Range</label>
+                            <input id="enquiry-budgetRange" {...register("budgetRange")} type="text" placeholder="e.g. $5000 – $10000"
+                              className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors" />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="enquiry-timeline">Timeline</label>
+                            <select id="enquiry-timeline" {...register("timeline")}
+                              className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors">
+                              <option value="">Select timeframe</option>
+                              <option value="urgent">Urgent (within 6 weeks)</option>
+                              <option value="standard">Standard (2–3 months)</option>
+                              <option value="flexible">Flexible (3+ months)</option>
+                              <option value="planning">Just planning</option>
+                            </select>
+                          </div>
+                  </div>
+                </details>
                 <div className="pt-4">
                   <button type="submit" disabled={isSubmitting}
                     className="w-full px-8 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">
