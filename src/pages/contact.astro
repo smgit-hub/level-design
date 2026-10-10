@@ -1,9 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ContactForm from '../components/ContactForm';
-import { Image } from 'astro:assets';
 import SectionHeader from '../components/SectionHeader.astro';
-import contactImg from '../assets/images/contact/level-design-contact-image.webp';
 
 const serviceAreas = [
   {
@@ -87,17 +85,50 @@ const schema = {
       </div>
     </section>
 
-    <!-- Form -->
+    <!-- Form, with what to expect and where we work beside it -->
     <section class="py-16 md:py-20 bg-white">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeader
-          eyebrow="Send a Message"
-          title="How Can We Help?"
-          description="Tell us what it's about and we'll take it from there. For a custom project, we'll suggest the best direction for dimensions, design and finish."
-          wrapperClass="text-center mb-12"
-          descriptionClass="text-xl text-[#5a6b64]"
-        />
-        <ContactForm client:visible />
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] gap-10 lg:gap-14 items-start">
+          <div>
+            <SectionHeader
+              eyebrow="Send a Message"
+              title="How Can We Help?"
+              description="Tell us what it's about and we'll take it from there."
+              wrapperClass="mb-8"
+              titleClass="text-3xl md:text-4xl font-serif text-[#3d4f47] mb-4"
+              descriptionClass="text-lg text-[#5a6b64]"
+            />
+            <ContactForm client:visible />
+          </div>
+
+          <aside class="reveal lg:sticky lg:top-24 rounded-2xl border border-[#e5ddd0] bg-[#faf8f5] p-6 md:p-8 space-y-8" style="--delay: 0.1s">
+            <div>
+              <p class="text-[#c8956a] font-medium mb-2 uppercase text-sm">What to Expect</p>
+              <p class="text-[#5a6b64]">We reply within 2 business days. For a custom project we'll suggest a direction for dimensions, design and finish, and follow with a tailored quote.</p>
+            </div>
+            <div>
+              <p class="text-[#c8956a] font-medium mb-3 uppercase text-sm">Helpful to Include in a Project Enquiry</p>
+              <ul class="space-y-3 text-[#3d4f47]">
+                {[
+                  "Your preferred finish and overall look",
+                  "How many seats you need day to day",
+                  "Links to tables you like or photos of your space",
+                  "Your delivery suburb and any timing considerations",
+                ].map((item) => (
+                  <li class="flex items-start gap-3">
+                    <svg class="text-[#c8956a] flex-shrink-0 mt-0.5 w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p class="text-[#c8956a] font-medium mb-2 uppercase text-sm">Where We Work</p>
+              <p class="text-[#5a6b64] mb-3">Melbourne, the Bass Coast and Phillip Island, the Mornington Peninsula, Geelong, and regional Victoria by enquiry. If your project is elsewhere, send through the details and we can advise on delivery.</p>
+              <a href="/melbourne-custom-dining-tables/" class="text-[#c8956a] font-medium hover:underline">More about where we work →</a>
+            </div>
+          </aside>
+        </div>
       </div>
     </section>
 
@@ -112,102 +143,6 @@ const schema = {
           <a href="/studio/" class="flex-shrink-0 inline-flex items-center gap-2 px-6 py-3 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 whitespace-nowrap">
             Shop the Studio Collection →
           </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Info cards -->
-    <section class="py-24 bg-white">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeader
-          eyebrow="How to Get in Touch"
-          title="We're Here to Help"
-          description="Whether you have questions about our tables or want to start a custom project, we're ready to listen."
-        />
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          {[
-            {
-              svg: `<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>`,
-              title: "Contact Us",
-              detail: "Use the form below",
-              note: "Response within 2 business days",
-            },
-            {
-              svg: `<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.62 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.16 6.16l.97-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>`,
-              title: "Request a Call",
-              detail: "Available for project consultations",
-              note: "We'll call at a time that suits you",
-            },
-            {
-              svg: `<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>`,
-              title: "Delivery Area",
-              detail: "Custom work: Melbourne-wide. Studio tables: delivered to most major cities.",
-              note: "Anywhere else in Australia — reach out and we'll work out the details",
-            },
-          ].map((card, i) => (
-            <div class="reveal bg-[#f5f1e8] rounded-2xl p-8 text-center hover:shadow-lg transition-shadow group" style={`--delay: ${i * 0.1}s`}>
-              <div class="w-16 h-16 rounded-2xl bg-[#3d4f47] flex items-center justify-center mx-auto mb-6 group-hover:bg-[#c8956a] transition-colors duration-300">
-                <svg class="text-white w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" set:html={card.svg} />
-              </div>
-              <h3 class="text-lg font-semibold text-[#3d4f47] mb-2">{card.title}</h3>
-              <p class="text-[#5a6b64]">{card.detail}</p>
-              <p class="text-sm text-[#5a6b64] mt-3">{card.note}</p>
-            </div>
-          ))}
-        </div>
-
-        <div class="reveal bg-[#f5f1e8] rounded-3xl p-8 md:p-10 mb-16">
-          <div class="max-w-3xl mb-8">
-            <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Service Areas</p>
-            <h2 class="text-3xl md:text-4xl font-serif text-[#3d4f47] mb-4">Melbourne and Victorian Table Projects</h2>
-            <p class="text-[#5a6b64] text-lg leading-relaxed">
-              Level Design is Melbourne-based and works with homeowners, interior designers, and architects on custom timber dining tables across Melbourne, the Bass Coast and wider Victoria. If your project is outside these areas, send through the details and we can advise on delivery options.
-            </p>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {serviceAreas.map((item, i) => (
-              <div class="rounded-2xl bg-white p-6" style={`--delay: ${i * 0.1}s`}>
-                <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{item.area}</h3>
-                <p class="text-sm text-[#5a6b64] leading-relaxed">{item.detail}</p>
-              </div>
-            ))}
-          </div>
-          <a href="/melbourne-custom-dining-tables/" class="inline-flex mt-8 text-[#c8956a] font-medium hover:underline">
-            Read more about custom dining tables in Melbourne →
-          </a>
-        </div>
-
-        <!-- Helpful info with image -->
-        <div class="reveal bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] rounded-3xl overflow-hidden text-white">
-          <div class="grid grid-cols-1 lg:grid-cols-2">
-            <!-- Image -->
-            <div class="relative min-h-[320px] lg:min-h-0">
-              <Image
-                src={contactImg}
-                alt="Level Design timber table in a styled interior"
-                class="absolute inset-0 w-full h-full object-cover"
-              />
-            </div>
-            <!-- Tips -->
-            <div class="p-8 md:p-12">
-              <h3 class="text-2xl font-serif mb-2">Helpful to Include in a Project Enquiry</h3>
-              <p class="text-[#e8dcc8] mb-8">The more we know, the better we can help</p>
-              <div class="space-y-4">
-                {[
-                  "Your preferred finish and overall look",
-                  "How many seats you need day to day",
-                  "Links to tables you like or photos of your space",
-                  "Your delivery suburb and any timing considerations",
-                ].map((item) => (
-                  <div class="flex items-start gap-3 bg-[#2d3f37]/50 rounded-xl p-4">
-                    <svg class="text-[#c8956a] flex-shrink-0 mt-0.5 w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                    <span class="text-[#e8dcc8]">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
