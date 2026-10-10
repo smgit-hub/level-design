@@ -137,6 +137,51 @@ const whyChooseItems = [
           <a href="/signature/" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl">
             View the Full Collection →
           </a>
+          <p class="mt-6 text-[#5a6b64]">
+            Prefer something ready to order? <a href="/studio/" class="text-[#c8956a] font-medium hover:underline">See the Studio Collection →</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Studio Tables (ready to order) -->
+    <section class="py-24 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionHeader
+          eyebrow="The Studio Collection"
+          title="Considered Design, Ready to Order"
+          description="The same design standard in four oak dining tables with fixed sizes — thoughtfully designed, well made and fairly priced."
+          wrapperClass="text-center mb-12"
+          descriptionClass="text-lg text-[#5a6b64] max-w-3xl mx-auto"
+        />
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
+          {allStudioProducts.map((table, i) => (
+            <a
+              href={`/studio/${table.id}/`}
+              class="reveal group rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300"
+              style={`--delay: ${i * 0.1}s`}
+            >
+              <div class="aspect-[4/3] lg:aspect-[3/2] overflow-hidden">
+                <img src={table.images.gallery[0] ?? table.images.main} alt={table.name} loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              </div>
+              <div class="flex items-end justify-between gap-4 p-4 lg:p-5">
+                <div>
+                  <h3 class="text-lg lg:text-2xl font-serif text-[#3d4f47] group-hover:text-[#c8956a] transition-colors mb-1">{table.name}</h3>
+                  <p class="text-[#5a6b64] text-xs lg:text-sm flex items-center gap-2"><StudioShapeIcon product={table} /><span>{table.shape}</span></p>
+                </div>
+                <p class="text-[#c8956a] font-semibold text-sm lg:text-base whitespace-nowrap">From {formatPrice(getStartingPrice(table))}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+
+        <p class="text-center text-xs text-[#5a6b64] -mt-8 mb-10">Shown as renders — real timber varies in grain and colour.</p>
+
+        <div class="reveal text-center">
+          <a href="/studio/" class="btn-scale inline-flex items-center gap-2 px-8 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl">
+            View the Full Studio Collection →
+          </a>
         </div>
       </div>
     </section>

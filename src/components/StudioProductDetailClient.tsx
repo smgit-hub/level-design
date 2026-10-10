@@ -452,7 +452,7 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
                     ))}
                   </div>
                   <p className="text-sm text-[#3d4f47] mt-3">{selectedSize.dimensions}</p>
-                  <p className="text-xs text-[#8a9b94] mt-1">Sizes in mm, drawn to scale from above. The 3D view and room photo show the largest size ({largestSize.label.replace(/mm/g, "").replace(" Diameter", " dia")}).</p>
+                  <p className="text-xs text-[#8a9b94] mt-1">Sizes in mm, drawn to scale from above. The 3D view and room photo show the largest size ({largestSize.label.replace(/mm/g, "").replace(" Diameter", " dia")}) and are renders — real timber varies in grain and colour.</p>
                 </div>
 
                 {/* Price + CTA */}
