@@ -80,7 +80,7 @@ export default function Navigation({ currentPath }: Props) {
                 maskPosition: "center",
               }}
             />
-            <span className="font-serif text-lg tracking-wide text-[#f5f1e8] truncate transition-opacity duration-200 group-hover:opacity-80">Level Design</span>
+            <span className="max-[349px]:hidden text-[12px] sm:text-[13px] font-medium uppercase tracking-[0.2em] sm:tracking-[0.26em] text-[#f5f1e8] truncate transition-opacity duration-200 group-hover:opacity-80">Level Design</span>
           </a>
 
           {/* Desktop nav */}

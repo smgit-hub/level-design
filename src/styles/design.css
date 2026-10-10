@@ -49,13 +49,6 @@ h2.font-serif { font-size: clamp(1.875rem, 3.2vw, 3rem); }
 h3.font-serif { line-height: 1.12; }
 .hero-parallax h1.font-serif { font-size: clamp(2.75rem, 5.4vw, 5.25rem); }
 
-/* The brand text sits in a box that clips overflow (truncate): it needs a normal line height or descenders like the g are cut off */
-:is(nav, footer) a[aria-label="Level Design home"] .font-serif {
-  line-height: 1.45;
-  overflow: visible;
-  text-overflow: clip;
-}
-
 /* Small labels (eyebrows) are quiet, wide-set capitals */
 p.uppercase {
   letter-spacing: var(--label-tracking);
