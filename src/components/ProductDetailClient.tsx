@@ -1,6 +1,6 @@
 import { motion, MotionConfig } from "motion/react";
 import { useState, useEffect, useRef } from "react";
-import { ArrowLeft, ArrowRight, CheckCircle, Ruler, Truck, Shield } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle, ChevronLeft, ChevronRight, Ruler, Truck, Shield } from "lucide-react";
 import { useForm } from "react-hook-form";
 import type { Product } from "../data/signature-products";
 import { trackEvent } from "../lib/analytics";
@@ -63,18 +63,38 @@ export default function ProductDetailClient({ product, prev, next }: Props) {
     <MotionConfig reducedMotion="user">
     <div className="bg-[#faf8f5]">
       {/* Product header */}
-      <section className="pt-28 pb-12">
+      <section className="pt-20 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Table nav */}
-          <div className="flex items-center justify-between text-xs text-[#8a9b94] mb-8 mt-2">
-            <a href={`/signature/${prev.id}/`} className="inline-flex items-center gap-1.5 hover:text-[#3d4f47] transition-colors">
-              <ArrowLeft size={12} />
-              {prev.name}
+          {/* Back to the collection, and the tables either side of this one: quiet text links in the header's small capitals.
+              A row of its own across both columns, so the image and the title start at the same height. */}
+          <div className="flex items-center justify-between gap-4 -mt-2 mb-1">
+            <a
+              href="/signature/"
+              className="group inline-flex items-center gap-2 min-h-11 text-xs font-medium uppercase tracking-[0.12em] text-[#5a6b64] hover:text-[#3d4f47] transition-colors duration-200"
+            >
+              <ArrowLeft size={14} aria-hidden="true" className="transition-transform duration-200 group-hover:-translate-x-0.5" />
+              <span>Signature<span className="hidden sm:inline"> Collection</span></span>
             </a>
-            <a href={`/signature/${next.id}/`} className="inline-flex items-center gap-1.5 hover:text-[#3d4f47] transition-colors">
-              {next.name}
-              <ArrowRight size={12} />
-            </a>
+            {prev && next && (
+              <div className="flex items-center gap-5 sm:gap-7">
+                {[
+                  { table: prev, label: "Previous table", Icon: ChevronLeft, side: "previous" },
+                  { table: next, label: "Next table", Icon: ChevronRight, side: "next" },
+                ].map(({ table, label, Icon, side }) => (
+                  <a
+                    key={label}
+                    href={`/signature/${table.id}/`}
+                    aria-label={`${label}: ${table.name}`}
+                    title={`${label}: ${table.name}`}
+                    className="group inline-flex items-center gap-1.5 min-h-11 text-xs font-medium uppercase tracking-[0.12em] text-[#5a6b64] hover:text-[#3d4f47] transition-colors duration-200"
+                  >{/* The table's name shows from small tablets up; on phones the arrow stands alone */}
+                    {side === "previous" && <Icon size={16} aria-hidden="true" className="transition-transform duration-200 group-hover:-translate-x-0.5" />}
+                    <span className="hidden sm:inline">{table.name.replace(/ Table$/, "")}</span>
+                    {side === "next" && <Icon size={16} aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5" />}
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
 
