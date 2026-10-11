@@ -363,7 +363,7 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
                     />
                   )}
                   {views.length > 1 && (
-                    <div role="group" aria-label="Product views" className="absolute top-3 left-3 z-10 flex gap-2">
+                    <div role="group" aria-label="Product views" className="absolute bottom-3 left-3 z-10 flex gap-2">
                       {views.map((view) => (
                         <button
                           key={view.id}
@@ -371,10 +371,10 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
                           aria-pressed={selectedView === view.id}
                           onClick={() => setSelectedView(view.id)}
                           // Same size and shape as the "Drag to rotate" label below; the ::before stretches the tap area to a comfortable size
-                          className={`relative px-3 py-[3px] rounded-full text-xs font-medium tracking-wide border transition-colors duration-200 cursor-pointer before:absolute before:-inset-x-1 before:-inset-y-2 before:content-[''] ${
+                          className={`relative px-3 py-[3px] rounded-full text-xs tracking-wide border transition-colors duration-200 cursor-pointer before:absolute before:-inset-x-1 before:-inset-y-2 before:content-[''] ${
                             selectedView === view.id
-                              ? "bg-white border-white text-[#3d4f47]"
-                              : "bg-black/40 border-white/30 text-white backdrop-blur-sm hover:bg-black/55"
+                              ? "bg-white/20 border-white/70 text-white backdrop-blur-sm"
+                              : "bg-black/50 border-white/25 text-white/70 backdrop-blur-sm hover:bg-black/65 hover:text-white"
                           }`}
                         >
                           {view.label}
@@ -383,7 +383,7 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
                     </div>
                   )}
                   {selectedView === "model" && (
-                    <span className="absolute bottom-3 left-3 bg-black/50 text-white/80 text-xs tracking-wide px-3 py-1 rounded-full pointer-events-none">
+                    <span className="absolute top-3 left-3 bg-black/50 text-white/80 text-xs tracking-wide px-3 py-1 rounded-full pointer-events-none">
                       {isTouch ? (touchUnlocked ? "Drag to rotate · Pinch to zoom" : "Tap to explore in 3D") : "Drag to rotate · Scroll to zoom"}
                     </span>
                   )}
@@ -392,10 +392,10 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
                       type="button"
                       onClick={resetView}
                       aria-label="Reset view"
-                      className="absolute bottom-3 right-3 z-10 inline-flex items-center gap-1.5 bg-black/50 hover:bg-black/70 text-white/90 text-xs tracking-wide px-2.5 sm:px-3 py-2 sm:py-1.5 rounded-full cursor-pointer transition-colors"
+                      className="absolute bottom-3 right-3 z-10 inline-flex items-center gap-1.5 px-3 py-[3px] rounded-full text-xs tracking-wide border border-white/25 bg-black/50 text-white/70 backdrop-blur-sm hover:bg-black/65 hover:text-white transition-colors cursor-pointer before:absolute before:-inset-x-2 before:-inset-y-2.5 before:content-['']"
                     >
-                      <RotateCcw size={14} />
-                      <span className="hidden sm:inline">Reset view</span>
+                      <RotateCcw size={12} />
+                      <span>Reset view</span>
                     </button>
                   )}
                   {isTouch && selectedView === "model" && !touchUnlocked && (
@@ -410,7 +410,7 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
                     <button
                       type="button"
                       onClick={() => setTouchUnlocked(false)}
-                      className="absolute top-3 right-3 z-10 min-h-10 bg-black/50 text-white/85 text-xs tracking-wide px-4 rounded-full cursor-pointer"
+                      className="absolute top-3 right-3 z-10 px-3 py-[3px] rounded-full text-xs tracking-wide border border-white/25 bg-black/50 text-white/70 backdrop-blur-sm hover:bg-black/65 hover:text-white transition-colors cursor-pointer before:absolute before:-inset-x-2 before:-inset-y-2.5 before:content-['']"
                     >
                       Done
                     </button>
