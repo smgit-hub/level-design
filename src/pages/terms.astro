@@ -1,14 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { MELBOURNE_DELIVERY_CENTS, STANDARD_DELIVERY_CENTS } from '../data/delivery-zones';
+import { MELBOURNE_DELIVERY_CENTS } from '../data/delivery-zones';
 
 const formatPrice = (cents: number) =>
   new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 }).format(cents / 100);
 
 const deliveryZones = [
-  { area: 'Melbourne Metro and the Bass Coast', fee: formatPrice(MELBOURNE_DELIVERY_CENTS) },
-  { area: 'Regional Victoria, and metropolitan Sydney, Canberra, Brisbane and Adelaide', fee: formatPrice(STANDARD_DELIVERY_CENTS) },
-  { area: 'Everywhere else, including Perth, Hobart, Darwin, Tasmania and regional areas outside Victoria', fee: 'Quoted individually before you order' },
+  { area: 'Melbourne Metro, the Mornington Peninsula and the Bass Coast', fee: formatPrice(MELBOURNE_DELIVERY_CENTS) },
+  { area: 'Everywhere else, including Geelong, regional Victoria and interstate', fee: 'Quoted individually before you order' },
 ];
 
 const sections: { title: string; paragraphs?: string[]; list?: string[] }[] = [
@@ -106,7 +105,7 @@ const sections: { title: string; paragraphs?: string[]; list?: string[] }[] = [
             ))}
           </div>
           <p class="text-[#5a6b64] text-lg leading-relaxed mb-3">
-            If you are outside our standard delivery areas, <a href="/contact/?topic=studio" class="text-[#c8956a] font-medium hover:underline">get in touch</a> before ordering and we will quote delivery for you.
+            If you are outside the area above, <a href="/contact/?topic=studio" class="text-[#c8956a] font-medium hover:underline">get in touch</a> before ordering and we will quote delivery for you.
           </p>
           <p class="text-[#5a6b64] text-lg leading-relaxed mb-3">
             If the address you enter at checkout is in a different delivery area to the postcode you entered on our site, we will contact you before we make your table to confirm the correct fee or, if you prefer, cancel your order for a full refund.
