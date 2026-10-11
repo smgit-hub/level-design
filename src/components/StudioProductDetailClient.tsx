@@ -44,28 +44,6 @@ const START_ORBIT = "-63deg 71deg 90%";
 // How long the opening sweep runs before the table glides back to START_ORBIT.
 const SWEEP_MS = 5000;
 
-type TurntableModel = HTMLElement & { turntableRotation?: number; resetTurntableRotation?: (theta?: number) => void };
-
-/**
- * The opening sweep is model-viewer's auto-rotate, which turns the table through a separate "turntable" angle that the camera
- * orbit knows nothing about. Setting the orbit back to START_ORBIT therefore leaves the table wherever the sweep stopped, so
- * the turntable angle has to be eased back to zero as well.
- */
-const glideTurntableHome = (model: HTMLElement) => {
-  const m = model as TurntableModel;
-  const from = m.turntableRotation ?? 0;
-  if (!m.resetTurntableRotation || !from) return;
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const begin = performance.now();
-  const duration = 700;
-  const step = (now: number) => {
-    const t = reduceMotion ? 1 : Math.min(1, (now - begin) / duration);
-    m.resetTurntableRotation!(from * Math.pow(1 - t, 3));
-    if (t < 1) requestAnimationFrame(step);
-  };
-  requestAnimationFrame(step);
-};
-
 export default function StudioProductDetailClient({ product, tables }: Props) {
   // The tables either side of this one, wrapping round, for the arrows above the viewer
   const position = tables.findIndex((table) => table.id === product.id);
@@ -131,7 +109,6 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
     if (!model) return;
     model.removeAttribute("auto-rotate");
     model.cameraOrbit = START_ORBIT;
-    glideTurntableHome(model);
     model.cameraTarget = "auto auto auto";
     model.fieldOfView = "auto";
     setViewMoved(false);
@@ -192,10 +169,7 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
     const stop = (returnToStart: boolean) => {
       clearTimeout(timer);
       model.removeAttribute("auto-rotate");
-      if (returnToStart) {
-        (model as HTMLElement & { cameraOrbit: string }).cameraOrbit = START_ORBIT;
-        glideTurntableHome(model);
-      }
+      if (returnToStart) (model as HTMLElement & { cameraOrbit: string }).cameraOrbit = START_ORBIT;
     };
     const start = () => {
       if (started) return;
