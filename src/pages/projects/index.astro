@@ -5,6 +5,7 @@ import { products } from '../../data/signature-products';
 const projects = [
   {
     id: 'pillar',
+    alt: 'Pillar Table, an American Oak pedestal dining table in a Fitzroy home',
     role: 'Interior Designer',
     location: 'Fitzroy, Melbourne',
     design: products.pillar,
@@ -27,6 +28,7 @@ const projects = [
   },
   {
     id: 'venn',
+    alt: 'Venn Table, an organic-form American Oak dining table in a South Yarra home',
     role: 'Interior Designer',
     location: 'South Yarra, Melbourne',
     design: products.venn,
@@ -44,6 +46,7 @@ const projects = [
   },
   {
     id: 'luna',
+    alt: 'Luna Table, a round Tasmanian Oak dining table in a Brighton home',
     role: 'Homeowner',
     location: 'Brighton, Melbourne',
     design: products.luna,
@@ -72,6 +75,15 @@ const schema = {
   description:
     'A portfolio of bespoke dining table projects designed by Level Design around our clients\' spaces, lifestyles, and entertaining needs.',
   url: 'https://leveldesign.com.au/projects/',
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: projects.map((project, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: project.design.name,
+      url: `https://leveldesign.com.au/projects/#project-${project.id}`,
+    })),
+  },
 };
 ---
 
@@ -90,10 +102,17 @@ const schema = {
       <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl">
           <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">Project Portfolio</p>
-          <h1 class="hero-in text-4xl sm:text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Every Bespoke Table Begins with a Unique Brief</h1>
+          <h1 class="hero-in text-4xl sm:text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">Three Rooms, Three Briefs</h1>
           <p class="hero-in text-lg sm:text-xl text-[#e8dcc8] mb-8 max-w-2xl" style="--delay: 0.6s">
-            A selection of dining table projects designed around our clients' spaces, lifestyles, and the way they entertain. Client names are withheld for privacy.
+            Each commission began with a conversation about the room. Here is how the brief, the design decisions and the finished table came together. Client names are withheld for privacy.
           </p>
+          <div class="hero-in flex flex-wrap gap-3" style="--delay: 0.8s">
+            {projects.map((project) => (
+              <a href={`#project-${project.id}`} class="px-4 py-2 bg-[#2d3f37] rounded-full text-sm hover:bg-[#1f2f29] transition-colors">
+                {project.design.name} <span class="text-[#e8dcc8]">· {project.location.replace(', Melbourne', '')}</span>
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -102,23 +121,23 @@ const schema = {
     {projects.map((project, i) => (
       <section
         id={`project-${project.id}`}
-        class={`py-24 ${i % 2 === 0 ? 'bg-white' : 'bg-[#f5f1e8]'}`}
+        class={`py-20 ${i % 2 === 0 ? 'bg-white' : 'bg-[#f5f1e8]'}`}
       >
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           <!-- Project header -->
-          <div class="reveal mb-16">
+          <div class="reveal mb-10">
             <p class="text-[#c8956a] font-medium mb-2 tracking-wider uppercase text-sm">{project.role} — {project.location}</p>
             <h2 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-4">{project.design.name}</h2>
             <p class="text-xl text-[#5a6b64] max-w-2xl">{project.design.tagline}</p>
           </div>
 
           <!-- Main image + overview -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start mb-10">
             <div class="reveal rounded-2xl overflow-hidden">
               <img
                 src={project.images.main}
-                alt={project.design.name}
+                alt={project.alt}
                 loading="lazy"
                 class={`w-full object-cover aspect-[4/3] ${project.heroPos ?? 'object-center'} ${project.heroZoom ?? ''}`}
               />
@@ -136,12 +155,12 @@ const schema = {
           </div>
 
           <!-- Design considerations + materials -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-            <div class="reveal rounded-2xl bg-[#f5f1e8] p-8" style={i % 2 === 0 ? '' : '--delay: 0s'}>
+          <div class={`reveal rounded-2xl p-8 md:p-10 mb-10 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 ${i % 2 === 0 ? 'bg-[#f5f1e8]' : 'bg-white'}`}>
+            <div>
               <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-xs">Design Considerations</p>
               <p class="text-[#5a6b64] leading-relaxed">{project.considerations}</p>
             </div>
-            <div class="reveal rounded-2xl bg-[#f5f1e8] p-8" style="--delay: 0.1s">
+            <div>
               <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-xs">Material Selection</p>
               <p class="text-[#5a6b64] leading-relaxed">{project.materials}</p>
             </div>
@@ -151,30 +170,28 @@ const schema = {
           <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
             <div class="reveal lg:col-span-2">
               <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-xs">Final Outcome</p>
-              <p class="text-[#5a6b64] leading-relaxed mb-6">{project.outcome}</p>
-              <div class="space-y-2 text-sm">
-                {Object.entries(project.design.specifications).map(([k, v]) => (
-                  <div class="flex gap-2">
-                    <span class="text-[#3d4f47] font-medium min-w-[140px]">{k}</span>
-                    <span class="text-[#5a6b64]">{v}</span>
-                  </div>
-                ))}
-              </div>
+              <p class="text-[#5a6b64] leading-relaxed mb-4">{project.outcome}</p>
+              <p class="text-sm text-[#3d4f47] font-medium">
+                {[project.design.specifications['Dimensions Shown'], project.design.specifications['Timber / Finish Shown']].filter(Boolean).join(' · ')}
+              </p>
             </div>
-            <div class="reveal lg:col-span-3 grid grid-cols-3 gap-3" style="--delay: 0.1s">
+            <div class="reveal lg:col-span-3 grid grid-cols-2 sm:grid-cols-3 gap-3" style="--delay: 0.1s">
               {project.images.gallery.map((img, gi) => (
                 <img
                   src={img}
-                  alt={`${project.design.name} — detail ${gi + 1}`}
+                  alt={`${project.alt}, photo ${gi + 2}`}
                   loading="lazy"
-                  class="w-full rounded-xl object-cover aspect-square"
+                  class={`w-full rounded-xl object-cover ${gi === 0 ? 'col-span-2 aspect-[2/1] sm:col-span-1 sm:aspect-square' : 'aspect-square'}`}
                 />
               ))}
             </div>
           </div>
 
-          <!-- Link to table design -->
-          <div class="reveal mt-12">
+          <!-- Next steps -->
+          <div class="reveal mt-12 flex flex-col sm:flex-row sm:items-center gap-x-8 gap-y-4">
+            <a href={`/custom/#brief`} class="btn-scale inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 self-start">
+              Start a custom brief — from $5,000
+            </a>
             <a href={`/signature/${project.id}/`} class="inline-flex items-center gap-2 text-[#c8956a] font-medium hover:underline">
               View {project.design.name} in the collection →
             </a>
