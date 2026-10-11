@@ -370,11 +370,11 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
                           type="button"
                           aria-pressed={selectedView === view.id}
                           onClick={() => setSelectedView(view.id)}
-                          // Small true pills (the "pill" class keeps them round); the ::before stretches the tap area to a comfortable size
-                          className={`pill relative px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide transition-colors duration-200 cursor-pointer before:absolute before:-inset-x-1 before:-inset-y-2 before:content-[''] ${
+                          // Same size and shape as the "Drag to rotate" label below; the ::before stretches the tap area to a comfortable size
+                          className={`relative px-3 py-[3px] rounded-full text-xs font-medium tracking-wide border transition-colors duration-200 cursor-pointer before:absolute before:-inset-x-1 before:-inset-y-2 before:content-[''] ${
                             selectedView === view.id
-                              ? "bg-white text-[#3d4f47]"
-                              : "bg-black/40 text-white backdrop-blur-sm border border-white/30 hover:bg-black/55"
+                              ? "bg-white border-white text-[#3d4f47]"
+                              : "bg-black/40 border-white/30 text-white backdrop-blur-sm hover:bg-black/55"
                           }`}
                         >
                           {view.label}
