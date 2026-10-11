@@ -200,10 +200,11 @@ export async function handler(event: NetlifyEvent) {
     // The delivery option is identified by its price, which is set in create-checkout-session.ts.
     const shippingCents = session.shipping_cost?.amount_total;
     const deliveryName =
-      shippingCents === 19900 ? "Melbourne Metro, Peninsula & Bass Coast" : "Delivery";
+      shippingCents === 19900 ? "Melbourne Metro, Peninsula & Bass Coast" : session.metadata?.quote ? "Delivery (quoted)" : "Delivery";
     // The fee was set from the postcode typed on the product page; the address typed at checkout can still differ.
     const addressZone = addr?.postal_code ? deliveryForPostcode(addr.postal_code)?.zone : undefined;
-    const zoneMismatch = !!session.metadata?.deliveryZone && !!addressZone && addressZone !== session.metadata.deliveryZone;
+    // Quoted-delivery orders (from the private quote link) have no fixed zone to compare against.
+    const zoneMismatch = !!session.metadata?.deliveryZone && session.metadata.deliveryZone !== "quote" && !!addressZone && addressZone !== session.metadata.deliveryZone;
     const live = session.livemode;
     // A short reference both emails share, so a customer quoting it can be matched to the full Stripe session id below.
     const reference = `LD-${session.id.slice(-8).toUpperCase()}`;
@@ -213,6 +214,7 @@ export async function handler(event: NetlifyEvent) {
       `${live ? "" : "[TEST ORDER] "}New Studio Collection order`,
       "",
       `Item:      ${item?.description ?? session.metadata?.order ?? "—"}`,
+      ...(session.metadata?.quote ? [`Quoted:    delivery price agreed by email${session.metadata?.quoteFor ? ` (for ${session.metadata.quoteFor})` : ""}`] : []),
       `Table:     ${money(item?.amount_total)}`,
       `Delivery:  ${deliveryName}  ${money(shippingCents)}`,
       `Paid:      ${money(session.amount_total)}`,
