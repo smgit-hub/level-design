@@ -87,6 +87,13 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
   const largestSize = product.sizes[product.sizes.length - 1];
   // "2350mm × 1150mm" -> "2350 × 1150mm"; "1500mm Diameter" -> "1500mm dia".
   const selectedSize = product.sizes.find((s) => s.id === selectedSizeId) ?? product.sizes[0];
+  // Quoted postcodes go to the contact form with the table, size and postcode already filled in.
+  const quoteHref = `/contact/?${new URLSearchParams({
+    topic: "studio",
+    table: product.name,
+    postcode,
+    message: `I'd like a delivery quote for the ${product.name} (${selectedSize.label}) to ${postcode}.`,
+  }).toString()}`;
 
   // On touch screens the viewer starts in scroll mode behind a "Tap to explore" cover, so dragging the
   // model doesn't scroll the page. Tapping hands every touch to the model until "Done" is pressed.
@@ -109,7 +116,7 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
 
   // On phones, a slim buy bar stays at the bottom whenever the main Buy Now button is off-screen —
   // except at the end of the page, where the other-tables section takes over.
-  const buyRef = useRef<HTMLButtonElement>(null);
+  const buyRef = useRef<HTMLDivElement>(null);
   const [buyVisible, setBuyVisible] = useState(true);
   const [pageEndVisible, setPageEndVisible] = useState(false);
   const showBuyBar = !buyVisible && !pageEndVisible;
@@ -493,22 +500,29 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
                     )}
                     {delivery && delivery.priceCents === null && (
                       <>
-                        We quote delivery to {postcode} individually.{" "}
-                        <a href="/contact/?topic=studio" className="text-[#3d4f47] underline underline-offset-2 hover:text-[#c8956a]">Get in touch</a> and we'll send you a price.
+                        We quote delivery to {postcode} individually, usually within one business day. Send us your details and we'll confirm the price before you pay.
                       </>
                     )}
                   </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <button
-                    ref={buyRef}
-                    onClick={handleBuyNow}
-                    disabled={isCheckingOut}
-                    className="flex-1 px-6 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl font-medium disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
-                  >
-                    {isCheckingOut ? "Redirecting to checkout…" : `Buy Now — ${formatPrice(selectedSize.price)}`}
-                  </button>
+                <div ref={buyRef} className="flex flex-col sm:flex-row gap-4">
+                  {delivery && delivery.priceCents === null ? (
+                    <a
+                      href={quoteHref}
+                      className="flex-1 px-6 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl font-medium text-center cursor-pointer"
+                    >
+                      Get a delivery quote
+                    </a>
+                  ) : (
+                    <button
+                      onClick={handleBuyNow}
+                      disabled={isCheckingOut}
+                      className="flex-1 px-6 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl font-medium disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+                    >
+                      {isCheckingOut ? "Redirecting to checkout…" : `Buy Now — ${formatPrice(selectedSize.price)}`}
+                    </button>
+                  )}
                 </div>
                 {checkoutError && (
                   <p role="alert" className="text-sm text-red-700 text-center mt-4">
@@ -604,14 +618,24 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
           <div className="text-xs text-[#8a9b94] truncate">{product.name} · {selectedSize.label.replace(/mm/g, "").replace(" Diameter", " dia")}</div>
           <div className="text-lg font-semibold text-[#3d4f47] leading-tight">{formatPrice(selectedSize.price)}</div>
         </div>
-        <button
-          onClick={handleBuyNow}
-          disabled={isCheckingOut}
-          tabIndex={showBuyBar ? 0 : -1}
-          className="ml-auto px-6 py-3 bg-[#3d4f47] text-white rounded-full font-medium disabled:opacity-60 cursor-pointer"
-        >
-          {isCheckingOut ? "Redirecting…" : "Buy Now"}
-        </button>
+        {delivery && delivery.priceCents === null ? (
+          <a
+            href={quoteHref}
+            tabIndex={showBuyBar ? 0 : -1}
+            className="ml-auto px-6 py-3 bg-[#3d4f47] text-white rounded-full font-medium cursor-pointer"
+          >
+            Get a delivery quote
+          </a>
+        ) : (
+          <button
+            onClick={handleBuyNow}
+            disabled={isCheckingOut}
+            tabIndex={showBuyBar ? 0 : -1}
+            className="ml-auto px-6 py-3 bg-[#3d4f47] text-white rounded-full font-medium disabled:opacity-60 cursor-pointer"
+          >
+            {isCheckingOut ? "Redirecting…" : "Buy Now"}
+          </button>
+        )}
       </div>
     </div>
     </MotionConfig>

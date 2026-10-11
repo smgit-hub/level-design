@@ -48,6 +48,8 @@ export default function ContactForm() {
   const [isError, setIsError] = useState(false);
   const [topic, setTopic] = useState<Topic | null>(null);
   const [topicMissing, setTopicMissing] = useState(false);
+  // Links such as a "delivery quote" button can fill in the table, postcode and message too.
+  const [prefill, setPrefill] = useState({ table: "", postcode: "", message: "" });
   const successRef = useRef<HTMLDivElement>(null);
   // Fields that aren't on screen for the chosen topic are dropped, so they're neither validated nor sent.
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({ shouldUnregister: true });
@@ -55,9 +57,18 @@ export default function ContactForm() {
   // Links elsewhere on the site can open this page with a topic already chosen, e.g. /contact/?topic=studio.
   // "delivery" was its own topic once; older links and bookmarks still land on the Studio form.
   useEffect(() => {
-    const raw = new URLSearchParams(window.location.search).get("topic");
+    const params = new URLSearchParams(window.location.search);
+    const raw = params.get("topic");
     const requested = raw === "delivery" ? "studio" : raw;
-    if (topics.some((t) => t.value === requested)) setTopic(requested as Topic);
+    if (topics.some((t) => t.value === requested)) {
+      setTopic(requested as Topic);
+      const postcode = (params.get("postcode") ?? "").trim();
+      setPrefill({
+        table: studioTableOptions.includes(params.get("table") ?? "") ? (params.get("table") as string) : "",
+        postcode: /^\d{4}$/.test(postcode) ? postcode : "",
+        message: (params.get("message") ?? "").slice(0, 300),
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -183,7 +194,7 @@ export default function ContactForm() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className={labelClass} htmlFor="contact-preferredTable">Which table? (optional)</label>
-                    <select id="contact-preferredTable" {...register("preferredTable")} className={inputClass}>
+                    <select id="contact-preferredTable" {...register("preferredTable")} defaultValue={prefill.table} className={inputClass}>
                       <option value="">Select a table...</option>
                       {studioTableOptions.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
                     </select>
@@ -194,6 +205,7 @@ export default function ContactForm() {
                       id="contact-deliveryPostcode"
                       {...invalid("deliveryPostcode")}
                       {...register("deliveryPostcode", { pattern: { value: /^\d{4}$/, message: "Enter a 4-digit postcode" } })}
+                      defaultValue={prefill.postcode}
                       type="text"
                       inputMode="numeric"
                       autoComplete="postal-code"
@@ -270,6 +282,7 @@ export default function ContactForm() {
                     id="contact-message"
                     {...invalid("message")}
                     {...register("message", { required: "Please add a message" })}
+                    defaultValue={prefill.message}
                     rows={6}
                     placeholder={
                       topic === "studio"
