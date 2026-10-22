@@ -41,31 +41,33 @@ const formatPrice = (cents: number) =>
 const MODEL_VIEWER_SCRIPT_ID = "model-viewer-script";
 // Every table settles on this view: turned about 63 degrees left of square-on, a little below the default height.
 const START_ORBIT = "-63deg 71deg 90%";
-// The opening sweep is one full, steady turn that ends exactly on START_ORBIT, so there is no jump or flip when it finishes.
-const SWEEP_MS = 8000;
-const SWEEP_DEG_PER_SECOND = 360 / (SWEEP_MS / 1000);
-const FULL_TURN = Math.PI * 2;
+// Every table opens on START_ORBIT, then turns slowly (the original movement) and comes to rest REST_DEGREES further round,
+// with its long side facing the viewer. That resting angle is where it should always end up: after the sweep, after Reset view,
+// and if the visitor scrolls away before the sweep has finished.
+const SWEEP_DEG_PER_SECOND = 12;
+const REST_DEGREES = 60;
+const REST_RADIANS = (REST_DEGREES * Math.PI) / 180;
+const SWEEP_MAX_MS = 9000;
 
 type TurntableModel = HTMLElement & { turntableRotation?: number; resetTurntableRotation?: (theta?: number) => void };
 
 /**
- * The sweep spins the table through model-viewer's own "turntable" angle, which is separate from the camera orbit (and which
- * model-viewer pauses while the viewer is off-screen). Put it back on the preset: whole turns look identical to the preset,
- * so only a part-turn needs moving, and that is eased unless the viewer is out of sight, where it can simply be reset.
+ * The turn is model-viewer's own "turntable" angle, separate from the camera orbit, and model-viewer pauses it while the viewer is
+ * off-screen. This puts the table on the resting angle: straight away when asked (for example while out of sight), otherwise eased.
  */
-const settleTurntable = (model: HTMLElement, animate: boolean) => {
+const settleOnRest = (model: HTMLElement, animate: boolean) => {
   const m = model as TurntableModel;
   if (!m.resetTurntableRotation) return;
   const from = m.turntableRotation ?? 0;
-  const off = from - Math.round(from / FULL_TURN) * FULL_TURN;
-  if (!animate || Math.abs(off) < 0.15) {
-    m.resetTurntableRotation(0);
+  if (!animate || Math.abs(REST_RADIANS - from) < 0.03) {
+    m.resetTurntableRotation(REST_RADIANS);
     return;
   }
   const begin = performance.now();
   const step = (now: number) => {
-    const t = Math.min(1, (now - begin) / 700);
-    m.resetTurntableRotation!(off * Math.pow(1 - t, 3));
+    const t = Math.min(1, (now - begin) / 800);
+    const eased = -(Math.cos(Math.PI * t) - 1) / 2;
+    m.resetTurntableRotation!(from + (REST_RADIANS - from) * eased);
     if (t < 1) requestAnimationFrame(step);
   };
   requestAnimationFrame(step);
@@ -155,7 +157,7 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
     if (!model) return;
     model.removeAttribute("auto-rotate");
     model.cameraOrbit = START_ORBIT;
-    settleTurntable(model, true);
+    settleOnRest(model, true);
     model.cameraTarget = "auto auto auto";
     model.fieldOfView = "auto";
     setViewMoved(false);
@@ -213,34 +215,35 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
 
     let timer: ReturnType<typeof setTimeout> | undefined;
     let readyCheck: ReturnType<typeof setInterval> | undefined;
+    let progress: ReturnType<typeof setInterval> | undefined;
     let started = false;
     let sweeping = false;
     let visible = true;
-    // Ends the sweep. Part-way through the turn, model-viewer may have paused (the viewer scrolled out of sight), so the table is
-    // put back on the preset angle rather than being left wherever it stopped.
-    const stop = (backToStart: boolean) => {
+    // Ends the sweep. If it is ended early (the viewer was scrolled out of sight, so model-viewer stopped turning it, or the time ran
+    // out) the table is put on the resting angle rather than left wherever it stopped.
+    const stop = (onRest: boolean) => {
       clearTimeout(timer);
+      clearInterval(progress);
       sweeping = false;
       model.removeAttribute("auto-rotate");
-      if (backToStart) {
-        (model as HTMLElement & { cameraOrbit: string }).cameraOrbit = START_ORBIT;
-        settleTurntable(model, visible);
-      }
+      if (onRest) settleOnRest(model, visible);
     };
     const start = () => {
       if (started || !visible) return;
       started = true;
       sweeping = true;
       model.setAttribute("auto-rotate", "");
-      // When the time is up, look at where the viewer actually is (not only at what the visibility observer last reported), so a
-      // table that was paused out of sight is put straight back on the preset.
+      // Stop as soon as it has turned as far as the resting angle, so it ends there exactly (not a little past it).
+      progress = setInterval(() => {
+        if (((model as TurntableModel).turntableRotation ?? 0) >= REST_RADIANS) stop(true);
+      }, 30);
       timer = setTimeout(() => {
         const box = viewerBoxRef.current?.getBoundingClientRect();
         if (box) visible = box.bottom > 0 && box.top < window.innerHeight;
         stop(true);
-      }, SWEEP_MS);
+      }, SWEEP_MAX_MS);
     };
-    // Scrolling the viewer out of sight during the sweep ends it on the preset straight away, so it is already in place when it comes back.
+    // Scrolling the viewer out of sight during the sweep puts it on the resting angle straight away, so it is already there when it comes back.
     // It also starts the sweep if the model finished loading while the viewer was out of sight and it has since come into view.
     const watcher = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
@@ -275,6 +278,7 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
       model.removeEventListener("load", start);
       watcher.disconnect();
       clearInterval(readyCheck);
+      clearInterval(progress);
       clearTimeout(timer);
     };
   }, [selectedView]);
