@@ -1,6 +1,7 @@
 import { createHash, timingSafeEqual } from "node:crypto";
 import { studioProducts } from "../../src/data/studio-products";
 import { isValidPostcode } from "../../src/data/delivery-zones";
+import { isRequestId, requestStore, type QuoteRequest } from "./lib/quote-requests";
 
 /**
  * Private tool behind /admin/quote/: emails the customer their delivery quote and payment link, in Level Design's own words,
@@ -145,6 +146,7 @@ export async function handler(event: { httpMethod: string; body: string | null; 
     toEmail?: string;
     toName?: string;
     note?: string;
+    requestId?: string;
   };
   try {
     input = JSON.parse(event.body || "{}");
@@ -206,6 +208,17 @@ export async function handler(event: { httpMethod: string; body: string | null; 
     if (!response.ok) {
       console.error("send-quote-email: Brevo rejected the email:", response.status, await response.text());
       return json(500, { error: "Brevo couldn't send the email. Check the sender address is verified in Brevo." });
+    }
+    // If this quote answers a request from a table page, mark it quoted. The email is already sent, so a problem here is only logged.
+    if (isRequestId(input.requestId)) {
+      try {
+        const store = requestStore(event);
+        const key = `req/${input.requestId}`;
+        const request = (await store.get(key, { type: "json" })) as QuoteRequest | null;
+        if (request) await store.setJSON(key, { ...request, status: "quoted", quotedAt: new Date().toISOString(), quoteUrl: link });
+      } catch (err) {
+        console.error("send-quote-email: could not mark the request as quoted:", err);
+      }
     }
     return json(200, { sent: true, to: toEmail, copyTo: ORDER_NOTIFICATION_EMAIL });
   } catch (err) {
