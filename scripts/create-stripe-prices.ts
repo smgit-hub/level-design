@@ -5,9 +5,10 @@
  *   npm run stripe:setup -- --dry   print what would happen and change nothing
  *   npm run stripe:setup -- --live  required to touch a live-mode key (rk_live_… / sk_live_…)
  *
- * One Stripe Product per size (so the checkout line item reads "Line Table — 2000mm × 1000mm") with one AUD
- * Price each, found again by its lookup key. Safe to re-run: unchanged prices are left alone, and a changed
- * amount gets a new Price that takes over the lookup key (the old one is archived).
+ * One Stripe Product per size (so the checkout line item reads "Level Design — Line Table (2000mm × 1000mm)") with one AUD
+ * Price each, found again by its lookup key. Safe to re-run: unchanged prices are left alone (though a Product's
+ * name and description are refreshed if they have changed), and a changed amount gets a new Price that takes over the lookup
+ * key (the old one is archived). The names start with "Level Design" so they stand out on a shared Stripe account.
  *
  * The Stripe account is shared with other sites, so every object this creates is namespaced: Product ids and
  * Price lookup keys all start with "studio_", and nothing outside that prefix is read, changed or archived.
@@ -40,18 +41,27 @@ const dollars = (cents: number) => `$${(cents / 100).toLocaleString("en-AU")}`;
 let created = 0;
 let updated = 0;
 let unchanged = 0;
+let renamed = 0;
 
 for (const product of allStudioProducts) {
   for (const size of product.sizes) {
     const productId = size.stripeLookupKey; // e.g. studio_line_2000x1000 — also used as the Stripe Product id
-    const name = `${product.name} — ${size.label}`;
+    const name = `Level Design — ${product.name} (${size.label})`;
     const image = new URL(product.images.gallery[0] ?? product.images.main, SITE).toString();
     const description = `${size.dimensions}. ${product.specifications["Timber / Finish"]}. Studio Collection, made to order (6–8 week lead time).`;
 
     const existing = (await stripe.prices.list({ lookup_keys: [size.stripeLookupKey], active: true, limit: 1 })).data[0];
     if (existing && existing.unit_amount === size.price && existing.currency === "aud") {
-      console.log(`  =  ${name}  ${dollars(size.price)}  (already set up: ${existing.id})`);
-      unchanged++;
+      // The price is right; just make sure the Product's name and description are current.
+      const current = await stripe.products.retrieve(productId).catch(() => null);
+      if (current && (current.name !== name || current.description !== description)) {
+        console.log(`  ~  ${name}  ${dollars(size.price)}  → rename (was "${current.name}")`);
+        if (!dry) await stripe.products.update(productId, { name, description });
+        renamed++;
+      } else {
+        console.log(`  =  ${name}  ${dollars(size.price)}  (already set up: ${existing.id})`);
+        unchanged++;
+      }
       continue;
     }
 
@@ -92,5 +102,5 @@ for (const product of allStudioProducts) {
   }
 }
 
-console.log(`\nDone. ${created} created, ${updated} updated, ${unchanged} already up to date.`);
+console.log(`\nDone. ${created} created, ${updated} updated, ${renamed} renamed, ${unchanged} already up to date.`);
 if (dry) console.log("(Dry run: nothing was changed.)");
