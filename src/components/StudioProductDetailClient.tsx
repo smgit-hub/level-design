@@ -41,8 +41,35 @@ const formatPrice = (cents: number) =>
 const MODEL_VIEWER_SCRIPT_ID = "model-viewer-script";
 // Every table settles on this view: turned about 63 degrees left of square-on, a little below the default height.
 const START_ORBIT = "-63deg 71deg 90%";
-// How long the opening sweep runs before the table glides back to START_ORBIT.
-const SWEEP_MS = 5000;
+// The opening sweep is one full, steady turn that ends exactly on START_ORBIT, so there is no jump or flip when it finishes.
+const SWEEP_MS = 8000;
+const SWEEP_DEG_PER_SECOND = 360 / (SWEEP_MS / 1000);
+const FULL_TURN = Math.PI * 2;
+
+type TurntableModel = HTMLElement & { turntableRotation?: number; resetTurntableRotation?: (theta?: number) => void };
+
+/**
+ * The sweep spins the table through model-viewer's own "turntable" angle, which is separate from the camera orbit (and which
+ * model-viewer pauses while the viewer is off-screen). Put it back on the preset: whole turns look identical to the preset,
+ * so only a part-turn needs moving, and that is eased unless the viewer is out of sight, where it can simply be reset.
+ */
+const settleTurntable = (model: HTMLElement, animate: boolean) => {
+  const m = model as TurntableModel;
+  if (!m.resetTurntableRotation) return;
+  const from = m.turntableRotation ?? 0;
+  const off = from - Math.round(from / FULL_TURN) * FULL_TURN;
+  if (!animate || Math.abs(off) < 0.15) {
+    m.resetTurntableRotation(0);
+    return;
+  }
+  const begin = performance.now();
+  const step = (now: number) => {
+    const t = Math.min(1, (now - begin) / 700);
+    m.resetTurntableRotation!(off * Math.pow(1 - t, 3));
+    if (t < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+};
 
 export default function StudioProductDetailClient({ product, tables }: Props) {
   // The tables either side of this one, wrapping round, for the arrows above the viewer
@@ -128,6 +155,7 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
     if (!model) return;
     model.removeAttribute("auto-rotate");
     model.cameraOrbit = START_ORBIT;
+    settleTurntable(model, true);
     model.cameraTarget = "auto auto auto";
     model.fieldOfView = "auto";
     setViewMoved(false);
@@ -184,18 +212,42 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let timer: ReturnType<typeof setTimeout> | undefined;
+    let readyCheck: ReturnType<typeof setInterval> | undefined;
     let started = false;
-    const stop = (returnToStart: boolean) => {
+    let sweeping = false;
+    let visible = true;
+    // Ends the sweep. Part-way through the turn, model-viewer may have paused (the viewer scrolled out of sight), so the table is
+    // put back on the preset angle rather than being left wherever it stopped.
+    const stop = (backToStart: boolean) => {
       clearTimeout(timer);
+      sweeping = false;
       model.removeAttribute("auto-rotate");
-      if (returnToStart) (model as HTMLElement & { cameraOrbit: string }).cameraOrbit = START_ORBIT;
+      if (backToStart) {
+        (model as HTMLElement & { cameraOrbit: string }).cameraOrbit = START_ORBIT;
+        settleTurntable(model, visible);
+      }
     };
     const start = () => {
-      if (started) return;
+      if (started || !visible) return;
       started = true;
+      sweeping = true;
       model.setAttribute("auto-rotate", "");
-      timer = setTimeout(() => stop(true), SWEEP_MS);
+      // When the time is up, look at where the viewer actually is (not only at what the visibility observer last reported), so a
+      // table that was paused out of sight is put straight back on the preset.
+      timer = setTimeout(() => {
+        const box = viewerBoxRef.current?.getBoundingClientRect();
+        if (box) visible = box.bottom > 0 && box.top < window.innerHeight;
+        stop(true);
+      }, SWEEP_MS);
     };
+    // Scrolling the viewer out of sight during the sweep ends it on the preset straight away, so it is already in place when it comes back.
+    // It also starts the sweep if the model finished loading while the viewer was out of sight and it has since come into view.
+    const watcher = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (!visible && sweeping) stop(true);
+      if (visible && !started && (model as HTMLElement & { loaded?: boolean }).loaded) start();
+    });
+    watcher.observe(viewerBoxRef.current ?? model);
     const onCameraChange = (event: Event) => {
       if ((event as CustomEvent<{ source?: string }>).detail?.source === "user-interaction") {
         stop(false);
@@ -205,13 +257,24 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
 
     setViewMoved(false);
     model.addEventListener("camera-change", onCameraChange);
-    if ((model as HTMLElement & { loaded?: boolean }).loaded) start();
-    else model.addEventListener("load", start, { once: true });
+    // model-viewer doesn't always announce a model that is already cached, so readiness is also checked directly.
+    const ready = () => !!(model as HTMLElement & { loaded?: boolean }).loaded;
+    if (ready()) start();
+    else {
+      model.addEventListener("load", start, { once: true });
+      readyCheck = setInterval(() => {
+        if (started) return clearInterval(readyCheck);
+        if (ready() && visible) start();
+      }, 100);
+      setTimeout(() => clearInterval(readyCheck), 20000);
+    }
     model.addEventListener("dblclick", resetView);
     return () => {
       model.removeEventListener("dblclick", resetView);
       model.removeEventListener("camera-change", onCameraChange);
       model.removeEventListener("load", start);
+      watcher.disconnect();
+      clearInterval(readyCheck);
       clearTimeout(timer);
     };
   }, [selectedView]);
@@ -360,7 +423,7 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
                       alt={`${product.name} in 3D — drag to rotate`}
                       touch-action={touchUnlocked ? "none" : "pan-y"}
                       auto-rotate-delay="0"
-                      rotation-per-second="12deg"
+                      rotation-per-second={`${SWEEP_DEG_PER_SECOND}deg`}
                       camera-controls=""
                       camera-orbit={START_ORBIT}
                       interaction-prompt="none"
