@@ -154,37 +154,6 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
   // True once the visitor has moved the model, which is when the "Reset view" button appears.
   const [viewMoved, setViewMoved] = useState(false);
 
-  // Framing helper for the site owner: opening a table page with ?frame=1 shows what the camera is set to right now, so the zoom
-  // can be set by eye and sent back as one line of text. It does nothing for ordinary visitors.
-  const [frameMode, setFrameMode] = useState(false);
-  const [frameReading, setFrameReading] = useState("");
-  const [frameCopied, setFrameCopied] = useState(false);
-  useEffect(() => {
-    if (new URLSearchParams(window.location.search).get("frame") === "1") setFrameMode(true);
-  }, []);
-  useEffect(() => {
-    const model = modelRef.current as (TurntableModel & { getCameraOrbit?: () => { theta: number; phi: number; radius: number }; getCameraTarget?: () => { x: number; y: number; z: number } }) | null;
-    if (!frameMode || !model || selectedView !== "model") return;
-    const startPercent = product.id === "round" ? 90 : 86;
-    let autoRadius = 0;
-    const read = () => {
-      if (!model.getCameraOrbit || !model.getCameraTarget) return;
-      const o = model.getCameraOrbit();
-      // The camera distance is measured in metres; calibrate it against the known opening zoom so it can be shown as a percentage.
-      if (!autoRadius && (model as HTMLElement & { loaded?: boolean }).loaded && !viewMovedRef.current) autoRadius = o.radius / (startPercent / 100);
-      if (!autoRadius) return;
-      const deg = (r: number) => Math.round((r * 180) / Math.PI);
-      const t = model.getCameraTarget();
-      setFrameReading(`${product.name}: camera-orbit="${deg(o.theta)}deg ${deg(o.phi)}deg ${Math.round((o.radius / autoRadius) * 1000) / 10}%" camera-target="${t.x.toFixed(3)}m ${t.y.toFixed(3)}m ${t.z.toFixed(3)}m"`);
-    };
-    const timer = setInterval(read, 300);
-    return () => clearInterval(timer);
-  }, [frameMode, selectedView, product.id, product.name]);
-  const viewMovedRef = useRef(false);
-  useEffect(() => {
-    viewMovedRef.current = viewMoved;
-  }, [viewMoved]);
-
   const resetView = () => {
     const model = modelRef.current as (HTMLElement & { cameraOrbit: string; cameraTarget: string; fieldOfView: string }) | null;
     if (!model) return;
@@ -514,26 +483,6 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
                     <span className="absolute top-3 left-3 bg-black/50 text-white/80 text-xs tracking-wide px-3 py-1 rounded-full pointer-events-none">
                       {isTouch ? (touchUnlocked ? "Drag to rotate · Pinch to zoom" : "Tap to explore in 3D") : "Drag to rotate · Scroll to zoom"}
                     </span>
-                  )}
-                  {frameMode && selectedView === "model" && (
-                    <div className="absolute left-3 right-3 top-12 z-20 rounded-lg bg-black/70 p-3 text-[11px] leading-snug text-white">
-                      <div className="font-mono break-words">{frameReading || "Measuring… zoom in or out to where it looks right."}</div>
-                      <button
-                        type="button"
-                        onClick={async () => {
-                          try {
-                            await navigator.clipboard.writeText(frameReading);
-                            setFrameCopied(true);
-                            setTimeout(() => setFrameCopied(false), 1500);
-                          } catch {
-                            /* select the text instead */
-                          }
-                        }}
-                        className="mt-2 rounded bg-white/20 px-3 py-1 text-xs"
-                      >
-                        {frameCopied ? "Copied" : "Copy this setting"}
-                      </button>
-                    </div>
                   )}
                   {selectedView === "model" && viewMoved && (
                     <button
