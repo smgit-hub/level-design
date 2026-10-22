@@ -17,11 +17,29 @@ const products = allStudioProducts.map((p) => ({
       <h1 class="text-3xl font-serif text-[#3d4f47] mb-2">Delivery quote link</h1>
       <p class="text-[#5a6b64] mb-8">Make a payment link for a Studio table at the delivery price you've quoted. It can be paid once, and the usual order emails are sent when it is.</p>
 
-      <form id="quote-form" data-products={JSON.stringify(products)} class="bg-white rounded-2xl p-6 md:p-8 space-y-5 border border-[#e8dcc8]">
+      <div class="bg-white rounded-2xl p-6 md:p-8 mb-6 border border-[#e8dcc8] space-y-4">
         <div>
           <label for="q-key" class="block text-sm font-medium text-[#3d4f47] mb-2">Passphrase</label>
-          <input id="q-key" type="password" autocomplete="current-password" required class="w-full px-4 py-3 border border-[#e8dcc8] rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#c8956a]" />
+          <input id="q-key" type="password" autocomplete="current-password" class="w-full px-4 py-3 border border-[#e8dcc8] rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#c8956a]" />
         </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <button type="button" id="q-load-list" class="px-5 py-2.5 border border-[#3d4f47] text-[#3d4f47] rounded-full text-sm font-medium hover:bg-[#3d4f47] hover:text-white cursor-pointer">Show open quote requests</button>
+          <span id="q-list-status" class="text-sm text-[#5a6b64]" role="status"></span>
+        </div>
+        <ul id="q-list" class="space-y-2"></ul>
+      </div>
+
+      <div id="q-banner" class="hidden mb-6 rounded-2xl bg-[#e8dcc8]/60 p-5 text-sm text-[#3d4f47] space-y-3" aria-live="polite">
+        <p id="q-banner-text" class="font-medium"></p>
+        <p id="q-banner-message" class="text-[#5a6b64] whitespace-pre-line"></p>
+        <div class="flex flex-wrap gap-3">
+          <button type="button" id="q-load-request" class="hidden px-4 py-2 bg-[#3d4f47] text-white rounded-full text-sm font-medium hover:bg-[#2d3f37] cursor-pointer">Load this request</button>
+          <button type="button" id="q-mark-done" class="hidden px-4 py-2 border border-[#3d4f47] text-[#3d4f47] rounded-full text-sm font-medium hover:bg-[#3d4f47] hover:text-white cursor-pointer">Mark as done</button>
+          <button type="button" id="q-clear-request" class="hidden px-4 py-2 text-[#5a6b64] underline underline-offset-2 text-sm cursor-pointer">Clear</button>
+        </div>
+      </div>
+
+      <form id="quote-form" data-products={JSON.stringify(products)} class="bg-white rounded-2xl p-6 md:p-8 space-y-5 border border-[#e8dcc8]">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
             <label for="q-product" class="block text-sm font-medium text-[#3d4f47] mb-2">Table</label>
@@ -148,8 +166,128 @@ const products = allStudioProducts.map((p) => ({
       }
     };
 
+    // ── Quote requests from the table pages ──
+    type QuoteRequestData = {
+      id: string; createdAt: string; status: string; productId: string; sizeId: string; order: string;
+      postcode: string; name: string; email: string; phone: string; message: string;
+    };
+    let currentRequestId: string | null = null;
+    const bannerEl = $('q-banner');
+    const listEl = $('q-list');
+    const listStatus = $('q-list-status');
+    const loadBtn = $('q-load-request');
+    const doneBtn = $('q-mark-done');
+    const clearBtn = $('q-clear-request');
+
+    const callRequests = async (body: Record<string, unknown>) => {
+      if (!keyEl.value) throw new Error('Enter your passphrase first.');
+      const response = await fetch('/.netlify/functions/quote-requests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: keyEl.value, ...body }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || 'Something went wrong.');
+      try {
+        sessionStorage.setItem('ld-quote-key', keyEl.value);
+      } catch {
+        /* fine */
+      }
+      return data;
+    };
+
+    const showBanner = (text: string, message = '', buttons: { load?: boolean; done?: boolean; clear?: boolean } = {}) => {
+      bannerEl.classList.remove('hidden');
+      $('q-banner-text').textContent = text;
+      $('q-banner-message').textContent = message;
+      loadBtn.classList.toggle('hidden', !buttons.load);
+      doneBtn.classList.toggle('hidden', !buttons.done);
+      clearBtn.classList.toggle('hidden', !buttons.clear);
+    };
+
+    const applyRequest = (r: QuoteRequestData) => {
+      currentRequestId = r.id;
+      productEl.value = r.productId;
+      fillSizes();
+      sizeEl.value = r.sizeId;
+      $<HTMLInputElement>('q-postcode').value = r.postcode;
+      $<HTMLInputElement>('q-for').value = r.name;
+      $<HTMLInputElement>('q-email').value = r.email;
+      showTotal();
+      const contact = [r.email, r.phone].filter(Boolean).join(' · ');
+      const status = r.status === 'quoted' ? ' (already quoted)' : '';
+      showBanner(`Quote request from ${r.name}${status}: ${r.order} to ${r.postcode}. ${contact}`, r.message ? `"${r.message}"` : '', { done: true, clear: true });
+      deliveryEl.focus();
+      form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    const loadRequest = async (id: string) => {
+      try {
+        const data = await callRequests({ action: 'get', id });
+        applyRequest(data.request);
+      } catch (error) {
+        showBanner(error instanceof Error ? error.message : 'Something went wrong.', '', { load: false, clear: true });
+      }
+    };
+
+    const loadList = async () => {
+      listStatus.textContent = 'Loading…';
+      listEl.innerHTML = '';
+      try {
+        const data = await callRequests({ action: 'list' });
+        const requests: QuoteRequestData[] = data.requests || [];
+        listStatus.textContent = requests.length ? `${requests.length} open` : 'No open requests.';
+        requests.forEach((r) => {
+          const li = document.createElement('li');
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'w-full text-left px-4 py-3 rounded-lg border border-[#e8dcc8] hover:border-[#c8956a] text-sm text-[#3d4f47] cursor-pointer';
+          const when = new Date(r.createdAt).toLocaleString('en-AU', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
+          button.textContent = `${when}: ${r.name}, ${r.order} to ${r.postcode}${r.status === 'quoted' ? ' (quoted)' : ''}`;
+          button.addEventListener('click', () => applyRequest(r));
+          li.appendChild(button);
+          listEl.appendChild(li);
+        });
+      } catch (error) {
+        listStatus.textContent = error instanceof Error ? error.message : 'Something went wrong.';
+      }
+    };
+
+    $('q-load-list').addEventListener('click', loadList);
+    loadBtn.addEventListener('click', () => {
+      const id = new URLSearchParams(location.search).get('request');
+      if (id) loadRequest(id);
+    });
+    clearBtn.addEventListener('click', () => {
+      currentRequestId = null;
+      bannerEl.classList.add('hidden');
+    });
+    doneBtn.addEventListener('click', async () => {
+      if (!currentRequestId) return;
+      try {
+        await callRequests({ action: 'mark', id: currentRequestId, status: 'done' });
+        showBanner('Marked as done. It no longer shows in the open requests.', '', { clear: true });
+        currentRequestId = null;
+        if (listEl.children.length) loadList();
+      } catch (error) {
+        showBanner(error instanceof Error ? error.message : 'Something went wrong.', '', { done: true, clear: true });
+      }
+    });
+
+    // Opened from the notification email: /admin/quote/?request=<id>
+    const requested = new URLSearchParams(location.search).get('request');
+    if (requested) {
+      if (keyEl.value) loadRequest(requested);
+      else showBanner('Enter your passphrase, then load the quote request.', '', { load: true });
+    }
+
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
+      if (!keyEl.value) {
+        errorEl.textContent = 'Enter your passphrase first.';
+        errorEl.classList.remove('hidden');
+        return;
+      }
       errorEl.classList.add('hidden');
       resultEl.classList.add('hidden');
       submitEl.disabled = true;
@@ -223,11 +361,12 @@ const products = allStudioProducts.map((p) => ({
             toEmail,
             toName: $<HTMLInputElement>('q-for').value,
             note: $<HTMLTextAreaElement>('q-note').value,
+            requestId: currentRequestId || undefined,
           }),
         });
         const data = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(data.error || 'Something went wrong.');
-        show(`Sent to ${data.to}. A copy went to ${data.copyTo}.`, true);
+        show(`Sent to ${data.to}. A copy went to ${data.copyTo}.${currentRequestId ? ' The request is marked as quoted.' : ''}`, true);
         sendEl.textContent = 'Send again';
       } catch (error) {
         show(error instanceof Error ? error.message : 'Something went wrong.', false);
