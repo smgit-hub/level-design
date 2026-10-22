@@ -73,9 +73,9 @@ const settleOnRest = (model: HTMLElement, animate: boolean) => {
 };
 
 export default function StudioProductDetailClient({ product, tables }: Props) {
-  // How close the camera sits. The round table has room to spare at 90%; the long tables are framed tighter (86%), which is as close
+  // How close the camera sits. The round table has room to spare at 90%; the long tables are framed tighter (82%), which is as close
   // as they can go while still staying fully on screen through a whole turn.
-  const startOrbit = `-63deg 71deg ${product.id === "round" ? 90 : 86}%`;
+  const startOrbit = `-63deg 71deg ${product.id === "round" ? 90 : 80}%`;
   // The tables either side of this one, wrapping round, for the arrows above the viewer
   const position = tables.findIndex((table) => table.id === product.id);
   const previousTable = tables.length > 1 ? tables[(position - 1 + tables.length) % tables.length] : null;
