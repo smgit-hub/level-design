@@ -67,7 +67,7 @@ export const studioProducts: Record<string, StudioProduct> = {
     description:
       "The Line Table pairs a sharp-cornered rectangular top with clean lines — a straightforward, made-to-order design for everyday dining spaces.",
     category: "Studio",
-    construction: "a real oak veneer top over a stable substrate, with a fully solid oak base",
+    construction: "a real oak veneer top with a fully solid oak base",
     shape: "Straight-edged",
     outline: { kind: "rect", cornerRadiusMm: 40 },
     features: [
@@ -80,7 +80,7 @@ export const studioProducts: Record<string, StudioProduct> = {
     specifications: {
       "Top / Base Style": "Rectangle with small corner radius / Straight legs",
       "Timber / Finish": "American oak / Clear matte",
-      "Construction": "Oak veneer top over a stable substrate, solid oak base",
+      "Construction": "Oak veneer top, solid oak base",
     },
     images: {
       main: "/images/studio/line/level-design-line-studio-dining-table-main.webp",
@@ -130,7 +130,7 @@ export const studioProducts: Record<string, StudioProduct> = {
     description:
       "The Pill Table's stadium-shaped top — straight sides, fully rounded ends — keeps the seating generous while softening the whole silhouette.",
     category: "Studio",
-    construction: "real oak veneer over a stable substrate, top and base",
+    construction: "real oak veneer, top and base",
     shape: "Pill shape",
     outline: { kind: "pill" },
     features: [
@@ -143,7 +143,7 @@ export const studioProducts: Record<string, StudioProduct> = {
     specifications: {
       "Top / Base Style": "Pill shape / Straight legs",
       "Timber / Finish": "American oak / Clear matte",
-      "Construction": "Oak veneer over a stable substrate",
+      "Construction": "Oak veneer",
     },
     images: {
       main: "/images/studio/pill/level-design-pill-studio-dining-table-main.webp",
@@ -182,7 +182,7 @@ export const studioProducts: Record<string, StudioProduct> = {
     description:
       "The Round Table brings the same design standard to a circular top — an easy fit for smaller dining spaces and everyday conversation.",
     category: "Studio",
-    construction: "real oak veneer over a stable substrate, top and base",
+    construction: "real oak veneer, top and base",
     shape: "Round",
     outline: { kind: "round" },
     features: [
@@ -195,7 +195,7 @@ export const studioProducts: Record<string, StudioProduct> = {
     specifications: {
       "Top / Base Style": "Round / Central pedestal",
       "Timber / Finish": "American oak / Clear matte",
-      "Construction": "Oak veneer over a stable substrate",
+      "Construction": "Oak veneer",
     },
     images: {
       main: "/images/studio/round/level-design-round-studio-dining-table-main.webp",
@@ -234,7 +234,7 @@ export const studioProducts: Record<string, StudioProduct> = {
     description:
       "The Curve Table is a rectangular top with a large radius at every corner — a softer, warmer profile for open-plan living.",
     category: "Studio",
-    construction: "real oak veneer over a stable substrate, top and base",
+    construction: "real oak veneer, top and base",
     shape: "Soft corners",
     outline: { kind: "rect", cornerRadiusMm: 250 },
     features: [
@@ -247,7 +247,7 @@ export const studioProducts: Record<string, StudioProduct> = {
     specifications: {
       "Top / Base Style": "Rectangle with large corner radius / Straight legs",
       "Timber / Finish": "American oak / Clear matte",
-      "Construction": "Oak veneer over a stable substrate",
+      "Construction": "Oak veneer",
     },
     images: {
       main: "/images/studio/curve/level-design-curve-studio-dining-table-main.webp",
