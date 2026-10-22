@@ -1,5 +1,5 @@
 import { motion, MotionConfig } from "motion/react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type FormEvent } from "react";
 import { ArrowLeft, CheckCircle, ChevronLeft, ChevronRight, RotateCcw, Truck } from "lucide-react";
 import { deliveryForPostcode, isValidPostcode } from "../data/delivery-zones";
 import type { StudioProduct } from "../data/studio-products";
@@ -68,6 +68,7 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
   const onPostcodeChange = (value: string) => {
     const digits = value.replace(/\D/g, "").slice(0, 4);
     setPostcode(digits);
+    if (quoteStatus === "sent") setQuoteStatus("idle");
     if (digits.length === 4) setPostcodeHint(false);
     try {
       if (isValidPostcode(digits)) localStorage.setItem("ld-delivery-postcode", digits);
@@ -87,13 +88,31 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
   const largestSize = product.sizes[product.sizes.length - 1];
   // "2350mm × 1150mm" -> "2350 × 1150mm"; "1500mm Diameter" -> "1500mm dia".
   const selectedSize = product.sizes.find((s) => s.id === selectedSizeId) ?? product.sizes[0];
-  // Quoted postcodes go to the contact form with the table, size and postcode already filled in.
-  const quoteHref = `/contact/?${new URLSearchParams({
-    topic: "studio",
-    table: product.name,
-    postcode,
-    message: `I'd like a delivery quote for the ${product.name} (${selectedSize.label}) to ${postcode}.`,
-  }).toString()}`;
+  // Postcodes we quote individually get a short request form here instead of Buy Now. The request is saved, and an email
+  // with a link to the private quote page is sent to the order inbox.
+  const [quoteStatus, setQuoteStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [quoteError, setQuoteError] = useState("");
+  const [quoteForm, setQuoteForm] = useState({ name: "", email: "", phone: "", message: "", website: "" });
+  const sendQuoteRequest = async (event: FormEvent) => {
+    event.preventDefault();
+    if (quoteStatus === "sending") return;
+    setQuoteStatus("sending");
+    setQuoteError("");
+    try {
+      const response = await fetch("/.netlify/functions/request-quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId: product.id, sizeId: selectedSize.id, postcode, ...quoteForm }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || "Something went wrong.");
+      setQuoteStatus("sent");
+      trackEvent("generate_lead", { lead_type: "studio_delivery_quote", table_name: product.name, page_path: window.location.pathname });
+    } catch (err) {
+      setQuoteError(err instanceof Error ? err.message : "Something went wrong.");
+      setQuoteStatus("error");
+    }
+  };
 
   // On touch screens the viewer starts in scroll mode behind a "Tap to explore" cover, so dragging the
   // model doesn't scroll the page. Tapping hands every touch to the model until "Done" is pressed.
@@ -506,19 +525,44 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
                   </p>
                 </div>
 
-                <div ref={buyRef} className="flex flex-col sm:flex-row gap-4">
+                <div ref={buyRef}>
                   {delivery && delivery.priceCents === null ? (
-                    <a
-                      href={quoteHref}
-                      className="flex-1 px-6 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl font-medium text-center cursor-pointer"
-                    >
-                      Get a delivery quote
-                    </a>
+                    quoteStatus === "sent" ? (
+                      <div id="delivery-quote-form" role="status" className="rounded-xl border-2 border-[#e5ddd0] bg-white p-5 text-[#3d4f47]">
+                        <div className="flex items-center gap-2 font-semibold mb-1"><CheckCircle size={18} className="text-[#c8956a]" /> Thanks, {quoteForm.name.split(" ")[0]}.</div>
+                        <p className="text-sm text-[#5a6b64]">
+                          We've received your request for the {product.name} ({selectedSize.label}) delivered to {postcode}. We'll reply to {quoteForm.email} within one business day with the delivery price and a secure link to order.
+                        </p>
+                      </div>
+                    ) : (
+                      <form id="delivery-quote-form" onSubmit={sendQuoteRequest} className="space-y-3 scroll-mt-28">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <input aria-label="Your name" required maxLength={80} autoComplete="name" placeholder="Your name" value={quoteForm.name} onChange={(e) => setQuoteForm({ ...quoteForm, name: e.target.value })} className="w-full px-4 py-3 border-2 border-[#e5ddd0] rounded-xl bg-white text-[#3d4f47] focus:outline-none focus:border-[#c8956a] focus:ring-2 focus:ring-[#c8956a]/30" />
+                          <input aria-label="Email address" type="email" required maxLength={200} autoComplete="email" placeholder="Email address" value={quoteForm.email} onChange={(e) => setQuoteForm({ ...quoteForm, email: e.target.value })} className="w-full px-4 py-3 border-2 border-[#e5ddd0] rounded-xl bg-white text-[#3d4f47] focus:outline-none focus:border-[#c8956a] focus:ring-2 focus:ring-[#c8956a]/30" />
+                        </div>
+                        <input aria-label="Phone (optional)" type="tel" maxLength={25} autoComplete="tel" placeholder="Phone (optional)" value={quoteForm.phone} onChange={(e) => setQuoteForm({ ...quoteForm, phone: e.target.value })} className="w-full px-4 py-3 border-2 border-[#e5ddd0] rounded-xl bg-white text-[#3d4f47] focus:outline-none focus:border-[#c8956a] focus:ring-2 focus:ring-[#c8956a]/30" />
+                        <textarea aria-label="Message (optional)" rows={3} maxLength={600} placeholder="Anything we should know? Access, stairs, timing (optional)" value={quoteForm.message} onChange={(e) => setQuoteForm({ ...quoteForm, message: e.target.value })} className="w-full px-4 py-3 border-2 border-[#e5ddd0] rounded-xl bg-white text-[#3d4f47] focus:outline-none focus:border-[#c8956a] focus:ring-2 focus:ring-[#c8956a]/30 resize-none" />
+                        {/* A trap for bots: real visitors never see or fill this in. */}
+                        <input name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" value={quoteForm.website} onChange={(e) => setQuoteForm({ ...quoteForm, website: e.target.value })} className="absolute -left-[9999px] h-0 w-0 opacity-0" />
+                        {quoteStatus === "error" && (
+                          <p role="alert" className="text-sm text-red-700">
+                            {quoteError} You can also <a href="/contact/?topic=studio" className="underline underline-offset-2">contact us directly</a>.
+                          </p>
+                        )}
+                        <button
+                          type="submit"
+                          disabled={quoteStatus === "sending"}
+                          className="w-full px-6 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl font-medium disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+                        >
+                          {quoteStatus === "sending" ? "Sending…" : "Request a delivery quote"}
+                        </button>
+                      </form>
+                    )
                   ) : (
                     <button
                       onClick={handleBuyNow}
                       disabled={isCheckingOut}
-                      className="flex-1 px-6 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl font-medium disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+                      className="w-full px-6 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl font-medium disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
                     >
                       {isCheckingOut ? "Redirecting to checkout…" : `Buy Now — ${formatPrice(selectedSize.price)}`}
                     </button>
@@ -620,11 +664,11 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
         </div>
         {delivery && delivery.priceCents === null ? (
           <a
-            href={quoteHref}
+            href="#delivery-quote-form"
             tabIndex={showBuyBar ? 0 : -1}
             className="ml-auto px-6 py-3 bg-[#3d4f47] text-white rounded-full font-medium cursor-pointer"
           >
-            Get a delivery quote
+            Request a quote
           </a>
         ) : (
           <button
