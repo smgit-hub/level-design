@@ -26,10 +26,14 @@ export type QuoteRequest = {
 
 type LambdaEvent = Parameters<typeof connectLambda>[0];
 
-/** Netlify's older function format needs the event handed over before the store can be used. */
+/**
+ * Netlify's older function format needs the event handed over before the store can be used. The default (eventual)
+ * consistency is used on purpose: in this format a store asked for strong consistency throws before saving anything.
+ * A change can take up to a minute to show everywhere, which is fine for quote requests.
+ */
 export function requestStore(event: unknown) {
   connectLambda(event as LambdaEvent);
-  return getStore({ name: "quote-requests", consistency: "strong" });
+  return getStore("quote-requests");
 }
 
 export const newRequestId = () => randomBytes(12).toString("hex");

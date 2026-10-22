@@ -46,6 +46,25 @@ export async function handler(event: { httpMethod: string; body: string | null; 
   if (!/^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+$/.test(email) || email.length > 200) return json(400, { error: "Please enter a valid email address." });
   if (phone && !/^[0-9 +()\-]{6,25}$/.test(phone)) return json(400, { error: "Please enter a valid phone number, or leave it blank." });
 
+  try {
+    return await saveRequest(event, { product, size, postcode, name, email, phone, message });
+  } catch (err) {
+    console.error("request-quote: could not save the request:", err);
+    return json(500, { error: "We couldn't save your request just now. Please try again in a moment." });
+  }
+}
+
+type Saved = {
+  product: NonNullable<(typeof studioProducts)[string]>;
+  size: NonNullable<(typeof studioProducts)[string]>["sizes"][number];
+  postcode: string;
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+};
+
+async function saveRequest(event: { headers: Record<string, string | undefined> }, { product, size, postcode, name, email, phone, message }: Saved) {
   const store = requestStore(event);
 
   // At most a handful of requests an hour from one visitor.

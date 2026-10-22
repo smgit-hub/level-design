@@ -244,6 +244,7 @@ const products = allStudioProducts.map((p) => ({
           button.className = 'w-full text-left px-4 py-3 rounded-lg border border-[#e8dcc8] hover:border-[#c8956a] text-sm text-[#3d4f47] cursor-pointer';
           const when = new Date(r.createdAt).toLocaleString('en-AU', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
           button.textContent = `${when}: ${r.name}, ${r.order} to ${r.postcode}${r.status === 'quoted' ? ' (quoted)' : ''}`;
+          button.dataset.requestId = r.id;
           button.addEventListener('click', () => applyRequest(r));
           li.appendChild(button);
           listEl.appendChild(li);
@@ -267,8 +268,10 @@ const products = allStudioProducts.map((p) => ({
       try {
         await callRequests({ action: 'mark', id: currentRequestId, status: 'done' });
         showBanner('Marked as done. It no longer shows in the open requests.', '', { clear: true });
+        // Changes can take a moment to show everywhere, so drop it from the list here rather than reloading it.
+        const doneItem = listEl.querySelector(`[data-request-id="${currentRequestId}"]`);
+        doneItem?.parentElement?.remove();
         currentRequestId = null;
-        if (listEl.children.length) loadList();
       } catch (error) {
         showBanner(error instanceof Error ? error.message : 'Something went wrong.', '', { done: true, clear: true });
       }
