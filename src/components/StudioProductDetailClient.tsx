@@ -39,8 +39,9 @@ const formatPrice = (cents: number) =>
   new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 }).format(cents / 100);
 
 const MODEL_VIEWER_SCRIPT_ID = "model-viewer-script";
-
-// Every table opens on its start view, then turns slowly (the original movement) and comes to rest REST_DEGREES further round,
+// Every table settles on this view: turned about 63 degrees left of square-on, a little below the default height.
+const START_ORBIT = "-63deg 71deg 90%";
+// Every table opens on START_ORBIT, then turns slowly (the original movement) and comes to rest REST_DEGREES further round,
 // with its long side facing the viewer. That resting angle is where it should always end up: after the sweep, after Reset view,
 // and if the visitor scrolls away before the sweep has finished.
 const SWEEP_DEG_PER_SECOND = 12;
@@ -73,9 +74,6 @@ const settleOnRest = (model: HTMLElement, animate: boolean) => {
 };
 
 export default function StudioProductDetailClient({ product, tables }: Props) {
-  // How close the camera sits. The round table has room to spare at 90%; the long tables are framed tighter (86%), which is as close
-  // as they can go while still staying fully on screen through a whole turn.
-  const startOrbit = `-63deg 71deg ${product.id === "round" ? 90 : 86}%`;
   // The tables either side of this one, wrapping round, for the arrows above the viewer
   const position = tables.findIndex((table) => table.id === product.id);
   const previousTable = tables.length > 1 ? tables[(position - 1 + tables.length) % tables.length] : null;
@@ -158,7 +156,7 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
     const model = modelRef.current as (HTMLElement & { cameraOrbit: string; cameraTarget: string; fieldOfView: string }) | null;
     if (!model) return;
     model.removeAttribute("auto-rotate");
-    model.cameraOrbit = startOrbit;
+    model.cameraOrbit = START_ORBIT;
     settleOnRest(model, true);
     model.cameraTarget = "auto auto auto";
     model.fieldOfView = "auto";
@@ -208,7 +206,7 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
     return () => box.removeEventListener("touchmove", block);
   }, [touchUnlocked]);
 
-  // A short, slow opening sweep for a bit of life, then the table comes to rest and stays put.
+  // A short, slow opening sweep for a bit of life, then the table settles back on START_ORBIT and stays put.
   // Touching the model cancels it so it never fights the viewer, and reduced-motion users skip it entirely.
   useEffect(() => {
     const model = modelRef.current;
@@ -431,7 +429,7 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
                       auto-rotate-delay="0"
                       rotation-per-second={`${SWEEP_DEG_PER_SECOND}deg`}
                       camera-controls=""
-                      camera-orbit={startOrbit}
+                      camera-orbit={START_ORBIT}
                       interaction-prompt="none"
                       shadow-intensity="1.2"
                       shadow-softness="0.8"
