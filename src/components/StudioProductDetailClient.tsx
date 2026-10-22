@@ -44,7 +44,7 @@ const MODEL_VIEWER_SCRIPT_ID = "model-viewer-script";
 // with its long side facing the viewer. That resting angle is where it should always end up: after the sweep, after Reset view,
 // and if the visitor scrolls away before the sweep has finished.
 const SWEEP_DEG_PER_SECOND = 12;
-const REST_DEGREES = 60;
+const REST_DEGREES = 91;
 const REST_RADIANS = (REST_DEGREES * Math.PI) / 180;
 const SWEEP_MAX_MS = 9000;
 
