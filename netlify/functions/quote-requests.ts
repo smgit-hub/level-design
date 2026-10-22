@@ -1,7 +1,7 @@
 import { isRequestId, json, requestStore, sameSecret, type QuoteRequest } from "./lib/quote-requests";
 
 /**
- * Private, for /admin/quote/: look at delivery quote requests (one by id, or the open ones) and mark them done.
+ * Private, for /admin/quote/: look at delivery quote requests (one by id, or the open ones), mark them done, or delete them.
  * Needs QUOTE_ADMIN_KEY, the passphrase typed on the page.
  */
 
@@ -11,7 +11,7 @@ export async function handler(event: { httpMethod: string; body: string | null; 
   const adminKey = process.env.QUOTE_ADMIN_KEY;
   if (!adminKey) return json(500, { error: "The quote tool is not configured." });
 
-  let input: { key?: string; action?: string; id?: string; status?: string };
+  let input: { key?: string; action?: string; id?: string; status?: string; includeDone?: boolean };
   try {
     input = JSON.parse(event.body || "{}");
   } catch {
@@ -30,7 +30,7 @@ export async function handler(event: { httpMethod: string; body: string | null; 
       const { blobs } = await store.list({ prefix: "req/" });
       const all = (await Promise.all(blobs.map((b) => store.get(b.key, { type: "json" }).catch(() => null)))) as (QuoteRequest | null)[];
       const open = all
-        .filter((r): r is QuoteRequest => !!r && r.status !== "done")
+        .filter((r): r is QuoteRequest => !!r && (input.includeDone === true || r.status !== "done"))
         .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
         .slice(0, 50);
       return json(200, { requests: open });
@@ -42,6 +42,11 @@ export async function handler(event: { httpMethod: string; body: string | null; 
     if (!request) return json(404, { error: "That request wasn't found. It may have been removed." });
 
     if (input.action === "get") return json(200, { request });
+
+    if (input.action === "delete") {
+      await store.delete(key);
+      return json(200, { deleted: true });
+    }
 
     if (input.action === "mark") {
       if (input.status !== "new" && input.status !== "quoted" && input.status !== "done") return json(400, { error: "Unknown status." });

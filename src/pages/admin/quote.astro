@@ -24,6 +24,7 @@ const products = allStudioProducts.map((p) => ({
         </div>
         <div class="flex flex-wrap items-center gap-3">
           <button type="button" id="q-load-list" class="px-5 py-2.5 border border-[#3d4f47] text-[#3d4f47] rounded-full text-sm font-medium hover:bg-[#3d4f47] hover:text-white cursor-pointer">Show open quote requests</button>
+          <label class="flex items-center gap-2 text-sm text-[#5a6b64]"><input id="q-include-done" type="checkbox" class="rounded" /> Include done</label>
           <span id="q-list-status" class="text-sm text-[#5a6b64]" role="status"></span>
         </div>
         <ul id="q-list" class="space-y-2"></ul>
@@ -35,6 +36,7 @@ const products = allStudioProducts.map((p) => ({
         <div class="flex flex-wrap gap-3">
           <button type="button" id="q-load-request" class="hidden px-4 py-2 bg-[#3d4f47] text-white rounded-full text-sm font-medium hover:bg-[#2d3f37] cursor-pointer">Load this request</button>
           <button type="button" id="q-mark-done" class="hidden px-4 py-2 border border-[#3d4f47] text-[#3d4f47] rounded-full text-sm font-medium hover:bg-[#3d4f47] hover:text-white cursor-pointer">Mark as done</button>
+          <button type="button" id="q-delete-request" class="hidden px-4 py-2 border border-red-700 text-red-700 rounded-full text-sm font-medium hover:bg-red-700 hover:text-white cursor-pointer">Delete this request</button>
           <button type="button" id="q-clear-request" class="hidden px-4 py-2 text-[#5a6b64] underline underline-offset-2 text-sm cursor-pointer">Clear</button>
         </div>
       </div>
@@ -178,6 +180,7 @@ const products = allStudioProducts.map((p) => ({
     const loadBtn = $('q-load-request');
     const doneBtn = $('q-mark-done');
     const clearBtn = $('q-clear-request');
+    const deleteBtn = $('q-delete-request');
 
     const callRequests = async (body: Record<string, unknown>) => {
       if (!keyEl.value) throw new Error('Enter your passphrase first.');
@@ -196,13 +199,14 @@ const products = allStudioProducts.map((p) => ({
       return data;
     };
 
-    const showBanner = (text: string, message = '', buttons: { load?: boolean; done?: boolean; clear?: boolean } = {}) => {
+    const showBanner = (text: string, message = '', buttons: { load?: boolean; done?: boolean; clear?: boolean; remove?: boolean } = {}) => {
       bannerEl.classList.remove('hidden');
       $('q-banner-text').textContent = text;
       $('q-banner-message').textContent = message;
       loadBtn.classList.toggle('hidden', !buttons.load);
       doneBtn.classList.toggle('hidden', !buttons.done);
       clearBtn.classList.toggle('hidden', !buttons.clear);
+      deleteBtn.classList.toggle('hidden', !buttons.remove);
     };
 
     const applyRequest = (r: QuoteRequestData) => {
@@ -216,7 +220,7 @@ const products = allStudioProducts.map((p) => ({
       showTotal();
       const contact = [r.email, r.phone].filter(Boolean).join(' · ');
       const status = r.status === 'quoted' ? ' (already quoted)' : '';
-      showBanner(`Quote request from ${r.name}${status}: ${r.order} to ${r.postcode}. ${contact}`, r.message ? `"${r.message}"` : '', { done: true, clear: true });
+      showBanner(`Quote request from ${r.name}${status}: ${r.order} to ${r.postcode}. ${contact}`, r.message ? `"${r.message}"` : '', { done: r.status !== 'done', clear: true, remove: true });
       deliveryEl.focus();
       form.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
@@ -234,7 +238,7 @@ const products = allStudioProducts.map((p) => ({
       listStatus.textContent = 'Loading…';
       listEl.innerHTML = '';
       try {
-        const data = await callRequests({ action: 'list' });
+        const data = await callRequests({ action: 'list', includeDone: $<HTMLInputElement>('q-include-done').checked });
         const requests: QuoteRequestData[] = data.requests || [];
         listStatus.textContent = requests.length ? `${requests.length} open` : 'No open requests.';
         requests.forEach((r) => {
@@ -243,7 +247,7 @@ const products = allStudioProducts.map((p) => ({
           button.type = 'button';
           button.className = 'w-full text-left px-4 py-3 rounded-lg border border-[#e8dcc8] hover:border-[#c8956a] text-sm text-[#3d4f47] cursor-pointer';
           const when = new Date(r.createdAt).toLocaleString('en-AU', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
-          button.textContent = `${when}: ${r.name}, ${r.order} to ${r.postcode}${r.status === 'quoted' ? ' (quoted)' : ''}`;
+          button.textContent = `${when}: ${r.name}, ${r.order} to ${r.postcode}${r.status === 'quoted' ? ' (quoted)' : r.status === 'done' ? ' (done)' : ''}`;
           button.dataset.requestId = r.id;
           button.addEventListener('click', () => applyRequest(r));
           li.appendChild(button);
@@ -262,6 +266,18 @@ const products = allStudioProducts.map((p) => ({
     clearBtn.addEventListener('click', () => {
       currentRequestId = null;
       bannerEl.classList.add('hidden');
+    });
+    deleteBtn.addEventListener('click', async () => {
+      if (!currentRequestId) return;
+      if (!confirm('Permanently delete this quote request? This cannot be undone.')) return;
+      try {
+        await callRequests({ action: 'delete', id: currentRequestId });
+        showBanner('Deleted.', '', { clear: true });
+        listEl.querySelector(`[data-request-id="${currentRequestId}"]`)?.parentElement?.remove();
+        currentRequestId = null;
+      } catch (error) {
+        showBanner(error instanceof Error ? error.message : 'Something went wrong.', '', { done: true, clear: true, remove: true });
+      }
     });
     doneBtn.addEventListener('click', async () => {
       if (!currentRequestId) return;
