@@ -45,7 +45,7 @@ const products = allStudioProducts.map((p) => ({
           </div>
         </div>
         <div>
-          <label for="q-for" class="block text-sm font-medium text-[#3d4f47] mb-2">Customer name (optional, for your records)</label>
+          <label for="q-for" class="block text-sm font-medium text-[#3d4f47] mb-2">Customer name (optional, used in the email)</label>
           <input id="q-for" type="text" maxlength="80" class="w-full px-4 py-3 border border-[#e8dcc8] rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#c8956a]" />
         </div>
         <p id="q-total" class="text-sm text-[#5a6b64]" aria-live="polite"></p>
@@ -60,8 +60,22 @@ const products = allStudioProducts.map((p) => ({
           <label for="q-link" class="block text-sm font-medium text-[#3d4f47] mb-2">Payment link</label>
           <input id="q-link" type="text" readonly class="w-full px-4 py-3 border border-[#e8dcc8] rounded-lg bg-[#f5f1e8] text-sm" />
         </div>
+        <div class="rounded-xl bg-[#f5f1e8] p-5 space-y-4">
+          <p class="text-sm font-medium text-[#3d4f47]">Email the quote to the customer</p>
+          <p class="text-xs text-[#5a6b64]">Sent from Level Design with the quote, the pay button and what happens next. A copy comes to the order inbox, and their replies go there too.</p>
+          <div>
+            <label for="q-email" class="block text-sm font-medium text-[#3d4f47] mb-2">Customer email</label>
+            <input id="q-email" type="email" autocomplete="off" class="w-full px-4 py-3 border border-[#e8dcc8] rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#c8956a]" />
+          </div>
+          <div>
+            <label for="q-note" class="block text-sm font-medium text-[#3d4f47] mb-2">Personal note (optional)</label>
+            <textarea id="q-note" rows="3" maxlength="600" placeholder="e.g. Lovely to chat today. Delivery to you is a little further, so this is the best price I can offer." class="w-full px-4 py-3 border border-[#e8dcc8] rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#c8956a]"></textarea>
+          </div>
+          <p id="q-send-status" role="status" class="text-sm hidden"></p>
+          <button type="button" id="q-send" class="px-5 py-2.5 bg-[#c8956a] text-white rounded-full text-sm font-medium hover:bg-[#b8856a] disabled:opacity-60 cursor-pointer">Send email to customer</button>
+        </div>
         <div>
-          <label for="q-reply" class="block text-sm font-medium text-[#3d4f47] mb-2">Draft reply</label>
+          <label for="q-reply" class="block text-sm font-medium text-[#3d4f47] mb-2">Or copy a draft reply to send yourself</label>
           <textarea id="q-reply" rows="8" readonly class="w-full px-4 py-3 border border-[#e8dcc8] rounded-lg bg-[#f5f1e8] text-sm"></textarea>
         </div>
         <div class="flex flex-wrap gap-3">
@@ -95,6 +109,7 @@ const products = allStudioProducts.map((p) => ({
     const errorEl = $('q-error');
     const submitEl = $<HTMLButtonElement>('q-submit');
     const resultEl = $('q-result');
+    let lastQuote: { url: string; productId: string; sizeId: string; deliveryDollars: string; postcode: string } | null = null;
 
     try {
       keyEl.value = sessionStorage.getItem('ld-quote-key') || '';
@@ -166,6 +181,9 @@ const products = allStudioProducts.map((p) => ({
         mode.textContent = data.live ? 'Live link: real payments' : 'Test link: Stripe test mode only';
         mode.className = `text-xs font-medium uppercase tracking-wide ${data.live ? 'text-[#3d4f47]' : 'text-[#a15c1f]'}`;
         $<HTMLInputElement>('q-link').value = data.url;
+        lastQuote = { url: data.url, productId: productEl.value, sizeId: sizeEl.value, deliveryDollars: deliveryEl.value, postcode };
+        $('q-send-status').classList.add('hidden');
+        $<HTMLButtonElement>('q-send').textContent = 'Send email to customer';
         $<HTMLTextAreaElement>('q-reply').value =
           `Hi${name ? ` ${name.split(' ')[0]}` : ''},\n\n` +
           `Thanks for your interest in the ${data.order}. Delivery${postcode ? ` to ${postcode}` : ''}, including assembly in your room, is ${money(data.deliveryCents)}, which makes the total ${money(data.totalCents)}.\n\n` +
@@ -179,6 +197,43 @@ const products = allStudioProducts.map((p) => ({
       } finally {
         submitEl.disabled = false;
         submitEl.textContent = 'Create payment link';
+      }
+    });
+
+    const sendEl = $<HTMLButtonElement>('q-send');
+    const sendStatus = $('q-send-status');
+    sendEl.addEventListener('click', async () => {
+      if (!lastQuote) return;
+      const toEmail = $<HTMLInputElement>('q-email').value.trim();
+      const show = (message: string, ok: boolean) => {
+        sendStatus.textContent = message;
+        sendStatus.className = `text-sm ${ok ? 'text-[#3d4f47]' : 'text-red-700'}`;
+      };
+      if (!toEmail) return show("Enter the customer's email address first.", false);
+      if (!confirm(`Email this quote to ${toEmail}?`)) return;
+      sendEl.disabled = true;
+      sendEl.textContent = 'Sending…';
+      try {
+        const response = await fetch('/.netlify/functions/send-quote-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            key: keyEl.value,
+            ...lastQuote,
+            toEmail,
+            toName: $<HTMLInputElement>('q-for').value,
+            note: $<HTMLTextAreaElement>('q-note').value,
+          }),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || 'Something went wrong.');
+        show(`Sent to ${data.to}. A copy went to ${data.copyTo}.`, true);
+        sendEl.textContent = 'Send again';
+      } catch (error) {
+        show(error instanceof Error ? error.message : 'Something went wrong.', false);
+        sendEl.textContent = 'Send email to customer';
+      } finally {
+        sendEl.disabled = false;
       }
     });
 
