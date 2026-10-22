@@ -371,14 +371,16 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
                       loading="eager"
                       style={{ width: "100%", height: "100%", background: "transparent" }}
                     >
-                      <div slot="poster" style={{ position: "relative", width: "100%", height: "100%", background: "#3d4f47" }}>
-                        <img
-                          src={product.images.gallery[0] ?? product.images.main}
-                          alt=""
-                          {...{ fetchpriority: "high" }}
-                          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.55)" }}
-                        />
-                        <span style={{ position: "absolute", left: 0, right: 0, bottom: 16, textAlign: "center", color: "#f5f1e8", fontSize: 13, letterSpacing: "0.1em" }}>Loading 3D model…</span>
+                      {/* Shown while the 3D viewer loads: the same dark green the viewer sits on, so nothing else flashes up first. */}
+                      <div slot="poster" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%", background: "#3d4f47" }}>
+                        <style>{`@keyframes ld-model-spin{to{transform:rotate(360deg)}} @media (prefers-reduced-motion: reduce){.ld-model-spinner{animation:none!important}}`}</style>
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+                          <svg className="ld-model-spinner" style={{ width: 40, height: 40, animation: "ld-model-spin 1s linear infinite" }} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10" stroke="#c8956a" strokeWidth="2" strokeOpacity="0.3" />
+                            <path d="M12 2a10 10 0 0 1 10 10" stroke="#c8956a" strokeWidth="2" strokeLinecap="round" />
+                          </svg>
+                          <span style={{ color: "#e8dcc8", fontSize: 13, letterSpacing: "0.1em", opacity: 0.7 }}>Loading 3D model…</span>
+                        </div>
                       </div>
                     </model-viewer>
                   ) : (
