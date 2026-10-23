@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import CustomForm from '../components/CustomForm';
 import { Image } from 'astro:assets';
 import SectionHeader from '../components/SectionHeader.astro';
-import ModelViewer from '../components/ModelViewer.astro';
+import TableViewer from '../components/TableViewer.astro';
 import FaqAccordion from '../components/FaqAccordion.astro';
 import customImg from '../assets/images/custom/level-design-custom-furniture.webp';
 import { products } from '../data/signature-products';
@@ -234,7 +234,7 @@ const serviceSchema = {
 
           <!-- 3D Model viewer -->
           <div class="reveal-left order-2 lg:order-1">
-            <ModelViewer src="/models/signature/pillar-table-model-v2.glb" />
+            <TableViewer src="/models/signature/pillar-table-model-v2.glb" />
           </div>
 
           <!-- Content -->
