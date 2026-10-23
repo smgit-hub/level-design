@@ -1,25 +1,31 @@
 ---
 /**
- * The 3D viewer on the Custom page. It has the same controls as the Studio table pages: a hint label at the top, a "Reset view"
- * button that appears once the visitor has moved the table, double-click to reset, and on touch screens a "Tap to explore in 3D"
- * cover (so swiping scrolls the page) with a "Done" button once it is unlocked.
+ * The 3D viewer on the Custom page. It behaves exactly like the viewers on the Studio table pages
+ * (src/components/StudioProductDetailClient.tsx): the same lighting and camera, the same slow opening turn that comes to rest on the
+ * same angle (also when scrolled away mid-turn and on "Reset view"), and the same controls: a hint label, a "Reset view" button
+ * once the table has been moved, double-click to reset, and on touch screens a "Tap to explore in 3D" cover with a "Done" button.
+ * If the Studio viewer's movement or angles change, change them here too.
  */
 interface Props {
   src: string;
+  /** How close the camera sits, as a percentage of the automatic framing (the Studio long tables use 82). */
+  framing?: number;
 }
-const { src } = Astro.props;
+const { src, framing = 82 } = Astro.props;
 ---
-<div class="model-viewer-wrapper relative rounded-2xl overflow-hidden" style="background: #3d4f47;">
+<div class="model-viewer-wrapper relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-[5/4]" style="background: #3d4f47;" data-framing={framing}>
   <model-viewer
     src={src}
-    auto-rotate
     auto-rotate-delay="0"
-    rotation-per-second="20deg"
+    rotation-per-second="12deg"
     camera-controls
+    camera-orbit={`-63deg 71deg ${framing}%`}
+    interaction-prompt="none"
     shadow-intensity="1.2"
     shadow-softness="0.8"
-    exposure="1.1"
-    style="width:100%; height:480px; background:transparent; --progress-bar-color: transparent; --progress-bar-height: 0px;"
+    exposure="2.4"
+    environment-image="/environments/studio-light.jpg"
+    style="width:100%; height:100%; background:transparent; --progress-bar-color: transparent; --progress-bar-height: 0px;"
     loading="lazy"
   >
     <div slot="poster" style="display:flex; align-items:center; justify-content:center; width:100%; height:100%; background:#3d4f47;">
@@ -52,36 +58,96 @@ const { src } = Astro.props;
       var reset = wrapper.querySelector('[data-reset]');
       var done = wrapper.querySelector('[data-done]');
       var cover = wrapper.querySelector('[data-cover]');
+      var START_ORBIT = '-63deg 71deg ' + wrapper.getAttribute('data-framing') + '%';
+      // Same movement as the Studio viewers: a slow turn (12 degrees a second) that comes to rest REST_DEGREES round.
+      var REST_RADIANS = (91 * Math.PI) / 180;
+      var SWEEP_MAX_MS = 9000;
       var isTouch = window.matchMedia('(pointer: coarse)').matches;
       var unlocked = !isTouch;
-      var home = null;
+      var visible = true;
+      var started = false;
+      var sweeping = false;
+      var sweepTimer = null;
+      var progress = null;
+      var readyCheck = null;
 
       function setHint() {
         hint.textContent = isTouch ? (unlocked ? 'Drag to rotate · Pinch to zoom' : 'Tap to explore in 3D') : 'Drag to rotate · Scroll to zoom';
       }
 
-      // Remember the opening view so "Reset view" can return to it (read once the model is ready; the load event isn't always sent).
-      var waited = 0;
-      var homeTimer = setInterval(function () {
-        waited += 150;
-        if (model.loaded && typeof model.getCameraOrbit === 'function') {
-          var o = model.getCameraOrbit();
-          home = o.theta + 'rad ' + o.phi + 'rad ' + o.radius + 'm';
-          clearInterval(homeTimer);
-        } else if (waited > 30000) {
-          clearInterval(homeTimer);
+      // The turn is model-viewer's own "turntable" angle, which it pauses while the viewer is off-screen. Put the table on the
+      // resting angle: straight away when asked (for example while out of sight), otherwise eased.
+      function settleOnRest(animate) {
+        if (!model.resetTurntableRotation) return;
+        var from = model.turntableRotation || 0;
+        if (!animate || Math.abs(REST_RADIANS - from) < 0.03) {
+          model.resetTurntableRotation(REST_RADIANS);
+          return;
         }
-      }, 150);
+        var begin = performance.now();
+        (function step(now) {
+          var t = Math.min(1, (now - begin) / 800);
+          var eased = -(Math.cos(Math.PI * t) - 1) / 2;
+          model.resetTurntableRotation(from + (REST_RADIANS - from) * eased);
+          if (t < 1) requestAnimationFrame(step);
+        })(begin);
+      }
+
+      function stop(onRest) {
+        clearTimeout(sweepTimer);
+        clearInterval(progress);
+        sweeping = false;
+        model.removeAttribute('auto-rotate');
+        if (onRest) settleOnRest(visible);
+      }
+
+      function start() {
+        if (started || !visible) return;
+        started = true;
+        sweeping = true;
+        model.setAttribute('auto-rotate', '');
+        // Stop as soon as it has turned as far as the resting angle, so it ends there exactly.
+        progress = setInterval(function () {
+          if ((model.turntableRotation || 0) >= REST_RADIANS) stop(true);
+        }, 30);
+        sweepTimer = setTimeout(function () {
+          var box = wrapper.getBoundingClientRect();
+          visible = box.bottom > 0 && box.top < window.innerHeight;
+          stop(true);
+        }, SWEEP_MAX_MS);
+      }
+
+      // Scrolling away mid-turn puts the table on the resting angle straight away; scrolling to it after it loaded starts the turn.
+      new IntersectionObserver(function (entries) {
+        visible = entries[0].isIntersecting;
+        if (!visible && sweeping) stop(true);
+        if (visible && !started && model.loaded) start();
+      }).observe(wrapper);
+
+      // model-viewer doesn't always announce a model that is already cached, so readiness is checked directly.
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        var waited = 0;
+        readyCheck = setInterval(function () {
+          waited += 100;
+          if (started || waited > 30000) return clearInterval(readyCheck);
+          if (model.loaded && visible) start();
+        }, 100);
+      }
 
       function resetView() {
-        if (home) model.cameraOrbit = home;
+        stop(false);
+        model.cameraOrbit = START_ORBIT;
+        settleOnRest(true);
         model.cameraTarget = 'auto auto auto';
         model.fieldOfView = 'auto';
         reset.style.display = 'none';
       }
 
       model.addEventListener('camera-change', function (e) {
-        if (e.detail && e.detail.source === 'user-interaction') reset.style.display = 'inline-flex';
+        if (e.detail && e.detail.source === 'user-interaction') {
+          stop(false);
+          reset.style.display = 'inline-flex';
+        }
       });
       reset.addEventListener('click', resetView);
       model.addEventListener('dblclick', resetView);
