@@ -173,7 +173,7 @@ export const studioProducts: Record<string, StudioProduct> = {
         stripeLookupKey: "studio_pill_2350x1150",
       },
     ],
-    model: "/models/studio/pill.glb",
+    model: "/models/studio/pill-v2.glb",
   },
   round: {
     id: "round",
@@ -225,7 +225,7 @@ export const studioProducts: Record<string, StudioProduct> = {
         stripeLookupKey: "studio_round_1500",
       },
     ],
-    model: "/models/studio/round.glb",
+    model: "/models/studio/round-v2.glb",
   },
   curve: {
     id: "curve",
@@ -277,7 +277,7 @@ export const studioProducts: Record<string, StudioProduct> = {
         stripeLookupKey: "studio_curve_2350x1150",
       },
     ],
-    model: "/models/studio/curve.glb",
+    model: "/models/studio/curve-v2.glb",
   },
 };
 
