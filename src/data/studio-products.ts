@@ -84,7 +84,7 @@ export const studioProducts: Record<string, StudioProduct> = {
     },
     images: {
       main: "/images/studio/line/level-design-line-studio-dining-table-main.webp",
-      gallery: ["/images/studio/line/level-design-line-studio-dining-table-lifestyle.webp"],
+      gallery: ["/images/studio/line/level-design-line-studio-dining-table-lifestyle-v2.webp"],
     },
     sizes: [
       {
@@ -147,7 +147,7 @@ export const studioProducts: Record<string, StudioProduct> = {
     },
     images: {
       main: "/images/studio/pill/level-design-pill-studio-dining-table-main.webp",
-      gallery: ["/images/studio/pill/level-design-pill-studio-dining-table-lifestyle.webp"],
+      gallery: ["/images/studio/pill/level-design-pill-studio-dining-table-lifestyle-v2.webp"],
     },
     sizes: [
       {
@@ -199,7 +199,7 @@ export const studioProducts: Record<string, StudioProduct> = {
     },
     images: {
       main: "/images/studio/round/level-design-round-studio-dining-table-main.webp",
-      gallery: ["/images/studio/round/level-design-round-studio-dining-table-lifestyle.webp"],
+      gallery: ["/images/studio/round/level-design-round-studio-dining-table-lifestyle-v2.webp"],
     },
     sizes: [
       {
@@ -251,7 +251,7 @@ export const studioProducts: Record<string, StudioProduct> = {
     },
     images: {
       main: "/images/studio/curve/level-design-curve-studio-dining-table-main.webp",
-      gallery: ["/images/studio/curve/level-design-curve-studio-dining-table-lifestyle.webp"],
+      gallery: ["/images/studio/curve/level-design-curve-studio-dining-table-lifestyle-v2.webp"],
     },
     sizes: [
       {
