@@ -21,13 +21,13 @@ export const clientProjects: ClientProject[] = [
     pieces: [
       {
         name: "Sideboard",
-        model: "/models/clients/nadine-af535bfe/sideboard.glb",
-        details: { Timber: "American Oak", Finish: "Clear Matte", Size: "900mm W × 450mm D × 1400mm H" },
+        model: "/models/clients/nadine-af535bfe/sideboard-v2.glb",
+        details: { Timber: "American Oak", Finish: "Clear Matte", Size: "1000mm W × 450mm D × 1400mm H" },
       },
       {
         name: "Bedside Table",
-        model: "/models/clients/nadine-af535bfe/bedside.glb",
-        details: { Timber: "American Oak", Finish: "Clear Matte", Size: "500mm W × 450mm D × 500mm H" },
+        model: "/models/clients/nadine-af535bfe/bedside-v2.glb",
+        details: { Timber: "American Oak", Finish: "Clear Matte", Size: "500mm W × 400mm D × 500mm H" },
       },
     ],
   },
