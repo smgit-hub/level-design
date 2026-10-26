@@ -51,6 +51,19 @@ const { project } = Astro.props;
                   ))}
                 </div>
               )}
+              {piece.drawing && (
+                <div class="mt-4 p-4 md:p-6 bg-white rounded-xl">
+                  <div class="flex justify-between items-center gap-4 mb-4">
+                    <h3 class="font-medium text-[#3d4f47]">Dimensions</h3>
+                    {piece.drawingPdf && (
+                      <a href={piece.drawingPdf} target="_blank" rel="noopener" class="text-sm text-[#c8956a] hover:text-[#3d4f47] transition-colors">Download PDF</a>
+                    )}
+                  </div>
+                  <a href={piece.drawingPdf ?? piece.drawing} target="_blank" rel="noopener">
+                    <img src={piece.drawing} alt={`Dimension drawing of the ${(piece.name ?? `piece ${i + 1}`).toLowerCase()}`} width="1191" height="842" loading="lazy" class="w-full h-auto" />
+                  </a>
+                </div>
+              )}
             </div>
           );
         })}
