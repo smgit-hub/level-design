@@ -53,3 +53,37 @@
 .nav-slide-down {
   animation: slideDown 0.6s ease forwards;
 }
+
+/* ── Accessible colours ──
+   The brand copper (#c8956a) is too light for small text on cream or white (about 2.5:1) and for white text on a copper
+   button (2.6:1). WCAG AA needs 4.5:1, so on those two uses it is deepened to a bronze, while dark sections keep a light
+   copper that reads well on green. Everything below is an override: delete this block to go back to the original colours. */
+:root {
+  --copper-text: #94602f;
+  --copper-text-hover: #7f5226;
+  --copper-on-dark: #d9b48d;
+  --muted-text: #5f6e67;
+}
+.text-\[\#c8956a\] { color: var(--copper-text); }
+.bg-\[\#c8956a\].text-white { background-color: var(--copper-text); }
+.bg-\[\#c8956a\].text-white:hover,
+.bg-\[\#c8956a\].text-white:focus-visible { background-color: var(--copper-text-hover); }
+.text-\[\#8a9b94\] { color: var(--muted-text); }
+:is(
+  [class*="bg-[#3d4f47]"], [class*="from-[#3d4f47]"], [class*="bg-[#2d3f37]"],
+  [class*="bg-[#1f2f29]"], [class*="from-[#1a241f]"], footer
+) .text-\[\#c8956a\] {
+  color: var(--copper-on-dark);
+}
+:is([class*="bg-[#3d4f47]"], [class*="from-[#3d4f47]"], [class*="bg-[#2d3f37]"], footer) .text-\[\#8a9b94\] {
+  color: #b8ac98;
+}
+
+/* ── Respect "reduce motion" ── */
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal-left, .reveal-right { opacity: 1; transform: none; transition: none; }
+  .hero-in { animation: none; opacity: 1; }
+  .scroll-bounce, .nav-slide-down { animation: none; }
+  .btn-scale:hover, .btn-scale:active { transform: none; }
+  html { scroll-behavior: auto; }
+}

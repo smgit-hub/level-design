@@ -3,26 +3,32 @@ import Navigation from '../components/Navigation';
 import Footer from '../components/Footer.astro';
 import { ViewTransitions } from 'astro:transitions';
 import '../styles/global.css';
+import '../styles/design.css';
+import '../styles/motion.css';
 
 interface Props {
   title?: string;
   description?: string;
   preloadImage?: string;
+  /** Phone-sized version of preloadImage, when the page serves a different image to phones. */
+  preloadImageMobile?: string;
+  /** Keeps the page out of search results (order confirmations, etc.). */
+  noindex?: boolean;
   /** Link preview image. Pass false to leave it out (e.g. client pages, where the site hero is misleading). */
   ogImage?: string | false;
   ogType?: string;
   schema?: Record<string, unknown> | Record<string, unknown>[];
-  noindex?: boolean;
 }
 
 const {
   title = 'Level Design',
   description = 'Handcrafted timber dining tables designed and made in Melbourne, Australia. 9 signature designs, fully customisable to your space.',
   preloadImage,
+  preloadImageMobile,
+  noindex = false,
   ogImage = '/images/home/level-design-handcrafted-furniture-hero.webp',
   ogType = 'website',
   schema,
-  noindex = false,
 } = Astro.props;
 
 const currentPath = Astro.url.pathname;
@@ -36,7 +42,7 @@ const baseSchema = {
   '@type': 'LocalBusiness',
   '@id': businessSchemaId,
   name: 'Level Design',
-  legalName: 'Level Design',
+  legalName: 'Level Design Australia Pty Ltd',
   alternateName: 'Level Design Melbourne',
   url: siteURL.toString(),
   image: new URL('/images/home/level-design-handcrafted-furniture-hero.webp', siteURL).toString(),
@@ -44,6 +50,8 @@ const baseSchema = {
   description,
   areaServed: [
     { '@type': 'City', name: 'Melbourne' },
+    { '@type': 'AdministrativeArea', name: 'Bass Coast' },
+    { '@type': 'Place', name: 'Phillip Island' },
     { '@type': 'AdministrativeArea', name: 'Victoria' },
     { '@type': 'Country', name: 'Australia' },
   ],
@@ -130,9 +138,14 @@ const schemaNodes = [baseSchema, websiteSchema, ...(Array.isArray(schema) ? sche
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     {ogImageURL && <meta name="twitter:image" content={ogImageURL} />}
+    <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/dm-sans.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    {preloadImage && <link rel="preload" as="image" href={preloadImage} />}
-    <link rel="apple-touch-icon" href="/favicon-circle.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+    {preloadImage && <link rel="preload" as="image" href={preloadImage} media={preloadImageMobile ? '(min-width: 768px)' : undefined} fetchpriority="high" />}
+    {preloadImageMobile && <link rel="preload" as="image" href={preloadImageMobile} media="(max-width: 767px)" fetchpriority="high" />}
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="me" href={googleBusinessProfileURL} />
     {schemaNodes.map((node) => (
       <script type="application/ld+json" set:html={JSON.stringify(node)} />
@@ -148,9 +161,10 @@ const schemaNodes = [baseSchema, websiteSchema, ...(Array.isArray(schema) ? sche
     </script>
   </head>
   <body class="bg-[#f5f1e8] text-[#3d4f47]">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-full focus:bg-white focus:text-[#3d4f47] focus:shadow-lg">Skip to main content</a>
     <Navigation client:load currentPath={currentPath} transition:persist />
     <div class="overflow-x-hidden">
-      <main>
+      <main id="main" tabindex="-1" class="outline-none">
         <slot />
       </main>
       <Footer />
@@ -170,24 +184,27 @@ const schemaNodes = [baseSchema, websiteSchema, ...(Array.isArray(schema) ? sche
           }
         });
       },
-      { threshold: 0.12 }
+      // Reveal as soon as a block starts to enter, a little before the bottom edge so the movement is noticed
+      { threshold: 0, rootMargin: '0px 0px -6% 0px' }
     );
     document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach((el) => {
-      observer.observe(el);
+      // Anything already on screen when the page loads appears straight away, so the first screen is never blank
+      const { top, bottom } = el.getBoundingClientRect();
+      if (top < window.innerHeight && bottom > 0) el.classList.add('visible');
+      else observer.observe(el);
     });
   }
   document.addEventListener('astro:page-load', initReveal);
 
-  // Hero parallax: fade + scale out as user scrolls past
+  // Hero: report how far the page has scrolled past it (0 to 1); motion.css turns that into a slow drift and a fade
   let heroScrollHandler: (() => void) | null = null;
   function initHeroParallax() {
     if (heroScrollHandler) window.removeEventListener('scroll', heroScrollHandler);
     const hero = document.querySelector<HTMLElement>('.hero-parallax');
-    if (!hero) return;
+    if (!hero || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     heroScrollHandler = () => {
       const progress = Math.max(0, Math.min(1, -hero!.getBoundingClientRect().top / hero!.offsetHeight));
-      hero!.style.opacity = String(1 - progress);
-      hero!.style.transform = `scale(${1 - progress * 0.2})`;
+      hero!.style.setProperty('--hero-p', progress.toFixed(3));
     };
     window.addEventListener('scroll', heroScrollHandler, { passive: true });
     heroScrollHandler();

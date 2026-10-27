@@ -1,8 +1,8 @@
-import { motion } from "motion/react";
+import { motion, MotionConfig } from "motion/react";
 import { useState, useEffect, useRef } from "react";
-import { ArrowLeft, ArrowRight, CheckCircle, Ruler, Truck, Shield } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle, ChevronLeft, ChevronRight, Ruler, Truck, Shield } from "lucide-react";
 import { useForm } from "react-hook-form";
-import type { Product } from "../data/products";
+import type { Product } from "../data/signature-products";
 import { trackEvent } from "../lib/analytics";
 import { EMAIL_PATTERN, toFormUrlEncoded } from "../lib/forms";
 
@@ -32,10 +32,11 @@ export default function ProductDetailClient({ product, prev, next }: Props) {
   useEffect(() => {
     if (isSubmitted && successRef.current) {
       successRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      successRef.current.focus({ preventScroll: true });
     }
   }, [isSubmitted]);
   const [selectedImage, setSelectedImage] = useState<string>(product.images.main);
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
     setIsError(false);
@@ -59,20 +60,41 @@ export default function ProductDetailClient({ product, prev, next }: Props) {
   };
 
   return (
+    <MotionConfig reducedMotion="user">
     <div className="bg-[#faf8f5]">
       {/* Product header */}
-      <section className="pt-28 pb-12">
+      <section className="pt-20 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Table nav */}
-          <div className="flex items-center justify-between text-xs text-[#8a9b94] mb-8 mt-2">
-            <a href={`/tables/${prev.id}/`} className="inline-flex items-center gap-1.5 hover:text-[#3d4f47] transition-colors">
-              <ArrowLeft size={12} />
-              {prev.name}
+          {/* Back to the collection, and the tables either side of this one: quiet text links in the header's small capitals.
+              A row of its own across both columns, so the image and the title start at the same height. */}
+          <div className="flex items-center justify-between gap-4 -mt-2 mb-1">
+            <a
+              href="/signature/"
+              className="group inline-flex items-center gap-2 min-h-11 text-xs font-medium uppercase tracking-[0.12em] text-[#5a6b64] hover:text-[#3d4f47] transition-colors duration-200"
+            >
+              <ArrowLeft size={14} aria-hidden="true" className="transition-transform duration-200 group-hover:-translate-x-0.5" />
+              <span>Signature<span className="hidden sm:inline"> Collection</span></span>
             </a>
-            <a href={`/tables/${next.id}/`} className="inline-flex items-center gap-1.5 hover:text-[#3d4f47] transition-colors">
-              {next.name}
-              <ArrowRight size={12} />
-            </a>
+            {prev && next && (
+              <div className="flex items-center gap-5 sm:gap-7">
+                {[
+                  { table: prev, label: "Previous table", Icon: ChevronLeft, side: "previous" },
+                  { table: next, label: "Next table", Icon: ChevronRight, side: "next" },
+                ].map(({ table, label, Icon, side }) => (
+                  <a
+                    key={label}
+                    href={`/signature/${table.id}/`}
+                    aria-label={`${label}: ${table.name}`}
+                    title={`${label}: ${table.name}`}
+                    className="group inline-flex items-center gap-1.5 min-h-11 text-xs font-medium uppercase tracking-[0.12em] text-[#5a6b64] hover:text-[#3d4f47] transition-colors duration-200"
+                  >{/* The table's name shows from small tablets up; on phones the arrow stands alone */}
+                    {side === "previous" && <Icon size={16} aria-hidden="true" className="transition-transform duration-200 group-hover:-translate-x-0.5" />}
+                    <span className="hidden sm:inline">{table.name.replace(/ Table$/, "")}</span>
+                    {side === "next" && <Icon size={16} aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5" />}
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
 
@@ -139,8 +161,8 @@ export default function ProductDetailClient({ product, prev, next }: Props) {
                 <div className="grid grid-cols-3 gap-4 mb-8">
                   {[
                     { icon: Ruler, label: "Custom Sizing" },
-                    { icon: Truck, label: "Free Delivery" },
-                    { icon: Shield, label: "Quality Guaranteed" },
+                    { icon: Truck, label: "Made to Order" },
+                    { icon: Shield, label: "Designed in Melbourne" },
                   ].map(({ icon: Icon, label }) => (
                     <div key={label} className="text-center p-4 bg-white rounded-xl">
                       <Icon className="text-[#c8956a] mx-auto mb-2" size={24} />
@@ -187,7 +209,8 @@ export default function ProductDetailClient({ product, prev, next }: Props) {
       </section>
 
       {/* Specifications */}
-      <section className="py-16 bg-white">
+      {/* White, like the enquiry section below it, so only a little bottom padding here: the two used to stack into a 170px gap */}
+      <section className="pt-[var(--section-y-sm)] pb-4 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -264,82 +287,91 @@ export default function ProductDetailClient({ product, prev, next }: Props) {
                 <div style={{ display: "none" }} aria-hidden="true"><input name="bot-field" tabIndex={-1} autoComplete="off" /></div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-[#3d4f47] mb-2">Name *</label>
-                    <input
+                    <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="enquiry-name">Name *</label>
+                    <input id="enquiry-name" aria-invalid={!!errors.name} aria-describedby={errors.name ? "enquiry-name-error" : undefined}
                       {...register("name", { required: "Name is required" })}
                       type="text"
                       placeholder="Your name"
-                      className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors"
                     />
-                    {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>}
+                    {errors.name && <p id="enquiry-name-error" role="alert" className="mt-1 text-sm text-red-700">{errors.name.message}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#3d4f47] mb-2">Email *</label>
-                    <input
+                    <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="enquiry-email">Email *</label>
+                    <input id="enquiry-email" aria-invalid={!!errors.email} aria-describedby={errors.email ? "enquiry-email-error" : undefined}
                       {...register("email", {
                         required: "Email is required",
                         pattern: { value: EMAIL_PATTERN, message: "Invalid email" },
                       })}
                       type="email"
                       placeholder="your@email.com"
-                      className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors"
                     />
-                    {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
+                    {errors.email && <p id="enquiry-email-error" role="alert" className="mt-1 text-sm text-red-700">{errors.email.message}</p>}
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[#3d4f47] mb-2">Phone (optional)</label>
-                  <input {...register("phone")} type="tel" placeholder="Your phone number"
-                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-[#3d4f47] mb-2">Dimensions & Space Details</label>
-                  <input {...register("dimensions")} type="text" placeholder="e.g. 2400mm × 1000mm, seats 8"
-                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-[#3d4f47] mb-2">Project Details *</label>
-                  <textarea
+                  <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="enquiry-projectDetails">Your message *</label>
+                  <textarea id="enquiry-projectDetails" aria-invalid={!!errors.projectDetails} aria-describedby={errors.projectDetails ? "enquiry-projectDetails-error" : undefined}
                     {...register("projectDetails", { required: "Please tell us about your project" })}
-                    rows={6}
-                    placeholder="Tell us about your space, style preferences, timber choices, and any inspiration..."
-                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors resize-none"
+                    rows={4}
+                    placeholder="Tell us about your space and what you have in mind..."
+                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors resize-none"
                   />
-                  {errors.projectDetails && <p className="mt-1 text-sm text-red-600">{errors.projectDetails.message}</p>}
+                  {errors.projectDetails && <p id="enquiry-projectDetails-error" role="alert" className="mt-1 text-sm text-red-700">{errors.projectDetails.message}</p>}
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-[#3d4f47] mb-2">Timber Preference</label>
-                  <input {...register("timberPreference")} type="text" placeholder="e.g. American Oak, American Ash"
-                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-[#3d4f47] mb-2">Budget Range</label>
-                  <input {...register("budgetRange")} type="text" placeholder="e.g. $5000 – $10000"
-                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-[#3d4f47] mb-2">Timeline</label>
-                  <select {...register("timeline")}
-                    className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none transition-colors">
-                    <option value="">Select timeframe</option>
-                    <option value="urgent">Urgent (within 6 weeks)</option>
-                    <option value="standard">Standard (2–3 months)</option>
-                    <option value="flexible">Flexible (3+ months)</option>
-                    <option value="planning">Just planning</option>
-                  </select>
-                </div>
+                {/* The extra detail is optional, so it is tucked away: most people only need to leave their name, email and a message */}
+                <details className="group rounded-lg border border-[#e8dcc8] bg-white">
+                  <summary className="flex items-center justify-between gap-4 cursor-pointer list-none px-4 py-3 text-sm font-medium text-[#3d4f47] [&::-webkit-details-marker]:hidden">
+                    <span>Add more detail <span className="font-normal text-[#5a6b64]">(optional: phone, size, timber, budget, timing)</span></span>
+                    <svg className="w-4 h-4 flex-shrink-0 text-[#c8956a] transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5" /></svg>
+                  </summary>
+                  <div className="space-y-6 px-4 pb-5 pt-2">
+                          <div>
+                            <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="enquiry-phone">Phone (optional)</label>
+                            <input id="enquiry-phone" {...register("phone")} type="tel" placeholder="Your phone number"
+                              className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors" />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="enquiry-dimensions">Dimensions & Space Details</label>
+                            <input id="enquiry-dimensions" {...register("dimensions")} type="text" placeholder="e.g. 2400mm × 1000mm, seats 8"
+                              className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors" />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="enquiry-timberPreference">Timber Preference</label>
+                            <input id="enquiry-timberPreference" {...register("timberPreference")} type="text" placeholder="e.g. American Oak, American Ash"
+                              className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors" />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="enquiry-budgetRange">Budget Range</label>
+                            <input id="enquiry-budgetRange" {...register("budgetRange")} type="text" placeholder="e.g. $5000 – $10000"
+                              className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors" />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-[#3d4f47] mb-2" htmlFor="enquiry-timeline">Timeline</label>
+                            <select id="enquiry-timeline" {...register("timeline")}
+                              className="w-full px-4 py-3 rounded-lg bg-white border border-[#e8dcc8] text-[#3d4f47] focus:border-[#c8956a] focus:outline-none focus:ring-2 focus:ring-[#c8956a]/30 transition-colors">
+                              <option value="">Select timeframe</option>
+                              <option value="urgent">Urgent (within 6 weeks)</option>
+                              <option value="standard">Standard (2–3 months)</option>
+                              <option value="flexible">Flexible (3+ months)</option>
+                              <option value="planning">Just planning</option>
+                            </select>
+                          </div>
+                  </div>
+                </details>
                 <div className="pt-4">
-                  <button type="submit"
-                    className="w-full px-8 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center justify-center gap-2 cursor-pointer">
+                  <button type="submit" disabled={isSubmitting}
+                    className="w-full px-8 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl font-medium flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">
                     Send Enquiry
                     <ArrowRight size={20} />
                   </button>
                   <p className="text-sm text-[#5a6b64] text-center mt-4">We'll only use this to contact you about your table.</p>
-                  {isError && <p className="text-sm text-red-600 text-center mt-2">Something went wrong — please try again or email us directly at hello@leveldesign.com.au</p>}
+                  {isError && <p className="text-sm text-red-600 text-center mt-2">Something went wrong — please try again in a moment.</p>}
                 </div>
               </form>
             ) : (
-              <div ref={successRef} className="text-center py-12">
+              <div ref={successRef} role="status" tabIndex={-1} className="text-center py-12 outline-none">
                 <div className="w-20 h-20 rounded-full bg-[#c8956a] flex items-center justify-center mx-auto mb-6">
                   <CheckCircle className="text-white" size={40} />
                 </div>
@@ -360,5 +392,6 @@ export default function ProductDetailClient({ product, prev, next }: Props) {
         </div>
       </section>
     </div>
+    </MotionConfig>
   );
 }

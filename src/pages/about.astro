@@ -2,47 +2,47 @@
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
 import SectionHeader from '../components/SectionHeader.astro';
-import IconFeatureGrid from '../components/IconFeatureGrid.astro';
 import aboutImg from '../assets/images/about/level-design-about-image.webp';
 import belleImg from '../assets/images/about/level-design-belle-magazine-custom-table.webp';
 import houzzImg from '../assets/images/about/level-design-houzz-magazine-coffee-table.webp';
+import workshopImg from '../assets/images/about/level-design-workshop.webp';
 
 const valueItems = [
   {
-    title: 'Design expertise',
-    desc: 'We bring over a decade of experience in dining table design — understanding proportion, material, construction, and how tables live in real homes.',
-    svg: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
-  },
-  {
-    title: 'Understanding how people live and entertain',
-    desc: 'The best dining table is designed around the people who use it. We learn how you cook, host, gather, and live — then design accordingly.',
+    title: 'Designed around how you live',
+    desc: "The best table is designed around the people who use it — a bespoke commission shaped around your brief, or a Studio design chosen to fit how you live.",
     svg: '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>',
   },
   {
-    title: 'Heirloom-quality material knowledge',
-    desc: 'Selecting the right timber and finish is a design decision. We guide every client through the options in the context of their interior and their life.',
+    title: 'Honest materials',
+    desc: 'Signature tables are mostly solid timber. Studio tables are made from a mix of real oak veneer and solid oak. We always tell you exactly what a table is made from.',
     svg: '<circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>',
+  },
+  {
+    title: 'Considered detail',
+    desc: 'Overall proportions, edge profile, leg placement and finish are decided with your room in mind, not left to chance.',
+    svg: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
   },
 ];
 ---
 
-<Layout title="About Level Design | Dining Table Design Studio Melbourne" description="Level Design is a dining table design studio based in Melbourne. We design bespoke dining tables around our clients' spaces, lifestyles, and entertaining needs. Featured in Belle and Houzz.">
+<Layout title="About Level Design | Dining Table Design Studio Melbourne" description="Level Design is a Melbourne dining table studio: bespoke commissions plus the Studio Collection. Our bespoke work has been featured in Belle and Houzz.">
   <div>
 
     <!-- Hero -->
-    <section class="relative pt-36 pb-20 min-h-[30rem] flex items-center bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white overflow-hidden">
+    <section class="relative pt-28 pb-12 md:pt-32 md:min-h-[24rem] flex items-center bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white overflow-hidden">
       <div class="absolute inset-0 opacity-10">
         <div class="absolute -top-24 -right-24 w-96 h-96 bg-[#c8956a] rounded-full blur-3xl"></div>
       </div>
       <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl">
           <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">About Level Design</p>
-          <h1 class="hero-in text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">A Dining Table Design Studio Based in Melbourne</h1>
-          <p class="hero-in text-xl text-[#e8dcc8] leading-relaxed mb-8" style="--delay: 0.6s">
-            For more than 10 years, we have focused on designing bespoke dining tables shaped around the spaces, lifestyles, and entertaining habits of the people who commission them.
+          <h1 class="hero-in text-4xl sm:text-5xl md:text-6xl font-serif mb-6" style="--delay: 0.4s">A Dining Table Design Studio Based in Melbourne</h1>
+          <p class="hero-in text-lg sm:text-xl text-[#e8dcc8] leading-relaxed mb-8" style="--delay: 0.6s">
+            For more than 10 years, we've designed bespoke dining tables shaped around the people who commission them — and more recently, the Studio Collection, a small range of ready-to-order tables.
           </p>
           <div class="hero-in flex flex-wrap gap-4" style="--delay: 0.8s">
-            {["10+ years of design expertise", "Featured in Belle and Houzz", "Working with homeowners, designers & architects"].map((item) => (
+            {["10+ years of design expertise", "Bespoke work featured in Belle and Houzz", "Made in Melbourne"].map((item) => (
               <div class="px-4 py-2 bg-[#2d3f37] rounded-full text-sm flex items-center gap-2">
                 <svg class="w-4 h-4 text-[#c8956a]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 {item}
@@ -54,7 +54,7 @@ const valueItems = [
     </section>
 
     <!-- Story -->
-    <section class="py-24 bg-white">
+    <section class="py-16 md:py-24 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div class="reveal-left">
@@ -64,54 +64,60 @@ const valueItems = [
             </h2>
             <div class="space-y-6 text-[#5a6b64] text-lg">
               <p>Level Design is a dining table design studio. We work with clients across Melbourne and Australia to design bespoke dining tables shaped around their specific rooms, the way they live, and the way they entertain.</p>
-              <p>Every project begins with understanding the space — its proportions, its material palette, the people who gather around it, and what they need the table to do. The design follows from that understanding, not from a catalogue.</p>
-              <p>We work directly with homeowners, and regularly collaborate with interior designers and architects who are specifying furniture for design-led residential projects. Our knowledge of scale, proportion, material, and construction allows us to work closely with each client's brief and bring the right result to life.</p>
+              <p>Every bespoke commission begins with understanding the space — its proportions, its material palette, the people who gather around it, and what they need the table to do. The design follows from that understanding, not from a fixed specification.</p>
+              <p>Alongside these bespoke commissions, we also offer the <a href="/studio/" class="text-[#c8956a] hover:underline">Studio Collection</a> — a small range of ready-to-order tables, built to the same standard of craft, with a 6–8 week lead time. Everything is designed in Melbourne and made with American and Australian hardwoods by skilled local craftspeople.</p>
+              <p>We also work closely with interior designers and architects on their clients' projects — <a href="/projects/#designers" class="text-[#c8956a] hover:underline">see how we work together</a>.</p>
             </div>
           </div>
           <div class="reveal-right relative">
             <div class="relative z-10 aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl">
               <Image src={aboutImg} alt="Level Design table in a beautifully designed interior" loading="lazy" class="w-full h-full object-cover" />
             </div>
-            <div class="absolute -bottom-8 -left-8 w-32 h-32 bg-[#c8956a] rounded-2xl"></div>
-            <div class="absolute -top-8 -right-8 w-32 h-32 bg-[#e8dcc8] rounded-2xl"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Workshop -->
+    <section class="py-16 md:py-24 bg-[#f5f1e8]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+          <div class="reveal-left">
+            <div class="aspect-[4/5] max-w-md mx-auto lg:max-w-none rounded-2xl overflow-hidden">
+              <Image src={workshopImg} alt="A Level Design craftsperson machining timber in the Melbourne workshop" loading="lazy" class="w-full h-full object-cover" />
+            </div>
+          </div>
+          <div class="reveal-right">
+            <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Made in Melbourne</p>
+            <h2 class="text-3xl md:text-5xl font-serif text-[#3d4f47] mb-6">Cut, Shaped and Finished in Melbourne</h2>
+            <div class="space-y-5 text-[#5a6b64] text-lg">
+              <p>Every Level Design table is made in Melbourne by skilled craftspeople, from the first cut of the timber to the final finish.</p>
+              <p>Bespoke commissions and Studio tables alike are made to order, so each one is made for you rather than pulled from a shelf.</p>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Values -->
-    <section class="py-24 bg-[#f5f1e8]">
+    <section class="py-16 md:py-24 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           eyebrow="Our Approach"
           title="What Guides Our Work"
-          wrapperClass="text-center mb-16"
-          titleClass="text-4xl md:text-5xl font-serif text-[#3d4f47]"
+          wrapperClass="text-center mb-10 md:mb-14"
+          titleClass="text-3xl md:text-5xl font-serif text-[#3d4f47]"
         />
-        <IconFeatureGrid items={valueItems} />
-      </div>
-    </section>
-
-    <!-- Timeline -->
-    <section class="py-24 bg-white">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeader
-          eyebrow="The Studio"
-          title="10 Years of Designing Around People and Their Spaces"
-          description="A steady commitment to design-led work, close collaboration with each client, and a genuine understanding of how dining tables are used every day."
-          wrapperClass="text-center mb-16"
-          descriptionClass="text-xl text-[#5a6b64] max-w-3xl mx-auto"
-        />
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            { year: "10+", title: "Years of Practice", desc: "Over a decade designing bespoke dining tables around individual spaces and lifestyles." },
-            { year: "Local", title: "Australian Made", desc: "Designed in Melbourne and made with American and Australian hardwoods by skilled local craftspeople." },
-            { year: "Design-led", title: "From First Conversation", desc: "Every project begins with understanding the client's space — not with a catalogue." },
-          ].map((item, i) => (
-            <div class="reveal text-center p-8 rounded-2xl bg-[#f5f1e8] hover:bg-[#e8dcc8] transition-colors duration-300" style={`--delay: ${i * 0.1}s`}>
-              <div class="text-6xl font-serif text-[#c8956a] mb-4">{item.year}</div>
-              <h3 class="text-xl font-semibold text-[#3d4f47] mb-3">{item.title}</h3>
-              <p class="text-[#5a6b64]">{item.desc}</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+          {valueItems.map((item, i) => (
+            <div class="reveal flex gap-4" style={`--delay: ${i * 0.1}s`}>
+              <div class="w-12 h-12 flex-shrink-0 rounded-xl bg-[#3d4f47] flex items-center justify-center">
+                <svg class="text-white w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" set:html={item.svg} />
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold text-[#3d4f47] mb-1">{item.title}</h3>
+                <p class="text-[#5a6b64] text-sm leading-relaxed">{item.desc}</p>
+              </div>
             </div>
           ))}
         </div>
@@ -119,23 +125,23 @@ const valueItems = [
     </section>
 
     <!-- Magazine -->
-    <section class="py-24 bg-[#f5f1e8]">
+    <section class="py-16 md:py-24 bg-[#f5f1e8]">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div class="reveal-left order-2 lg:order-1">
-            <div class="relative h-[30rem]">
-              <!-- Belle landscape, bottom-left -->
-              <div class="absolute bottom-0 left-0 w-80 rounded-xl overflow-hidden shadow-xl z-10">
-                <div class="aspect-[4/3]">
+            <div class="grid grid-cols-2 gap-4 items-start">
+              <figure>
+                <div class="aspect-[4/3] rounded-xl overflow-hidden">
                   <Image src={belleImg} alt="Level Design table featured in Belle magazine" loading="lazy" class="w-full h-full object-cover" />
                 </div>
-              </div>
-              <!-- Houzz portrait, slightly overlapping belle -->
-              <div class="absolute top-0 left-[296px] w-72 rounded-xl overflow-hidden shadow-xl z-20">
-                <div class="aspect-[3/4]">
+                <figcaption class="mt-3 text-xs uppercase tracking-[0.14em] text-[#5a6b64]">Featured in Belle</figcaption>
+              </figure>
+              <figure>
+                <div class="aspect-[3/4] rounded-xl overflow-hidden">
                   <Image src={houzzImg} alt="Level Design table featured in Houzz" loading="lazy" class="w-full h-full object-cover" />
                 </div>
-              </div>
+                <figcaption class="mt-3 text-xs uppercase tracking-[0.14em] text-[#5a6b64]">Featured on Houzz</figcaption>
+              </figure>
             </div>
           </div>
           <div class="reveal-right order-1 lg:order-2">
@@ -148,85 +154,20 @@ const valueItems = [
       </div>
     </section>
 
-    <!-- Hidden form for Netlify detection -->
-    <form name="trade-enquiry" data-netlify="true" data-netlify-honeypot="bot-field" style="display:none">
-      <input name="name" /><input name="email" /><textarea name="message"></textarea>
-    </form>
-
-    <!-- Trade CTA -->
-    <section class="py-24 bg-white">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] rounded-3xl p-12 text-white">
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div class="reveal">
-              <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Designers & Architects</p>
-              <h2 class="text-3xl md:text-4xl font-serif mb-4">A Studio Partner for Design-led Residential Projects</h2>
-              <p class="text-[#e8dcc8] mb-6">We work closely with interior designers and architects to design dining tables that sit precisely within their clients' interiors — aligned with material palettes, circulation plans, and project briefs.</p>
-              <div class="space-y-3">
-                {["Flexible dimensions", "Timber guidance", "Close specification support"].map((item) => (
-                  <div class="flex items-center gap-3">
-                    <svg class="text-[#c8956a] w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div class="reveal bg-white/10 backdrop-blur-sm rounded-2xl p-8" style="--delay: 0.2s">
-              <div id="trade-success" class="text-center py-12" style="display:none">
-                <div class="w-20 h-20 rounded-full bg-[#c8956a] flex items-center justify-center mx-auto mb-6">
-                  <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                </div>
-                <h3 class="text-3xl font-serif mb-4">Thank You!</h3>
-                <p class="text-[#e8dcc8] text-xl mb-8">We've received your enquiry and will get back to you within 2 business days.</p>
-                <button onclick="document.getElementById('trade-success').style.display='none'; document.getElementById('trade-form').style.display='block';" class="text-[#c8956a] hover:underline cursor-pointer">Submit another enquiry</button>
-              </div>
-              <div id="trade-form">
-                <h3 class="text-2xl font-semibold mb-6">Get in Touch</h3>
-                <form id="trade-form-el" class="space-y-4">
-                  <input type="hidden" name="form-name" value="trade-enquiry" />
-                  <div style="display:none"><input name="bot-field" /></div>
-                  <input type="text" name="name" required placeholder="Your name" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:border-[#c8956a] focus:outline-none transition-colors" />
-                  <input type="email" name="email" required placeholder="Email address" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:border-[#c8956a] focus:outline-none transition-colors" />
-                  <textarea name="message" rows="4" placeholder="Tell us about your project" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:border-[#c8956a] focus:outline-none transition-colors resize-none"></textarea>
-                  <button type="submit" class="w-full px-6 py-3 bg-[#c8956a] text-white rounded-lg hover:bg-[#b8856a] transition-colors font-medium cursor-pointer">Start Conversation</button>
-                </form>
-              </div>
-              <script>
-                const tradeForm = document.getElementById('trade-form-el');
-                if (tradeForm instanceof HTMLFormElement) {
-                  tradeForm.addEventListener('submit', async function(e) {
-                  e.preventDefault();
-                  try {
-                    const formData = new FormData(tradeForm);
-                    const formBody = new URLSearchParams(
-                      Array.from(formData.entries()).map(([key, value]) => [key, String(value)])
-                    ).toString();
-                    await fetch('/', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                      body: formBody
-                    });
-                    if (typeof window.gtag === 'function') {
-                      window.gtag('event', 'generate_lead', {
-                        form_name: 'trade_enquiry',
-                        lead_type: 'trade',
-                        page_path: window.location.pathname,
-                      });
-                    }
-                    const successPanel = document.getElementById('trade-success');
-                    const formPanel = document.getElementById('trade-form');
-                    if (successPanel) successPanel.style.display = 'block';
-                    if (formPanel) formPanel.style.display = 'none';
-                    setTimeout(function() {
-                      successPanel?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }, 100);
-                  } catch(err) {
-                    alert('Something went wrong — please try again or email us at hello@leveldesign.com.au');
-                  }
-                  });
-                }
-              </script>
-            </div>
+    <!-- CTA -->
+    <section class="py-16 md:py-24 bg-gradient-to-r from-[#3d4f47] to-[#2d3f37] text-white">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="reveal">
+          <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Work With Us</p>
+          <h2 class="text-3xl md:text-5xl font-serif mb-6">Design a Table for Your Room</h2>
+          <p class="text-xl text-[#e8dcc8] mb-8 max-w-2xl mx-auto">Tell us about your space and we'll design around it, or order a Studio table today.</p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/custom/" class="btn-scale inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300">
+              Begin a Design Consultation →
+            </a>
+            <a href="/studio/" class="btn-scale inline-flex items-center justify-center gap-2 px-8 py-4 bg-transparent border-2 border-white text-white rounded-full hover:bg-white hover:text-[#3d4f47] transition-all duration-300">
+              Shop the Studio Collection
+            </a>
           </div>
         </div>
       </div>

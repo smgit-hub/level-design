@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, MotionConfig } from "motion/react";
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { trackEvent } from "../lib/analytics";
@@ -8,17 +8,31 @@ interface Props {
 }
 
 const navLinks = [
-  { path: "/tables/", label: "Collection" },
-  { path: "/projects/", label: "Projects" },
+  { path: "/signature/", label: "Signature Collection" },
+  { path: "/studio/", label: "Studio Collection", isNew: true },
   { path: "/custom/", label: "Custom Design" },
+  { path: "/projects/", label: "Projects" },
   { path: "/about/", label: "About" },
+  { path: "/contact/", label: "Contact" },
 ];
+
+/** A small "New" tag beside a menu item, in the light copper that reads on the dark header */
+function NewBadge() {
+  return (
+    <span className="ml-2 align-middle rounded-full bg-[#d9b48d] px-1.5 py-0.5 text-[9px] font-bold uppercase leading-none tracking-wide text-[#1f2f29]">
+      New
+    </span>
+  );
+}
 
 export default function Navigation({ currentPath }: Props) {
   const isHomepage = currentPath === "/";
   const [isScrolled, setIsScrolled] = useState(!isHomepage);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activePath, setActivePath] = useState(currentPath);
+  // The site's main action is buying a Studio table, so the header button is the same on every page.
+  const ctaLabel = "Shop Now";
+  const ctaHref = "/studio/";
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.location.pathname !== "/" || window.scrollY > 20);
@@ -29,35 +43,48 @@ export default function Navigation({ currentPath }: Props) {
       setIsMobileMenuOpen(false);
     };
     document.addEventListener("astro:page-load", handlePageLoad);
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsMobileMenuOpen(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("astro:page-load", handlePageLoad);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
   return (
+    <MotionConfig reducedMotion="user">
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled ? "bg-[#3d4f47]/95 backdrop-blur-md shadow-lg" : "bg-transparent"
       }`}
     >
       <div className="w-full px-4 sm:px-6 lg:px-10">
-        <div className="grid grid-cols-[1fr_auto] md:grid-cols-[1fr_auto_1fr] items-center h-16">
+        <div className="grid grid-cols-[1fr_auto] xl:grid-cols-[1fr_auto_1fr] items-center h-16">
 
-          {/* Logo */}
-          <a href="/" aria-label="Level Design home" className="flex items-center gap-3 group min-w-0 justify-self-start">
-            <div className="w-12 h-12 rounded-full bg-[#e8dcc8] flex items-center justify-center p-2 transition-transform duration-300 group-hover:scale-110 flex-shrink-0">
-              <img
-                src="/images/level-logo.png"
-                alt="Level Design"
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <span className="text-white text-lg font-semibold truncate">Level Design</span>
+          {/* Logo: the mark is drawn straight onto the header (masked from the PNG's alpha) in the same off-white as the name, so the lockup is one colour and sits a step above the cream menu links */}
+          <a href="/" aria-label="Level Design home" className="flex items-center gap-2.5 group min-w-0 justify-self-start">
+            <span
+              aria-hidden="true"
+              className="block flex-shrink-0 w-11 h-[31px] bg-[#f5f1e8] transition-opacity duration-200 group-hover:opacity-80"
+              style={{
+                WebkitMaskImage: "url(/images/level-logo.png)",
+                maskImage: "url(/images/level-logo.png)",
+                WebkitMaskSize: "contain",
+                maskSize: "contain",
+                WebkitMaskRepeat: "no-repeat",
+                maskRepeat: "no-repeat",
+                WebkitMaskPosition: "center",
+                maskPosition: "center",
+              }}
+            />
+            <span className="max-[349px]:hidden text-[12px] sm:text-[13px] font-medium uppercase tracking-[0.2em] sm:tracking-[0.26em] text-[#f5f1e8] truncate transition-opacity duration-200 group-hover:opacity-80">Level Design</span>
           </a>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-8 justify-self-center">
+          <div className="hidden xl:flex items-center gap-8 justify-self-center">
             {navLinks.map((link) => (
               <a
                 key={link.path}
@@ -65,6 +92,7 @@ export default function Navigation({ currentPath }: Props) {
                 className="relative text-[#e8dcc8] hover:text-white transition-colors duration-200 py-2"
               >
                 {link.label}
+                {link.isNew && <NewBadge />}
                 {activePath === link.path && (
                   <motion.div
                     layoutId="activeNav"
@@ -78,29 +106,46 @@ export default function Navigation({ currentPath }: Props) {
 
           {/* CTA */}
           <motion.a
-            href="/contact/"
+            href={ctaHref}
             onClick={() =>
               trackEvent("select_content", {
                 content_type: "cta",
-                item_id: "start_project_nav_desktop",
+                item_id: "shop_now_nav_desktop",
                 page_path: window.location.pathname,
               })
             }
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="hidden md:flex items-center gap-2 px-5 py-2 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 text-sm font-medium shadow-sm justify-self-end"
+            className="hidden xl:flex items-center gap-2 px-5 py-2.5 bg-[#c8956a] text-white rounded-full hover:bg-[#b8856a] transition-all duration-300 text-xs font-medium uppercase tracking-[0.14em] justify-self-end"
           >
-            Start a Project
+            {ctaLabel}
           </motion.a>
 
-          {/* Mobile toggle */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden text-[#e8dcc8] hover:text-white transition-colors justify-self-end ml-2"
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Mobile CTA + toggle */}
+          <div className="xl:hidden flex items-center gap-3 justify-self-end">
+            <a
+              href={ctaHref}
+              onClick={() =>
+                trackEvent("select_content", {
+                  content_type: "cta",
+                  item_id: "shop_now_nav_mobile_header",
+                  page_path: window.location.pathname,
+                })
+              }
+              className="relative inline-flex items-center px-3.5 py-2.5 bg-[#c8956a] text-white rounded-full text-[11px] font-medium uppercase tracking-[0.12em] whitespace-nowrap before:absolute before:inset-x-0 before:-inset-y-1 before:content-['']"
+            >
+              {ctaLabel}
+            </a>
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="flex items-center justify-center w-11 h-11 -mr-2 text-[#e8dcc8] hover:text-white transition-colors"
+              aria-label="Toggle menu"
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-menu"
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -108,42 +153,45 @@ export default function Navigation({ currentPath }: Props) {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
+            id="mobile-menu"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden mx-4 mb-4 overflow-hidden rounded-2xl border border-white/15 bg-[#1f2f29]/88 shadow-2xl backdrop-blur-xl"
+            className="xl:hidden mx-4 mb-4 overflow-hidden rounded-2xl border border-white/15 bg-[#1f2f29]/88 shadow-2xl backdrop-blur-xl"
           >
             <div className="px-4 py-4 space-y-3">
               {navLinks.map((link) => (
                 <a
                   key={link.path}
                   href={link.path}
-                  className={`block px-4 py-2 rounded-lg transition-colors ${
+                  className={`block px-4 py-3 rounded-lg transition-colors ${
                     activePath === link.path
                       ? "bg-white/12 text-white"
                       : "text-[#e8dcc8] hover:bg-white/10"
                   }`}
                 >
                   {link.label}
+                  {link.isNew && <NewBadge />}
                 </a>
               ))}
               <a
-                href="/contact/"
+                href="/custom/#brief"
                 onClick={() =>
                   trackEvent("select_content", {
                     content_type: "cta",
-                    item_id: "start_project_nav_mobile",
+                    item_id: "custom_brief_nav_mobile",
                     page_path: window.location.pathname,
                   })
                 }
-                className="block px-4 py-2 text-center bg-[#e8dcc8] text-[#3d4f47] rounded-lg hover:bg-[#c8956a] hover:text-white transition-colors"
+                className="block px-4 py-3 text-center bg-[#c8956a] text-white font-medium rounded-lg hover:bg-[#b8856a] transition-colors"
               >
-                Start a Project
+                Start a Custom Design
               </a>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
     </nav>
+    </MotionConfig>
   );
 }

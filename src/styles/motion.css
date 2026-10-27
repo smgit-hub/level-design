@@ -1,0 +1,58 @@
+/* ───────────────────────────────────────────────────────────────────────────
+   Motion. A few purposeful movements instead of everything fading up:
+
+   • Content rises a few pixels and fades in, once, as it scrolls into view.
+   • Photos settle: they start a touch larger inside their frame and ease to size as they appear.
+   • The hero image drifts slowly behind the headline as the page scrolls; the text eases away.
+   • Photo cards on hover zoom very slightly, slowly.
+   • Page changes are a quick cross-fade.
+
+   Everything is inside prefers-reduced-motion: no-preference, so visitors who ask for less motion get none of it.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+:root { --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1); }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Reveal on scroll: opacity and a short rise (the old sideways slides are now the same quiet rise) */
+  .reveal, .reveal-left, .reveal-right {
+    transform: translateY(12px);
+    transition: opacity 0.9s ease, transform 1s var(--ease-out);
+    transition-delay: var(--delay, 0s);
+  }
+  :is(.reveal, .reveal-left, .reveal-right).visible { opacity: 1; transform: none; }
+
+  /* Photos inside a revealed block settle to size */
+  :is(.reveal, .reveal-left, .reveal-right) .overflow-hidden > img {
+    transform: scale(1.06);
+    transition: transform 1.6s var(--ease-out), scale 1.2s var(--ease-out);
+    transition-delay: var(--delay, 0s), 0s;
+  }
+  :is(.reveal, .reveal-left, .reveal-right).visible .overflow-hidden > img { transform: none; }
+
+  /* Hover: photo cards zoom a little, slowly */
+  img[class*="group-hover:scale"] { transition: transform 1.2s var(--ease-out), scale 1.2s var(--ease-out); }
+  :where(.group):hover img.group-hover\:scale-105 { scale: 1.035; }
+
+  /* Hero: gentler entrance, then the photo drifts and the text eases away as you scroll (see Layout.astro) */
+  @keyframes heroIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .hero-in {
+    animation: heroIn 1s var(--ease-out) forwards;
+    animation-delay: calc(var(--delay, 0s) * 0.6);
+  }
+  @keyframes heroSettle {
+    from { scale: 1.06; }
+    to   { scale: 1; }
+  }
+  .hero-parallax > picture {
+    animation: heroSettle 2.4s var(--ease-out) both;
+    transform: translateY(calc(var(--hero-p, 0) * 8%));
+    will-change: transform;
+  }
+  .hero-parallax > div.relative { opacity: calc(1 - var(--hero-p, 0) * 1.3); }
+
+  /* Page changes: a quick cross-fade */
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 0.28s; }
+}

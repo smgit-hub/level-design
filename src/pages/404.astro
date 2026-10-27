@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Page Not Found | Level Design"
+  description="That page couldn't be found. Browse the Studio and Signature collections or get in touch."
+  noindex
+>
+  <section class="pt-40 pb-24 bg-[#faf8f5] min-h-[60vh] flex items-center">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <p class="text-sm uppercase tracking-wider text-[#c8956a] mb-4">Error 404</p>
+      <h1 class="text-4xl md:text-5xl font-serif text-[#3d4f47] mb-4">We couldn't find that page.</h1>
+      <p class="text-xl text-[#5a6b64] mb-8">
+        It may have moved, or the link may be out of date. Here's where most people are headed.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/studio/" class="px-8 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-all duration-300 shadow-lg hover:shadow-xl font-medium">
+          Shop the Studio Collection
+        </a>
+        <a href="/signature/" class="px-8 py-4 bg-transparent border-2 border-[#3d4f47] text-[#3d4f47] rounded-full hover:bg-[#3d4f47] hover:text-white transition-all duration-300 font-medium">
+          Signature Collection
+        </a>
+      </div>
+      <p class="mt-8 text-[#5a6b64]">
+        Or <a href="/contact/" class="text-[#c8956a] font-medium hover:underline">get in touch</a> and we'll help you find what you're after.
+      </p>
+    </div>
+  </section>
+</Layout>

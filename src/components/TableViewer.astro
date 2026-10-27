@@ -1,0 +1,201 @@
+---
+/**
+ * The 3D viewer on the Custom page. It behaves exactly like the viewers on the Studio table pages
+ * (src/components/StudioProductDetailClient.tsx): the same lighting and camera, the same slow opening turn that comes to rest on the
+ * same angle (also when scrolled away mid-turn and on "Reset view"), and the same controls: a hint label, a "Reset view" button
+ * once the table has been moved, double-click to reset, and on touch screens a "Tap to explore in 3D" cover with a "Done" button.
+ * If the Studio viewer's movement or angles change, change them here too.
+ */
+interface Props {
+  src: string;
+  /** How close the camera sits, as a percentage of the automatic framing (the Studio long tables use 82). */
+  framing?: number;
+}
+const { src, framing = 82 } = Astro.props;
+---
+<div class="model-viewer-wrapper relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-[5/4]" style="background: #3d4f47;" data-framing={framing}>
+  <model-viewer
+    src={src}
+    auto-rotate-delay="0"
+    rotation-per-second="12deg"
+    camera-controls
+    camera-orbit={`-63deg 71deg ${framing}%`}
+    interaction-prompt="none"
+    shadow-intensity="1.2"
+    shadow-softness="0.8"
+    exposure="2.4"
+    environment-image="/environments/studio-light.jpg"
+    style="width:100%; height:100%; background:transparent; --progress-bar-color: transparent; --progress-bar-height: 0px;"
+    loading="lazy"
+  >
+    <div slot="poster" style="display:flex; align-items:center; justify-content:center; width:100%; height:100%; background:#3d4f47;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:16px;">
+        <svg style="width:40px; height:40px; animation:table-viewer-spin 1s linear infinite;" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="#c8956a" stroke-width="2" stroke-opacity="0.3"/>
+          <path d="M12 2a10 10 0 0 1 10 10" stroke="#c8956a" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span style="color:#e8dcc8; font-size:13px; letter-spacing:0.1em; opacity:0.7;">Loading 3D model…</span>
+      </div>
+    </div>
+  </model-viewer>
+
+  <span data-hint class="absolute top-3 left-3 z-10 bg-black/50 text-white/80 text-xs tracking-wide px-3 py-1 rounded-full pointer-events-none">Drag to rotate · Scroll to zoom</span>
+
+  <button type="button" data-reset aria-label="Reset view" style="display:none" class="absolute bottom-3 right-3 z-10 items-center gap-1.5 px-3 py-[3px] rounded-full text-xs tracking-wide border border-white/25 bg-black/50 text-white/70 backdrop-blur-sm hover:bg-black/65 hover:text-white transition-colors cursor-pointer">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+    <span>Reset view</span>
+  </button>
+
+  <button type="button" data-done style="display:none" class="absolute top-3 right-3 z-10 px-3 py-[3px] rounded-full text-xs tracking-wide border border-white/25 bg-black/50 text-white/70 backdrop-blur-sm hover:bg-black/65 hover:text-white transition-colors cursor-pointer">Done</button>
+
+  <div data-cover role="button" aria-label="Tap to explore in 3D" style="display:none" class="absolute inset-0 z-[5] cursor-pointer"></div>
+
+  <script is:inline>
+    (function () {
+      var wrapper = document.currentScript.parentElement;
+      var model = wrapper.querySelector('model-viewer');
+      var hint = wrapper.querySelector('[data-hint]');
+      var reset = wrapper.querySelector('[data-reset]');
+      var done = wrapper.querySelector('[data-done]');
+      var cover = wrapper.querySelector('[data-cover]');
+      var START_ORBIT = '-63deg 71deg ' + wrapper.getAttribute('data-framing') + '%';
+      // Same movement as the Studio viewers: a slow turn (12 degrees a second) that comes to rest REST_DEGREES round.
+      var REST_RADIANS = (91 * Math.PI) / 180;
+      var SWEEP_MAX_MS = 9000;
+      var isTouch = window.matchMedia('(pointer: coarse)').matches;
+      var unlocked = !isTouch;
+      var visible = true;
+      var started = false;
+      var sweeping = false;
+      var sweepTimer = null;
+      var progress = null;
+      var readyCheck = null;
+
+      function setHint() {
+        hint.textContent = isTouch ? (unlocked ? 'Drag to rotate · Pinch to zoom' : 'Tap to explore in 3D') : 'Drag to rotate · Scroll to zoom';
+      }
+
+      // The turn is model-viewer's own "turntable" angle, which it pauses while the viewer is off-screen. Put the table on the
+      // resting angle: straight away when asked (for example while out of sight), otherwise eased.
+      function settleOnRest(animate) {
+        if (!model.resetTurntableRotation) return;
+        var from = model.turntableRotation || 0;
+        if (!animate || Math.abs(REST_RADIANS - from) < 0.03) {
+          model.resetTurntableRotation(REST_RADIANS);
+          return;
+        }
+        var begin = performance.now();
+        (function step(now) {
+          var t = Math.min(1, (now - begin) / 800);
+          var eased = -(Math.cos(Math.PI * t) - 1) / 2;
+          model.resetTurntableRotation(from + (REST_RADIANS - from) * eased);
+          if (t < 1) requestAnimationFrame(step);
+        })(begin);
+      }
+
+      function stop(onRest) {
+        clearTimeout(sweepTimer);
+        clearInterval(progress);
+        sweeping = false;
+        model.removeAttribute('auto-rotate');
+        if (onRest) settleOnRest(visible);
+      }
+
+      function start() {
+        if (started || !visible) return;
+        started = true;
+        sweeping = true;
+        model.setAttribute('auto-rotate', '');
+        // Stop as soon as it has turned as far as the resting angle, so it ends there exactly.
+        progress = setInterval(function () {
+          if ((model.turntableRotation || 0) >= REST_RADIANS) stop(true);
+        }, 30);
+        sweepTimer = setTimeout(function () {
+          var box = wrapper.getBoundingClientRect();
+          visible = box.bottom > 0 && box.top < window.innerHeight;
+          stop(true);
+        }, SWEEP_MAX_MS);
+      }
+
+      // Scrolling away mid-turn puts the table on the resting angle straight away; scrolling to it after it loaded starts the turn.
+      new IntersectionObserver(function (entries) {
+        visible = entries[0].isIntersecting;
+        if (!visible && sweeping) stop(true);
+        if (visible && !started && model.loaded) start();
+      }).observe(wrapper);
+
+      // model-viewer doesn't always announce a model that is already cached, so readiness is checked directly.
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        var waited = 0;
+        readyCheck = setInterval(function () {
+          waited += 100;
+          if (started || waited > 30000) return clearInterval(readyCheck);
+          if (model.loaded && visible) start();
+        }, 100);
+      }
+
+      function resetView() {
+        stop(false);
+        model.cameraOrbit = START_ORBIT;
+        settleOnRest(true);
+        model.cameraTarget = 'auto auto auto';
+        model.fieldOfView = 'auto';
+        reset.style.display = 'none';
+      }
+
+      model.addEventListener('camera-change', function (e) {
+        if (e.detail && e.detail.source === 'user-interaction') {
+          stop(false);
+          reset.style.display = 'inline-flex';
+        }
+      });
+      reset.addEventListener('click', resetView);
+      model.addEventListener('dblclick', resetView);
+
+      if (isTouch) {
+        // Until it is tapped, a cover sits over the model so swipes scroll the page instead of turning the table.
+        cover.style.display = 'block';
+        model.setAttribute('touch-action', 'pan-y');
+        wrapper.addEventListener('touchmove', function (e) {
+          if (unlocked && e.cancelable) e.preventDefault();
+        }, { passive: false });
+        cover.addEventListener('click', function () {
+          unlocked = true;
+          model.setAttribute('touch-action', 'none');
+          wrapper.style.touchAction = 'none';
+          cover.style.display = 'none';
+          done.style.display = 'block';
+          setHint();
+        });
+        done.addEventListener('click', function () {
+          unlocked = false;
+          model.setAttribute('touch-action', 'pan-y');
+          wrapper.style.touchAction = '';
+          cover.style.display = 'block';
+          done.style.display = 'none';
+          setHint();
+        });
+      }
+      setHint();
+    })();
+  </script>
+
+  <script is:inline>
+    (function () {
+      var loaded = false;
+      var wrapper = document.currentScript.parentElement;
+      var observer = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting && !loaded) {
+          loaded = true;
+          var s = document.createElement('script');
+          s.type = 'module';
+          s.src = 'https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js';
+          document.head.appendChild(s);
+          observer.disconnect();
+        }
+      }, { rootMargin: '200px' });
+      if (wrapper) observer.observe(wrapper);
+    })();
+  </script>
+</div>
+<style>@keyframes table-viewer-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }</style>
