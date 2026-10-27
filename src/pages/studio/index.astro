@@ -84,7 +84,7 @@ const schema = {
             Thoughtfully designed, well made and fairly priced — four oak dining tables in fixed sizes.
           </p>
           <div class="hero-in flex flex-wrap gap-4" style="--delay: 0.8s">
-            {["4 designs", `From ${formatPrice(startingPrice)}`, "6–8 week lead time"].map((item) => (
+            {["4 designs", `From ${formatPrice(startingPrice)}`, "6–8 week lead time", ...(freeDeliveryActive() ? [`Free Melbourne delivery until ${FREE_DELIVERY_UNTIL_TEXT}`] : [])].map((item) => (
               <div class="px-4 py-2 bg-[#2d3f37] rounded-full text-sm flex items-center gap-2">
                 <svg class="w-4 h-4 text-[#c8956a]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 {item}

@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { products } from '../data/signature-products';
+import { freeDeliveryActive, FREE_DELIVERY_UNTIL_TEXT } from '../data/delivery-zones';
 import { allStudioProducts, startingPrice as getStartingPrice } from '../data/studio-products';
 import StudioShapeIcon from '../components/StudioShapeIcon.astro';
 import SectionHeader from '../components/SectionHeader.astro';
@@ -70,6 +71,11 @@ const whyChooseItems = [
               Design a Custom Table
             </a>
           </div>
+          {freeDeliveryActive() && (
+            <p class="hero-in mt-5 text-[#e8dcc8] text-sm md:text-base drop-shadow-lg" style="--delay: 1.1s">
+              Launch offer: free Melbourne-area delivery on every Studio table until {FREE_DELIVERY_UNTIL_TEXT}.
+            </p>
+          )}
         </div>
       </div>
 

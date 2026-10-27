@@ -553,13 +553,18 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
                 </div>
 
                 {/* Price + CTA */}
-                <div className="flex items-center gap-3 mb-4">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mb-4">
                   {selectedSize.compareAtPrice && selectedSize.compareAtPrice > selectedSize.price && (
                     <span className="text-xl text-[#8a9b94] line-through">{formatPrice(selectedSize.compareAtPrice)}</span>
                   )}
                   <p className="text-3xl font-semibold text-[#3d4f47]">{formatPrice(selectedSize.price)}</p>
                   {selectedSize.compareAtPrice && selectedSize.compareAtPrice > selectedSize.price && (
                     <span className="text-xs font-semibold uppercase tracking-wide text-white bg-[#c8956a] px-2 py-1 rounded-full">Sale</span>
+                  )}
+                  {freeDeliveryActive() && (
+                    <span className="text-xs font-semibold tracking-wide text-[#8a5a35] bg-[#c8956a]/15 border border-[#c8956a]/40 px-2.5 py-1 rounded-full">
+                      Free Melbourne delivery until {FREE_DELIVERY_UNTIL_TEXT}
+                    </span>
                   )}
                 </div>
 
