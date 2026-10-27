@@ -1,7 +1,8 @@
 import { createHash } from "node:crypto";
 import { studioProducts } from "../../src/data/studio-products";
 import { deliveryForPostcode, isValidPostcode } from "../../src/data/delivery-zones";
-import { json, newRequestId, requestStore, siteOrigin, type QuoteRequest } from "./lib/quote-requests";
+import { json, newRequestId, requestStore, type QuoteRequest } from "./lib/quote-requests";
+import { siteOrigin } from "./lib/site";
 
 /**
  * Public: a customer asks for a delivery quote from a Studio table page (their postcode is one we quote individually).

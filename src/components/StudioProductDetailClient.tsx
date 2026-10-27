@@ -33,6 +33,8 @@ interface Props {
   product: StudioProduct;
   /** Every Studio table, in display order, for the switcher above the viewer. */
   tables: { id: string; name: string }[];
+  /** Whether the free-delivery launch offer was on when the page was built, so the first render matches the built page. */
+  offerActiveAtBuild: boolean;
 }
 
 const formatPrice = (cents: number) =>
@@ -72,7 +74,7 @@ const settleOnRest = (model: HTMLElement, animate: boolean) => {
   requestAnimationFrame(step);
 };
 
-export default function StudioProductDetailClient({ product, tables }: Props) {
+export default function StudioProductDetailClient({ product, tables, offerActiveAtBuild }: Props) {
   // How close the camera sits. The round table has room to spare at 90%; the long tables are framed tighter (82%), which is as close
   // as they can go while still staying fully on screen through a whole turn.
   const startOrbit = `-63deg 71deg ${product.id === "round" ? 90 : 82}%`;
@@ -86,6 +88,10 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
   const [postcode, setPostcode] = useState("");
   const [postcodeHint, setPostcodeHint] = useState(false);
   const postcodeRef = useRef<HTMLInputElement>(null);
+  // The page is built ahead of time, so start from what was built and then check today's date, which takes the offer
+  // text away once it has ended (without the mismatch React reports if the first render disagrees with the built page)
+  const [offerActive, setOfferActive] = useState(offerActiveAtBuild);
+  useEffect(() => setOfferActive(freeDeliveryActive()), []);
   useEffect(() => {
     try {
       const saved = localStorage.getItem("ld-delivery-postcode");
@@ -567,7 +573,7 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
                   {selectedSize.compareAtPrice && selectedSize.compareAtPrice > selectedSize.price && (
                     <span className="text-xs font-semibold uppercase tracking-wide text-white bg-[#c8956a] px-2 py-1 rounded-full">Sale</span>
                   )}
-                  {freeDeliveryActive() && (
+                  {offerActive && (
                     <span className="text-xs font-semibold tracking-wide text-[#8a5a35] bg-[#c8956a]/15 border border-[#c8956a]/40 px-2.5 py-1 rounded-full">
                       Free Melbourne delivery until {FREE_DELIVERY_UNTIL_TEXT}
                     </span>
@@ -593,7 +599,7 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
                     className="w-36 px-4 py-3 rounded-xl border-2 border-[#e5ddd0] bg-white text-[#3d4f47] focus:outline-none focus:border-[#c8956a] focus:ring-2 focus:ring-[#c8956a]/30"
                   />
                   <p id="delivery-postcode-note" aria-live="polite" className="text-sm mt-2 text-[#5a6b64]">
-                    {!delivery && (postcodeHint ? <span className="text-red-700">Enter your delivery postcode to see the delivery fee.</span> : (freeDeliveryActive() ? `Enter your postcode to see the delivery fee. Free Melbourne delivery until ${FREE_DELIVERY_UNTIL_TEXT}.` : "Enter your postcode to see the delivery fee."))}
+                    {!delivery && (postcodeHint ? <span className="text-red-700">Enter your delivery postcode to see the delivery fee.</span> : (offerActive ? `Enter your postcode to see the delivery fee. Free Melbourne delivery until ${FREE_DELIVERY_UNTIL_TEXT}.` : "Enter your postcode to see the delivery fee."))}
                     {delivery && delivery.priceCents !== null && (
                       <>
                         Delivery to {postcode}: <strong className="text-[#3d4f47]">{delivery.free ? "Free" : formatPrice(delivery.priceCents)}</strong>{delivery.free && ` (launch offer until ${FREE_DELIVERY_UNTIL_TEXT})`} · Total <strong className="text-[#3d4f47]">{formatPrice(selectedSize.price + delivery.priceCents)}</strong>

@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import { studioProducts } from "../../src/data/studio-products";
 import { deliveryForPostcode } from "../../src/data/delivery-zones";
+import { orderEmailStore } from "./lib/orders";
 
 /**
  * Stripe → "you've got an order" email.
@@ -168,12 +169,6 @@ export async function handler(event: NetlifyEvent) {
     return { statusCode: 200, body: "Ignored." };
   }
 
-  if (!BREVO_API_KEY || !BREVO_SENDER_EMAIL || !ORDER_NOTIFICATION_EMAIL) {
-    // Returning an error makes Stripe retry for days, so the order email is not lost if this is fixed in time.
-    console.error("stripe-webhook: BREVO_API_KEY, BREVO_SENDER_EMAIL or ORDER_NOTIFICATION_EMAIL is not set.");
-    return { statusCode: 500, body: "Order emails are not configured." };
-  }
-
   try {
     const base = stripeEvent.data.object as Stripe.Checkout.Session;
     // This Stripe account also serves other websites and products, and Stripe sends every checkout to every
@@ -183,6 +178,17 @@ export async function handler(event: NetlifyEvent) {
     }
     if (base.payment_status !== "paid") {
       return { statusCode: 200, body: "Not paid yet." }; // an async payment will fire async_payment_succeeded later
+    }
+    // Checked only now, so a missing setting doesn't also fail the other sites' checkouts on this Stripe account.
+    if (!BREVO_API_KEY || !BREVO_SENDER_EMAIL || !ORDER_NOTIFICATION_EMAIL) {
+      // Returning an error makes Stripe retry for days, so the order email is not lost if this is fixed in time.
+      console.error("stripe-webhook: BREVO_API_KEY, BREVO_SENDER_EMAIL or ORDER_NOTIFICATION_EMAIL is not set.");
+      return { statusCode: 500, body: "Order emails are not configured." };
+    }
+    const emailsSent = orderEmailStore(event);
+    const alreadySent = await emailsSent.get(base.id);
+    if (alreadySent.owner && alreadySent.customer) {
+      return { statusCode: 200, body: "Order emails already sent." }; // a repeat delivery of the same event
     }
 
     // Needs only read access to Checkout Sessions (no extra permissions for shipping rates or payment intents).
@@ -197,15 +203,16 @@ export async function handler(event: NetlifyEvent) {
     const customer = session.customer_details;
 
     const item = session.line_items?.data[0];
-    // The delivery option is identified by its price, which is set in create-checkout-session.ts.
+    // The delivery option is named from what the checkout recorded (create-checkout-session.ts / create-quote-link.ts), not
+    // guessed from the amount, so a quoted delivery that happens to cost the same as the set fee is still called quoted.
     const shippingCents = session.shipping_cost?.amount_total;
     const freeDelivery = shippingCents === 0 && session.metadata?.deliveryOffer === "launch-free-delivery";
     const deliveryName = freeDelivery
       ? "Melbourne Metro, Peninsula & Bass Coast (free delivery, launch offer)"
-      : shippingCents === 19900
-        ? "Melbourne Metro, Peninsula & Bass Coast"
-        : session.metadata?.quote
-          ? "Delivery (quoted)"
+      : session.metadata?.quote
+        ? "Delivery (quoted)"
+        : session.metadata?.deliveryZone === "melbourne"
+          ? "Melbourne Metro, Peninsula & Bass Coast"
           : "Delivery";
     const deliveryPrice = freeDelivery ? "Free" : money(shippingCents);
     // The fee was set from the postcode typed on the product page; the address typed at checkout can still differ.
@@ -258,21 +265,25 @@ export async function handler(event: NetlifyEvent) {
         body: JSON.stringify(message),
       });
 
-    const response = await sendEmail({
-      sender: { email: BREVO_SENDER_EMAIL, name: "Level Design orders" },
-      to: [{ email: ORDER_NOTIFICATION_EMAIL }],
-      replyTo: customer?.email ? { email: customer.email, name: customer.name ?? undefined } : undefined,
-      subject: `${live ? "" : "[TEST] "}New order ${reference}: ${item?.description ?? session.metadata?.order ?? "Studio table"} — ${money(session.amount_total)}`,
-      textContent: lines.join("\n"),
-    });
-    if (!response.ok) {
-      console.error("stripe-webhook: Brevo rejected the order email:", response.status, await response.text());
-      return { statusCode: 500, body: "Could not send the order email." }; // Stripe will retry
+    // The order email to us comes first; it is skipped if an earlier delivery of this event already sent it.
+    if (!alreadySent.owner) {
+      const response = await sendEmail({
+        sender: { email: BREVO_SENDER_EMAIL, name: "Level Design orders" },
+        to: [{ email: ORDER_NOTIFICATION_EMAIL }],
+        replyTo: customer?.email ? { email: customer.email, name: customer.name ?? undefined } : undefined,
+        subject: `${live ? "" : "[TEST] "}New order ${reference}: ${item?.description ?? session.metadata?.order ?? "Studio table"} — ${money(session.amount_total)}`,
+        textContent: lines.join("\n"),
+      });
+      if (!response.ok) {
+        console.error("stripe-webhook: Brevo rejected the order email:", response.status, await response.text());
+        return { statusCode: 500, body: "Could not send the order email." }; // Stripe will retry
+      }
+      await emailsSent.set(session.id, { owner: true });
     }
 
     // The customer's confirmation. The order email above is the one that matters, so a failure here is logged but does
     // not return an error — that would make Stripe retry and send you the order email again.
-    if (customer?.email) {
+    if (customer?.email && !alreadySent.customer) {
       try {
         const product = session.metadata?.productId ? studioProducts[session.metadata.productId] : undefined;
         const size = product?.sizes.find((s) => s.id === session.metadata?.sizeId);
@@ -300,6 +311,7 @@ export async function handler(event: NetlifyEvent) {
           textContent: confirmation.text,
         });
         if (!sent.ok) console.error("stripe-webhook: Brevo rejected the customer email:", sent.status, await sent.text());
+        else await emailsSent.set(session.id, { owner: true, customer: true });
       } catch (err) {
         console.error("stripe-webhook: could not send the customer email:", err);
       }

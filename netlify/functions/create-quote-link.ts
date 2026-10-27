@@ -2,6 +2,7 @@ import Stripe from "stripe";
 import { createHash, timingSafeEqual } from "node:crypto";
 import { studioProducts } from "../../src/data/studio-products";
 import { isValidPostcode } from "../../src/data/delivery-zones";
+import { siteOrigin } from "./lib/site";
 
 /**
  * Private tool behind /admin/quote/: makes a one-off payment link for a Studio table at a delivery price we have quoted.
@@ -48,7 +49,7 @@ export async function handler(event: { httpMethod: string; body: string | null; 
   const quoteFor = String(input.quoteFor ?? "").trim().slice(0, 80);
 
   const stripe = new Stripe(stripeSecretKey);
-  const origin = event.headers.origin || process.env.URL || "https://leveldesign.com.au";
+  const origin = siteOrigin(event.headers);
 
   try {
     // The table's price comes from the live Stripe Price, and is refused if it ever differs from the site's.
@@ -80,6 +81,8 @@ export async function handler(event: { httpMethod: string; body: string | null; 
         deliveryZone: "quote",
         deliveryPostcode: postcode,
         quote: "yes",
+        // Lets send-quote-email check the emailed delivery price is the one this link charges
+        deliveryCents: String(deliveryCents),
         ...(quoteFor ? { quoteFor } : {}),
       },
       payment_intent_data: { description: `Studio Collection — ${orderLabel} (quoted delivery)`, metadata: { productId: product.id, sizeId: size.id } },
@@ -91,6 +94,8 @@ export async function handler(event: { httpMethod: string; body: string | null; 
     });
 
     return json(200, {
+      // The email step looks the link up by id in our own Stripe account, rather than trusting a URL sent back to it
+      id: link.id,
       url: link.url,
       order: orderLabel,
       tableCents: size.price,

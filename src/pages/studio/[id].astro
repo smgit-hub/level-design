@@ -1,11 +1,12 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { freeDeliveryActive, FREE_DELIVERY_UNTIL_TEXT } from '../../data/delivery-zones';
+import { freeDeliveryActive, FREE_DELIVERY_ENDS_AT, FREE_DELIVERY_UNTIL_TEXT } from '../../data/delivery-zones';
 import StudioProductDetailClient from '../../components/StudioProductDetailClient';
 import StudioShapeIcon from '../../components/StudioShapeIcon.astro';
 import { allStudioProducts, startingPrice } from '../../data/studio-products';
 
-const launchDeliveryNote = freeDeliveryActive() ? ` As a launch offer, delivery in that area is free until ${FREE_DELIVERY_UNTIL_TEXT} 2026.` : '';
+// Kept out of the answer itself (and out of the structured data): it's shown in its own element, which the layout removes once the offer ends
+const launchDeliveryNote = freeDeliveryActive() ? `As a launch offer, delivery to Melbourne Metro, the Mornington Peninsula and the Bass Coast is free until ${FREE_DELIVERY_UNTIL_TEXT} 2026.` : undefined;
 
 export function getStaticPaths() {
   return allStudioProducts.map((p) => ({
@@ -38,7 +39,8 @@ const productFaqs = [
   },
   {
     question: `How is ${product.name} delivered, and what does delivery cost?`,
-    answer: `Delivery is $199 for Melbourne Metro, the Mornington Peninsula and the Bass Coast, and the fee is shown on the table's page before you pay.${launchDeliveryNote} Everywhere else, including Geelong, regional Victoria and interstate, we quote delivery individually: enter your postcode on the table's page and we'll take you to a short form, then reply with a price, usually within one business day. Once you're happy with it, we'll send a secure payment link for the table and delivery.`,
+    answer: `Delivery is $199 for Melbourne Metro, the Mornington Peninsula and the Bass Coast, and the fee is shown on the table's page before you pay. Everywhere else, including Geelong, regional Victoria and interstate, we quote delivery individually: enter your postcode on the table's page and we'll take you to a short form, then reply with a price, usually within one business day. Once you're happy with it, we'll send a secure payment link for the table and delivery.`,
+    offerNote: launchDeliveryNote,
   },
   {
     question: `Does ${product.name} arrive assembled?`,
@@ -135,7 +137,7 @@ const schema = [
   ogType="product"
   schema={schema}
 >
-  <StudioProductDetailClient product={product} tables={allStudioProducts.map((table) => ({ id: table.id, name: table.name }))} client:load />
+  <StudioProductDetailClient product={product} tables={allStudioProducts.map((table) => ({ id: table.id, name: table.name }))} offerActiveAtBuild={freeDeliveryActive()} client:load />
 
   <section class="pt-0 pb-16 bg-white">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -148,7 +150,7 @@ const schema = [
                 {item.question}
                 <svg class="w-5 h-5 flex-shrink-0 text-[#c8956a] transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5" /></svg>
               </summary>
-              <p class="text-[#5a6b64] leading-relaxed mt-3">{item.answer}</p>
+              <p class="text-[#5a6b64] leading-relaxed mt-3">{item.answer}{item.offerNote && <span data-offer-until={FREE_DELIVERY_ENDS_AT}> {item.offerNote}</span>}</p>
             </details>
           ))}
         </div>

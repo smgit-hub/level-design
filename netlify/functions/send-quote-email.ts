@@ -1,3 +1,4 @@
+import Stripe from "stripe";
 import { createHash, timingSafeEqual } from "node:crypto";
 import { studioProducts } from "../../src/data/studio-products";
 import { isValidPostcode } from "../../src/data/delivery-zones";
@@ -8,8 +9,9 @@ import { isRequestId, requestStore, type QuoteRequest } from "./lib/quote-reques
  * so it doesn't have to be written in a mail app. Sent through Brevo from the same verified sender as the order emails, with a
  * copy to the order inbox, and replies go to that inbox.
  *
- * The wording is fixed here (only the optional personal note is free text, and it is escaped), and the payment link must be a
- * Stripe link, so the page can't be used to send arbitrary email from the domain. Needs QUOTE_ADMIN_KEY, BREVO_API_KEY,
+ * The wording is fixed here (only the optional personal note is free text, and it is escaped), and the payment link is looked up
+ * in our own Stripe account and must be one of our Studio quote links for the same table and delivery price, so the page can't be
+ * used to send arbitrary email, or someone else's payment link, from the domain. Needs QUOTE_ADMIN_KEY, BREVO_API_KEY,
  * BREVO_SENDER_EMAIL and ORDER_NOTIFICATION_EMAIL.
  */
 
@@ -131,9 +133,9 @@ export async function handler(event: { httpMethod: string; body: string | null; 
   if (event.httpMethod !== "POST") return json(405, { error: "Method Not Allowed" });
 
   const adminKey = process.env.QUOTE_ADMIN_KEY;
-  const { BREVO_API_KEY, BREVO_SENDER_EMAIL, ORDER_NOTIFICATION_EMAIL } = process.env;
-  if (!adminKey || !BREVO_API_KEY || !BREVO_SENDER_EMAIL || !ORDER_NOTIFICATION_EMAIL) {
-    return json(500, { error: "Email sending is not configured (needs QUOTE_ADMIN_KEY, BREVO_API_KEY, BREVO_SENDER_EMAIL and ORDER_NOTIFICATION_EMAIL)." });
+  const { BREVO_API_KEY, BREVO_SENDER_EMAIL, ORDER_NOTIFICATION_EMAIL, STRIPE_SECRET_KEY } = process.env;
+  if (!adminKey || !BREVO_API_KEY || !BREVO_SENDER_EMAIL || !ORDER_NOTIFICATION_EMAIL || !STRIPE_SECRET_KEY) {
+    return json(500, { error: "Email sending is not configured (needs QUOTE_ADMIN_KEY, BREVO_API_KEY, BREVO_SENDER_EMAIL, ORDER_NOTIFICATION_EMAIL and STRIPE_SECRET_KEY)." });
   }
 
   let input: {
@@ -142,7 +144,7 @@ export async function handler(event: { httpMethod: string; body: string | null; 
     sizeId?: string;
     deliveryDollars?: number | string;
     postcode?: string;
-    url?: string;
+    linkId?: string;
     toEmail?: string;
     toName?: string;
     note?: string;
@@ -170,15 +172,35 @@ export async function handler(event: { httpMethod: string; body: string | null; 
   const postcode = String(input.postcode ?? "").trim();
   if (postcode && !isValidPostcode(postcode)) return json(400, { error: "The postcode must be 4 digits." });
 
-  const link = String(input.url ?? "");
-  if (!/^https:\/\/buy\.stripe\.com\/[A-Za-z0-9_]+$/.test(link)) return json(400, { error: "Create the payment link first." });
+  // The link must be one create-quote-link made in our own Stripe account, for this table and delivery price; its address comes
+  // from Stripe, not from the request. (deliveryCents is only on links made since it was added, so older links skip that check.)
+  const linkId = String(input.linkId ?? "");
+  if (!/^plink_[A-Za-z0-9]+$/.test(linkId)) return json(400, { error: "Create the payment link first." });
+  let paymentLink: Stripe.PaymentLink;
+  try {
+    paymentLink = await new Stripe(STRIPE_SECRET_KEY).paymentLinks.retrieve(linkId);
+  } catch {
+    return json(400, { error: "That payment link wasn't found in our Stripe account. Create it again." });
+  }
+  const meta = paymentLink.metadata ?? {};
+  if (
+    !paymentLink.active ||
+    meta.source !== "leveldesign-studio" ||
+    meta.quote !== "yes" ||
+    meta.productId !== product.id ||
+    meta.sizeId !== size.id ||
+    (meta.deliveryCents !== undefined && meta.deliveryCents !== String(deliveryCents))
+  ) {
+    return json(400, { error: "That payment link doesn't match this table and delivery price. Create it again." });
+  }
+  const link = paymentLink.url;
 
   const toEmail = String(input.toEmail ?? "").trim();
   if (!/^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+$/.test(toEmail) || toEmail.length > 200) return json(400, { error: "Enter the customer's email address." });
   const toName = String(input.toName ?? "").trim().slice(0, 80);
   const note = String(input.note ?? "").trim().slice(0, 600);
 
-  const isTest = link.includes("/test_");
+  const isTest = !paymentLink.livemode;
   const email = quoteEmail({
     firstName: toName.split(/\s+/)[0] || undefined,
     tableName: product.name,

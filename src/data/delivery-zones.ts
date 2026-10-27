@@ -26,10 +26,14 @@ export const MELBOURNE_DELIVERY_CENTS = 19900;
  * Launch offer: delivery in the one fixed-fee area is free through the end of 15 November 2026, Melbourne time (AEDT, UTC+11). It
  * switches itself off after that: the product page and the checkout function both ask `freeDeliveryActive()`, so the fee goes back to
  * $199 with no change needed. Quoted areas are not part of the offer. To end it early or move the date, edit the date below.
+ *
+ * The pages are built ahead of time, so any offer text on them also carries `data-offer-until={FREE_DELIVERY_ENDS_AT}`; a script in
+ * the layout removes it in the visitor's browser once the offer is over, without needing a rebuild.
  */
 export const FREE_DELIVERY_UNTIL_TEXT = "15 November";
-const FREE_DELIVERY_ENDS_AT = Date.parse("2026-11-15T23:59:59+11:00");
-export const freeDeliveryActive = (now: number = Date.now()) => now <= FREE_DELIVERY_ENDS_AT;
+/** The first moment the offer no longer applies (midnight at the start of 16 November, Melbourne time), in ms. */
+export const FREE_DELIVERY_ENDS_AT = Date.parse("2026-11-16T00:00:00+11:00");
+export const freeDeliveryActive = (now: number = Date.now()) => now < FREE_DELIVERY_ENDS_AT;
 
 const MELBOURNE_METRO_NAME = "Melbourne Metro, Peninsula & Bass Coast Delivery";
 

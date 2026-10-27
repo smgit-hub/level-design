@@ -169,6 +169,12 @@ const schemaNodes = [baseSchema, websiteSchema, ...(Array.isArray(schema) ? sche
       </main>
       <Footer />
     </div>
+    {/* Offer text is built into the page ahead of time; take it out once the offer has ended (see FREE_DELIVERY_ENDS_AT), on every page view */}
+    <script is:inline data-astro-rerun>
+      document.querySelectorAll('[data-offer-until]').forEach((el) => {
+        if (Date.now() >= Number(el.getAttribute('data-offer-until'))) el.remove();
+      });
+    </script>
   </body>
 </html>
 

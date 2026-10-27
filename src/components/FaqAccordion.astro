@@ -1,7 +1,11 @@
 ---
+import { FREE_DELIVERY_ENDS_AT } from '../data/delivery-zones';
+
 interface FaqItem {
   question: string;
   answer: string;
+  /** Launch-offer sentence shown after the answer, and removed in the browser once the offer ends. */
+  offerNote?: string;
 }
 interface Props {
   items: FaqItem[];
@@ -17,7 +21,7 @@ const { items } = Astro.props;
           <path d="M12 5v14M5 12h14"/>
         </svg>
       </summary>
-      <p class="text-[#5a6b64] leading-relaxed mt-2 pb-1">{item.answer}</p>
+      <p class="text-[#5a6b64] leading-relaxed mt-2 pb-1">{item.answer}{item.offerNote && <span data-offer-until={FREE_DELIVERY_ENDS_AT}> {item.offerNote}</span>}</p>
     </details>
   ))}
 </div>

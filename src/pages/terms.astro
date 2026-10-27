@@ -1,13 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { MELBOURNE_DELIVERY_CENTS, freeDeliveryActive, FREE_DELIVERY_UNTIL_TEXT } from '../data/delivery-zones';
+import { MELBOURNE_DELIVERY_CENTS, freeDeliveryActive, FREE_DELIVERY_ENDS_AT, FREE_DELIVERY_UNTIL_TEXT } from '../data/delivery-zones';
 
 const formatPrice = (cents: number) =>
   new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 }).format(cents / 100);
 
 const deliveryZones = [
-  { area: 'Melbourne Metro, the Mornington Peninsula and the Bass Coast', fee: freeDeliveryActive() ? `${formatPrice(MELBOURNE_DELIVERY_CENTS)}, free until ${FREE_DELIVERY_UNTIL_TEXT} 2026 (launch offer)` : formatPrice(MELBOURNE_DELIVERY_CENTS) },
-  { area: 'Everywhere else, including Geelong, regional Victoria and interstate', fee: 'Quoted individually before you order' },
+  // The offer part is shown separately so the layout can remove it once the offer ends
+  { area: 'Melbourne Metro, the Mornington Peninsula and the Bass Coast', fee: formatPrice(MELBOURNE_DELIVERY_CENTS), offer: freeDeliveryActive() ? `, free until ${FREE_DELIVERY_UNTIL_TEXT} 2026 (launch offer)` : undefined },
+  { area: 'Everywhere else, including Geelong, regional Victoria and interstate', fee: 'Quoted individually before you order', offer: undefined },
 ];
 
 const sections: { title: string; paragraphs?: string[]; list?: string[] }[] = [
@@ -100,7 +101,7 @@ const sections: { title: string; paragraphs?: string[]; list?: string[] }[] = [
             {deliveryZones.map((zone) => (
               <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-6 px-5 py-4 border-b border-[#e5ddd0] last:border-b-0 bg-[#faf8f5]">
                 <span class="text-[#3d4f47]">{zone.area}</span>
-                <span class="text-[#3d4f47] font-semibold sm:text-right">{zone.fee}</span>
+                <span class="text-[#3d4f47] font-semibold sm:text-right">{zone.fee}{zone.offer && <span data-offer-until={FREE_DELIVERY_ENDS_AT}>{zone.offer}</span>}</span>
               </div>
             ))}
           </div>

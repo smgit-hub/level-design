@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import { studioProducts } from "../../src/data/studio-products";
-import { deliveryForPostcode } from "../../src/data/delivery-zones";
+import { deliveryForPostcode, FREE_DELIVERY_ENDS_AT } from "../../src/data/delivery-zones";
+import { siteOrigin } from "./lib/site";
 
 export async function handler(event: { httpMethod: string; body: string | null; headers: Record<string, string | undefined> }) {
   if (event.httpMethod !== "POST") {
@@ -38,7 +39,7 @@ export async function handler(event: { httpMethod: string; body: string | null; 
   }
 
   const stripe = new Stripe(stripeSecretKey);
-  const origin = event.headers.origin || process.env.URL || "https://leveldesign.com.au";
+  const origin = siteOrigin(event.headers);
 
   try {
     // Resolve the live Price (test or live mode, whichever key is in use) from the lookup key that
@@ -55,8 +56,13 @@ export async function handler(event: { httpMethod: string; body: string | null; 
     }
 
     const orderLabel = `${product.name} — ${size.label}`;
+    // A Checkout page normally stays open for 24 hours. With free delivery, close it when the offer ends instead, so a page
+    // opened just before the cut-off can't still be paid at the free rate the next day (Stripe needs at least 30 minutes).
+    const nowSeconds = Math.floor(Date.now() / 1000);
+    const expiresAt = delivery.free ? Math.max(Math.min(nowSeconds + 24 * 3600, Math.floor(FREE_DELIVERY_ENDS_AT / 1000)), nowSeconds + 30 * 60 + 60) : undefined;
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
+      ...(expiresAt ? { expires_at: expiresAt } : {}),
       line_items: [{ price: stripePrice.id, quantity: 1 }],
       // Delivery needs a phone number, and the order email needs to know exactly what was bought.
       phone_number_collection: { enabled: true },

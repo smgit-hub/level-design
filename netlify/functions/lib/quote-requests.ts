@@ -46,19 +46,3 @@ export function sameSecret(given: string, expected: string) {
   return timingSafeEqual(createHash("sha256").update(given).digest(), createHash("sha256").update(expected).digest());
 }
 
-/**
- * Where the quote page is, for the link in the notification email. The form's own request says which site it came from, so
- * the link always matches the site the customer was on (the live site, or a preview). That header can be forged, so only
- * our own domain and Netlify's preview domain are trusted; anything else falls back to the site's configured address.
- */
-export function siteOrigin(headers: Record<string, string | undefined>) {
-  const claimed = headers.origin || headers.Origin || "";
-  try {
-    const url = new URL(claimed);
-    const trusted = url.protocol === "https:" && (url.hostname === "leveldesign.com.au" || url.hostname === "www.leveldesign.com.au" || url.hostname.endsWith(".netlify.app"));
-    if (trusted) return url.origin;
-  } catch {
-    /* no usable origin header */
-  }
-  return process.env.DEPLOY_PRIME_URL || process.env.URL || "https://leveldesign.com.au";
-}

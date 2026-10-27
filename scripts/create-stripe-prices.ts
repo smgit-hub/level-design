@@ -81,16 +81,17 @@ for (const product of allStudioProducts) {
   for (const size of product.sizes) {
     const productId = size.stripeLookupKey; // e.g. studio_line_2000x1000 — also used as the Stripe Product id
     const name = `Level Design — ${product.name} (${size.label})`;
-    const image = new URL(product.images.gallery[0] ?? product.images.main, SITE).toString();
+    // The plain 3D render, as everywhere outside the product page (the room views are AI visualisations, labelled only there).
+    const image = new URL(product.images.main, SITE).toString();
     const description = `${size.dimensions}. ${product.specifications["Timber / Finish"]}. Studio Collection, made to order (6–8 week lead time).`;
 
     const existing = (await stripe.prices.list({ lookup_keys: [size.stripeLookupKey], active: true, limit: 1 })).data[0];
     if (existing && existing.unit_amount === size.price && existing.currency === "aud") {
-      // The price is right; just make sure the Product's name and description are current.
+      // The price is right; just make sure the Product's name, description and image are current.
       const current = await stripe.products.retrieve(productId).catch(() => null);
-      if (current && (current.name !== name || current.description !== description)) {
-        console.log(`  ~  ${name}  ${dollars(size.price)}  → rename (was "${current.name}")`);
-        if (!dry) await stripe.products.update(productId, { name, description });
+      if (current && (current.name !== name || current.description !== description || current.images[0] !== image)) {
+        console.log(`  ~  ${name}  ${dollars(size.price)}  → update details (was "${current.name}")`);
+        if (!dry) await stripe.products.update(productId, { name, description, images: [image] });
         renamed++;
       } else {
         console.log(`  =  ${name}  ${dollars(size.price)}  (already set up: ${existing.id})`);

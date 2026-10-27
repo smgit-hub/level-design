@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import { createHash, timingSafeEqual } from "node:crypto";
+import { siteOrigin } from "./lib/site";
 
 /**
  * Private: starts a A$1 "TEST ORDER" checkout, so the whole path (Stripe Checkout, the order webhook, both emails) can be tried once on
@@ -36,7 +37,7 @@ export async function handler(event: { httpMethod: string; body: string | null; 
   }
 
   const stripe = new Stripe(stripeSecretKey);
-  const origin = event.headers.origin || process.env.URL || "https://leveldesign.com.au";
+  const origin = siteOrigin(event.headers);
 
   try {
     const { data: prices } = await stripe.prices.list({ lookup_keys: [TEST_ORDER_LOOKUP_KEY], active: true, limit: 1 });
