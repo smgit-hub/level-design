@@ -47,7 +47,9 @@ export type StudioProduct = {
   /** Facts that don't vary by size — dimensions/seating live on each entry in `sizes` instead. */
   specifications: Record<string, string>;
   images: {
+    /** Plain 3D render on cream: used for thumbnails, link previews and Google, anywhere the image appears without a label. */
     main: string;
+    /** AI room views of the design: shown only on the product page, where they're labelled as AI visualisations. */
     gallery: string[];
   };
   /** Every size this table is offered in, smallest first. */
@@ -83,7 +85,7 @@ export const studioProducts: Record<string, StudioProduct> = {
       "Construction": "Oak veneer top, solid oak base",
     },
     images: {
-      main: "/images/studio/line/level-design-line-studio-dining-table-main.webp",
+      main: "/images/studio/line/level-design-line-studio-oak-dining-table-3d.webp",
       gallery: ["/images/studio/line/level-design-line-studio-dining-table-lifestyle-v2.webp"],
     },
     sizes: [
@@ -146,7 +148,7 @@ export const studioProducts: Record<string, StudioProduct> = {
       "Construction": "Oak veneer",
     },
     images: {
-      main: "/images/studio/pill/level-design-pill-studio-dining-table-main.webp",
+      main: "/images/studio/pill/level-design-pill-studio-oak-dining-table-3d.webp",
       gallery: ["/images/studio/pill/level-design-pill-studio-dining-table-lifestyle-v2.webp"],
     },
     sizes: [
@@ -198,7 +200,7 @@ export const studioProducts: Record<string, StudioProduct> = {
       "Construction": "Oak veneer",
     },
     images: {
-      main: "/images/studio/round/level-design-round-studio-dining-table-main.webp",
+      main: "/images/studio/round/level-design-round-studio-oak-dining-table-3d.webp",
       gallery: ["/images/studio/round/level-design-round-studio-dining-table-lifestyle-v2.webp"],
     },
     sizes: [
@@ -250,7 +252,7 @@ export const studioProducts: Record<string, StudioProduct> = {
       "Construction": "Oak veneer",
     },
     images: {
-      main: "/images/studio/curve/level-design-curve-studio-dining-table-main.webp",
+      main: "/images/studio/curve/level-design-curve-studio-oak-dining-table-3d.webp",
       gallery: ["/images/studio/curve/level-design-curve-studio-dining-table-lifestyle-v2.webp"],
     },
     sizes: [

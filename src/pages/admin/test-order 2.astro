@@ -1,0 +1,72 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Test order | Level Design" description="Private tool." noindex>
+  <section class="bg-[#f5f1e8] pt-28 pb-20 min-h-screen">
+    <div class="max-w-xl mx-auto px-4 sm:px-6">
+      <p class="text-[#c8956a] font-medium mb-2 uppercase text-sm">Private</p>
+      <h1 class="text-3xl font-serif text-[#3d4f47] mb-2">A$1 test order</h1>
+      <p class="text-[#5a6b64] mb-8">
+        Try the whole checkout once, for a dollar: Stripe's payment page, the order webhook and both emails. Pay with a real card, then
+        refund the A$1 in Stripe. Nothing is made or delivered.
+      </p>
+
+      <form id="test-form" class="bg-white rounded-2xl p-6 md:p-8 space-y-5 border border-[#e8dcc8]">
+        <div>
+          <label for="t-key" class="block text-sm font-medium text-[#3d4f47] mb-2">Passphrase</label>
+          <input id="t-key" type="password" autocomplete="current-password" required class="w-full px-4 py-3 border border-[#e8dcc8] rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#c8956a]" />
+        </div>
+        <p id="t-error" role="alert" class="text-sm text-red-700 hidden"></p>
+        <button id="t-submit" type="submit" class="w-full px-6 py-4 bg-[#3d4f47] text-white rounded-full hover:bg-[#2d3f37] transition-colors font-medium disabled:opacity-60 cursor-pointer">Start the A$1 test order</button>
+        <p class="text-xs text-[#5a6b64]">
+          If Stripe is in test mode (a sandbox key), use card 4242 4242 4242 4242. In live mode it charges a real card A$1.
+        </p>
+      </form>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  function init() {
+    const form = document.getElementById('test-form') as HTMLFormElement | null;
+    if (!form || form.dataset.ready) return;
+    form.dataset.ready = 'yes';
+    const keyEl = document.getElementById('t-key') as HTMLInputElement;
+    const errorEl = document.getElementById('t-error') as HTMLElement;
+    const submitEl = document.getElementById('t-submit') as HTMLButtonElement;
+    try {
+      keyEl.value = sessionStorage.getItem('ld-quote-key') || '';
+    } catch {
+      /* the passphrase is simply typed */
+    }
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      errorEl.classList.add('hidden');
+      submitEl.disabled = true;
+      submitEl.textContent = 'Starting…';
+      try {
+        const response = await fetch('/.netlify/functions/create-test-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key: keyEl.value }),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || !data.url) throw new Error(data.error || 'Something went wrong.');
+        try {
+          sessionStorage.setItem('ld-quote-key', keyEl.value);
+        } catch {
+          /* fine */
+        }
+        window.location.href = data.url;
+      } catch (error) {
+        errorEl.textContent = error instanceof Error ? error.message : 'Something went wrong.';
+        errorEl.classList.remove('hidden');
+        submitEl.disabled = false;
+        submitEl.textContent = 'Start the A$1 test order';
+      }
+    });
+  }
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

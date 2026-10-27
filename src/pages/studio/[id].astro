@@ -51,7 +51,8 @@ const schema = [
     '@type': 'Product',
     name: product.name,
     description: pageDescription,
-    image: [...product.images.gallery, product.images.main].map((image: string) => new URL(image, Astro.site ?? Astro.url.origin).toString()),
+    // The plain 3D render, not the AI room view: Google wants the product itself, on a clean background
+    image: [new URL(product.images.main, Astro.site ?? Astro.url.origin).toString()],
     category: 'Oak dining table',
     brand: {
       '@type': 'Brand',
@@ -130,7 +131,7 @@ const schema = [
 <Layout
   title={`${product.name} — Oak Dining Table, Melbourne | Level Design`}
   description={pageDescription}
-  ogImage={product.images.gallery[0] ?? product.images.main}
+  ogImage={product.images.main}
   ogType="product"
   schema={schema}
 >
@@ -163,7 +164,7 @@ const schema = [
           <a href={`/studio/${other.id}/`} class="group flex sm:block bg-white rounded-2xl overflow-hidden border border-[#e5ddd0] hover:border-[#c8956a] transition-colors">
             <div class="w-28 flex-shrink-0 aspect-square sm:w-full sm:aspect-[4/3] overflow-hidden">
               <img
-                src={other.images.gallery[0] ?? other.images.main}
+                src={other.images.main}
                 alt={other.name}
                 loading="lazy"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
