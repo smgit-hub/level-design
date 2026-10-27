@@ -4,6 +4,8 @@
  *   npm run stripe:setup            create or update everything in the mode of the key in your env file
  *   npm run stripe:setup -- --dry   print what would happen and change nothing
  *   npm run stripe:setup -- --live  required to touch a live-mode key (rk_live_… / sk_live_…)
+ *   npm run stripe:setup -- --test-order         create a hidden A$1 "TEST ORDER" product, for the private test at /admin/test-order/
+ *   npm run stripe:setup -- --remove-test-order  archive that test product again once the test is done
  *
  * One Stripe Product per size (so the checkout line item reads "Level Design — Line Table (2000mm × 1000mm)") with one AUD
  * Price each, found again by its lookup key. Safe to re-run: unchanged prices are left alone (though a Product's
@@ -37,6 +39,38 @@ console.log(`Stripe mode: ${isLive ? "LIVE" : "test"}${dry ? " (dry run — noth
 
 const stripe = new Stripe(key);
 const dollars = (cents: number) => `$${(cents / 100).toLocaleString("en-AU")}`;
+
+// A hidden A$1 product for one end-to-end test of checkout, the order webhook and the emails (see /admin/test-order/). It is not part
+// of the site's price list, so it never appears on a page. Only this one product and its price are created or archived.
+const TEST_ORDER_ID = "studio_test_order";
+if (args.has("--test-order") || args.has("--remove-test-order")) {
+  const existing = (await stripe.prices.list({ lookup_keys: [TEST_ORDER_ID], active: true, limit: 1 })).data[0];
+  if (args.has("--remove-test-order")) {
+    console.log(existing ? `  -  archive the test order price (${existing.id}) and product` : "  =  no active test order price to archive");
+    if (!dry) {
+      if (existing) await stripe.prices.update(existing.id, { active: false });
+      await stripe.products.update(TEST_ORDER_ID, { active: false }).catch(() => undefined);
+    }
+  } else if (existing && existing.unit_amount === 100 && existing.currency === "aud") {
+    console.log(`  =  TEST ORDER A$1 already set up (${existing.id})`);
+  } else {
+    console.log("  +  TEST ORDER  A$1  → create");
+    if (!dry) {
+      const fields = { name: "Level Design: TEST ORDER (not a real product)", description: "Internal test of the checkout, the order webhook and the order emails. Not for sale.", active: true };
+      try {
+        await stripe.products.update(TEST_ORDER_ID, fields);
+      } catch (err) {
+        if ((err as { code?: string }).code !== "resource_missing") throw err;
+        await stripe.products.create({ id: TEST_ORDER_ID, ...fields });
+      }
+      const price = await stripe.prices.create({ product: TEST_ORDER_ID, currency: "aud", unit_amount: 100, lookup_key: TEST_ORDER_ID, transfer_lookup_key: true, nickname: "Test order", tax_behavior: "unspecified" });
+      if (existing) await stripe.prices.update(existing.id, { active: false });
+      console.log(`       ${price.id}`);
+    }
+  }
+  console.log(dry ? "\n(Dry run: nothing was changed.)" : "\nDone.");
+  process.exit(0);
+}
 
 let created = 0;
 let updated = 0;
