@@ -52,7 +52,15 @@ if (args.has("--test-order") || args.has("--remove-test-order")) {
       await stripe.products.update(TEST_ORDER_ID, { active: false }).catch(() => undefined);
     }
   } else if (existing && existing.unit_amount === 100 && existing.currency === "aud") {
-    console.log(`  =  TEST ORDER A$1 already set up (${existing.id})`);
+    // The price can still be active while the product was archived (e.g. in the Stripe dashboard), and Checkout refuses an
+    // archived product, so make sure it's switched back on.
+    const product = await stripe.products.retrieve(TEST_ORDER_ID).catch(() => null);
+    if (product && !product.active) {
+      console.log(`  ~  TEST ORDER A$1 (${existing.id}): product was archived → reactivate`);
+      if (!dry) await stripe.products.update(TEST_ORDER_ID, { active: true });
+    } else {
+      console.log(`  =  TEST ORDER A$1 already set up (${existing.id})`);
+    }
   } else {
     console.log("  +  TEST ORDER  A$1  → create");
     if (!dry) {
