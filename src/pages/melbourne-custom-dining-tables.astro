@@ -4,6 +4,7 @@ import { Image } from 'astro:assets';
 import FaqAccordion from '../components/FaqAccordion.astro';
 import StudioShapeIcon from '../components/StudioShapeIcon.astro';
 import { products } from '../data/signature-products';
+import { freeDeliveryActive, FREE_DELIVERY_UNTIL_TEXT } from '../data/delivery-zones';
 import { allStudioProducts, startingPrice } from '../data/studio-products';
 import belleImg from '../assets/images/about/level-design-belle-magazine-custom-table.webp';
 import houzzImg from '../assets/images/about/level-design-houzz-magazine-coffee-table.webp';
@@ -155,7 +156,7 @@ const schema = [
           <p class="text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm">Ready to Order</p>
           <h2 class="text-3xl md:text-5xl font-serif text-[#3d4f47] mb-6">The Studio Collection, Delivered Across Melbourne</h2>
           <p class="text-lg md:text-xl text-[#5a6b64] max-w-3xl mx-auto">
-            Four designs in fixed sizes, from {formatPrice(studioFromPrice)} — the same design standard as our custom work. Delivery is $199 for Melbourne Metro, the Mornington Peninsula and the Bass Coast, with a 6–8 week lead time.
+            Four designs in fixed sizes, from {formatPrice(studioFromPrice)} — the same design standard as our custom work. Delivery is $199 for Melbourne Metro, the Mornington Peninsula and the Bass Coast{freeDeliveryActive() && ` (free until ${FREE_DELIVERY_UNTIL_TEXT} 2026 as a launch offer)`}, with a 6–8 week lead time.
           </p>
         </div>
 

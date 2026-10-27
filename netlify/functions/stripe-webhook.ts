@@ -199,8 +199,15 @@ export async function handler(event: NetlifyEvent) {
     const item = session.line_items?.data[0];
     // The delivery option is identified by its price, which is set in create-checkout-session.ts.
     const shippingCents = session.shipping_cost?.amount_total;
-    const deliveryName =
-      shippingCents === 19900 ? "Melbourne Metro, Peninsula & Bass Coast" : session.metadata?.quote ? "Delivery (quoted)" : "Delivery";
+    const freeDelivery = shippingCents === 0 && session.metadata?.deliveryOffer === "launch-free-delivery";
+    const deliveryName = freeDelivery
+      ? "Melbourne Metro, Peninsula & Bass Coast (free delivery, launch offer)"
+      : shippingCents === 19900
+        ? "Melbourne Metro, Peninsula & Bass Coast"
+        : session.metadata?.quote
+          ? "Delivery (quoted)"
+          : "Delivery";
+    const deliveryPrice = freeDelivery ? "Free" : money(shippingCents);
     // The fee was set from the postcode typed on the product page; the address typed at checkout can still differ.
     const addressZone = addr?.postal_code ? deliveryForPostcode(addr.postal_code)?.zone : undefined;
     // Quoted-delivery orders (from the private quote link) have no fixed zone to compare against.
@@ -216,7 +223,7 @@ export async function handler(event: NetlifyEvent) {
       `Item:      ${item?.description ?? session.metadata?.order ?? "—"}`,
       ...(session.metadata?.quote ? [`Quoted:    delivery price agreed by email${session.metadata?.quoteFor ? ` (for ${session.metadata.quoteFor})` : ""}`] : []),
       `Table:     ${money(item?.amount_total)}`,
-      `Delivery:  ${deliveryName}  ${money(shippingCents)}`,
+      `Delivery:  ${deliveryName}  ${deliveryPrice}`,
       `Paid:      ${money(session.amount_total)}`,
       "",
       ...(zoneMismatch
@@ -277,7 +284,7 @@ export async function handler(event: NetlifyEvent) {
           details: [size?.dimensions, size?.seating && `Seats ${size.seating}`, product?.specifications["Timber / Finish"]].filter(Boolean) as string[],
           tablePrice: money(item?.amount_total),
           deliveryName,
-          deliveryPrice: money(shippingCents),
+          deliveryPrice,
           paid: money(session.amount_total),
           recipient: shipping?.name ?? customer.name ?? "",
           addressLines: addr

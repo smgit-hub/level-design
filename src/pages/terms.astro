@@ -1,12 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { MELBOURNE_DELIVERY_CENTS } from '../data/delivery-zones';
+import { MELBOURNE_DELIVERY_CENTS, freeDeliveryActive, FREE_DELIVERY_UNTIL_TEXT } from '../data/delivery-zones';
 
 const formatPrice = (cents: number) =>
   new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 }).format(cents / 100);
 
 const deliveryZones = [
-  { area: 'Melbourne Metro, the Mornington Peninsula and the Bass Coast', fee: formatPrice(MELBOURNE_DELIVERY_CENTS) },
+  { area: 'Melbourne Metro, the Mornington Peninsula and the Bass Coast', fee: freeDeliveryActive() ? `${formatPrice(MELBOURNE_DELIVERY_CENTS)}, free until ${FREE_DELIVERY_UNTIL_TEXT} 2026 (launch offer)` : formatPrice(MELBOURNE_DELIVERY_CENTS) },
   { area: 'Everywhere else, including Geelong, regional Victoria and interstate', fee: 'Quoted individually before you order' },
 ];
 

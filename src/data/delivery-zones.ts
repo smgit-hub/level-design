@@ -16,9 +16,20 @@ export type DeliveryOption = {
   priceCents: number | null;
   /** Name shown on the product page, in Stripe Checkout and in the order emails. */
   label: string;
+  /** True while the launch offer makes delivery free (priceCents is then 0 and the normal fee is MELBOURNE_DELIVERY_CENTS). */
+  free: boolean;
 };
 
 export const MELBOURNE_DELIVERY_CENTS = 19900;
+
+/**
+ * Launch offer: delivery in the one fixed-fee area is free through the end of 15 November 2026, Melbourne time (AEDT, UTC+11). It
+ * switches itself off after that: the product page and the checkout function both ask `freeDeliveryActive()`, so the fee goes back to
+ * $199 with no change needed. Quoted areas are not part of the offer. To end it early or move the date, edit the date below.
+ */
+export const FREE_DELIVERY_UNTIL_TEXT = "15 November";
+const FREE_DELIVERY_ENDS_AT = Date.parse("2026-11-15T23:59:59+11:00");
+export const freeDeliveryActive = (now: number = Date.now()) => now <= FREE_DELIVERY_ENDS_AT;
 
 const MELBOURNE_METRO_NAME = "Melbourne Metro, Peninsula & Bass Coast Delivery";
 
@@ -49,9 +60,12 @@ const inRanges = (n: number, ranges: Range[]) => ranges.some(([from, to]) => n >
 export const isValidPostcode = (value: string) => /^\d{4}$/.test(value.trim());
 
 /** Everywhere not covered above — Geelong and the rest of regional Victoria, interstate, and so on — is quoted individually. */
-export function deliveryForPostcode(postcode: string): DeliveryOption | null {
+export function deliveryForPostcode(postcode: string, now: number = Date.now()): DeliveryOption | null {
   if (!isValidPostcode(postcode)) return null;
   const n = Number(postcode.trim());
-  if (inRanges(n, MELBOURNE_METRO) || inRanges(n, BASS_COAST)) return { zone: "melbourne", priceCents: MELBOURNE_DELIVERY_CENTS, label: MELBOURNE_METRO_NAME };
-  return { zone: "quote", priceCents: null, label: "Delivery quoted individually" };
+  if (inRanges(n, MELBOURNE_METRO) || inRanges(n, BASS_COAST)) {
+    if (freeDeliveryActive(now)) return { zone: "melbourne", priceCents: 0, label: `Free delivery, launch offer until ${FREE_DELIVERY_UNTIL_TEXT}`, free: true };
+    return { zone: "melbourne", priceCents: MELBOURNE_DELIVERY_CENTS, label: MELBOURNE_METRO_NAME, free: false };
+  }
+  return { zone: "quote", priceCents: null, label: "Delivery quoted individually", free: false };
 }

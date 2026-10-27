@@ -1,8 +1,11 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { freeDeliveryActive, FREE_DELIVERY_UNTIL_TEXT } from '../../data/delivery-zones';
 import StudioProductDetailClient from '../../components/StudioProductDetailClient';
 import StudioShapeIcon from '../../components/StudioShapeIcon.astro';
 import { allStudioProducts, startingPrice } from '../../data/studio-products';
+
+const launchDeliveryNote = freeDeliveryActive() ? ` As a launch offer, delivery in that area is free until ${FREE_DELIVERY_UNTIL_TEXT} 2026.` : '';
 
 export function getStaticPaths() {
   return allStudioProducts.map((p) => ({
@@ -35,7 +38,7 @@ const productFaqs = [
   },
   {
     question: `How is ${product.name} delivered, and what does delivery cost?`,
-    answer: `Delivery is $199 for Melbourne Metro, the Mornington Peninsula and the Bass Coast, and the fee is shown on the table's page before you pay. Everywhere else, including Geelong, regional Victoria and interstate, we quote delivery individually: enter your postcode on the table's page and we'll take you to a short form, then reply with a price, usually within one business day. Once you're happy with it, we'll send a secure payment link for the table and delivery.`,
+    answer: `Delivery is $199 for Melbourne Metro, the Mornington Peninsula and the Bass Coast, and the fee is shown on the table's page before you pay.${launchDeliveryNote} Everywhere else, including Geelong, regional Victoria and interstate, we quote delivery individually: enter your postcode on the table's page and we'll take you to a short form, then reply with a price, usually within one business day. Once you're happy with it, we'll send a secure payment link for the table and delivery.`,
   },
   {
     question: `Does ${product.name} arrive assembled?`,

@@ -1,7 +1,7 @@
 import { motion, MotionConfig } from "motion/react";
 import { useState, useEffect, useRef, type FormEvent } from "react";
 import { ArrowLeft, CheckCircle, ChevronLeft, ChevronRight, RotateCcw, Truck } from "lucide-react";
-import { deliveryForPostcode, isValidPostcode } from "../data/delivery-zones";
+import { deliveryForPostcode, freeDeliveryActive, FREE_DELIVERY_UNTIL_TEXT, isValidPostcode } from "../data/delivery-zones";
 import type { StudioProduct } from "../data/studio-products";
 import { trackEvent } from "../lib/analytics";
 import StudioTableOutline from "./StudioTableOutline";
@@ -582,10 +582,10 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
                     className="w-36 px-4 py-3 rounded-xl border-2 border-[#e5ddd0] bg-white text-[#3d4f47] focus:outline-none focus:border-[#c8956a] focus:ring-2 focus:ring-[#c8956a]/30"
                   />
                   <p id="delivery-postcode-note" aria-live="polite" className="text-sm mt-2 text-[#5a6b64]">
-                    {!delivery && (postcodeHint ? <span className="text-red-700">Enter your delivery postcode to see the delivery fee.</span> : "Enter your postcode to see the delivery fee.")}
+                    {!delivery && (postcodeHint ? <span className="text-red-700">Enter your delivery postcode to see the delivery fee.</span> : (freeDeliveryActive() ? `Enter your postcode to see the delivery fee. Free Melbourne delivery until ${FREE_DELIVERY_UNTIL_TEXT}.` : "Enter your postcode to see the delivery fee."))}
                     {delivery && delivery.priceCents !== null && (
                       <>
-                        Delivery to {postcode}: <strong className="text-[#3d4f47]">{formatPrice(delivery.priceCents)}</strong> · Total <strong className="text-[#3d4f47]">{formatPrice(selectedSize.price + delivery.priceCents)}</strong>
+                        Delivery to {postcode}: <strong className="text-[#3d4f47]">{delivery.free ? "Free" : formatPrice(delivery.priceCents)}</strong>{delivery.free && ` (launch offer until ${FREE_DELIVERY_UNTIL_TEXT})`} · Total <strong className="text-[#3d4f47]">{formatPrice(selectedSize.price + delivery.priceCents)}</strong>
                       </>
                     )}
                     {delivery && delivery.priceCents === null && (
