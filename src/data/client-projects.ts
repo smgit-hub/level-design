@@ -25,16 +25,16 @@ export const clientProjects: ClientProject[] = [
     pieces: [
       {
         name: "Sideboard",
-        model: "/models/clients/nadine-af535bfe/sideboard-v3.glb",
+        model: "/models/clients/nadine-af535bfe/sideboard-v4.glb",
         drawing: "/models/clients/nadine-af535bfe/sideboard-drawing.svg",
         drawingPdf: "/models/clients/nadine-af535bfe/sideboard-drawing.pdf",
         details: { Timber: "American Oak", Finish: "Clear Matte" },
       },
       {
         name: "Bedside Table",
-        model: "/models/clients/nadine-af535bfe/bedside-v3.glb",
-        drawing: "/models/clients/nadine-af535bfe/bedside-drawing-v2.svg",
-        drawingPdf: "/models/clients/nadine-af535bfe/bedside-drawing-v2.pdf",
+        model: "/models/clients/nadine-af535bfe/bedside-v4.glb",
+        drawing: "/models/clients/nadine-af535bfe/bedside-drawing-v3.svg",
+        drawingPdf: "/models/clients/nadine-af535bfe/bedside-drawing-v3.pdf",
         details: { Timber: "American Oak", Finish: "Clear Matte" },
       },
     ],
