@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { trackEvent } from "../lib/analytics";
-import { EMAIL_PATTERN } from "../lib/forms";
 
 export default function NewsletterSignup() {
   const [email, setEmail] = useState("");
@@ -44,9 +43,10 @@ export default function NewsletterSignup() {
     <form onSubmit={handleSubmit} className="w-full max-w-sm">
       <div className="flex flex-col sm:flex-row gap-3">
         <input
+          // No pattern attribute: the browser applies it without the shared pattern's ignore-case flag, which rejected every
+          // lower-case address. type="email" checks the format, and the signup function checks it again.
           type="email"
           required
-          pattern={EMAIL_PATTERN.source}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Your email address"
