@@ -8,7 +8,8 @@ interface Props {
   title?: string;
   description?: string;
   preloadImage?: string;
-  ogImage?: string;
+  /** Link preview image. Pass false to leave it out (e.g. client pages, where the site hero is misleading). */
+  ogImage?: string | false;
   ogType?: string;
   schema?: Record<string, unknown> | Record<string, unknown>[];
   noindex?: boolean;
@@ -27,7 +28,7 @@ const {
 const currentPath = Astro.url.pathname;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
 const siteURL = Astro.site ?? new URL(Astro.url.origin);
-const ogImageURL = new URL(ogImage, siteURL);
+const ogImageURL = ogImage ? new URL(ogImage, siteURL) : undefined;
 const googleBusinessProfileURL = 'https://share.google/2X8cmzgsefNsOyp1a';
 const businessSchemaId = new URL('/#level-design', siteURL).toString();
 const baseSchema = {
@@ -122,13 +123,13 @@ const schemaNodes = [baseSchema, websiteSchema, ...(Array.isArray(schema) ? sche
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={ogImageURL} />
+    {ogImageURL && <meta property="og:image" content={ogImageURL} />}
     <meta property="og:site_name" content="Level Design" />
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:card" content={ogImageURL ? "summary_large_image" : "summary"} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImageURL} />
+    {ogImageURL && <meta name="twitter:image" content={ogImageURL} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     {preloadImage && <link rel="preload" as="image" href={preloadImage} />}
     <link rel="apple-touch-icon" href="/favicon-circle.png" />
