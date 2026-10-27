@@ -115,7 +115,7 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
   const [selectedView, setSelectedView] = useState<"model" | string>("model");
   // Default to the middle size when there are three, or the smallest when there are two.
   const [selectedSizeId, setSelectedSizeId] = useState(product.sizes[Math.floor((product.sizes.length - 1) / 2)].id);
-  // Sizes are listed smallest first, and the 3D model and room photo are made at the largest.
+  // Sizes are listed smallest first, and the 3D model and room view are made at the largest.
   const largestSize = product.sizes[product.sizes.length - 1];
   // "2350mm × 1150mm" -> "2350 × 1150mm"; "1500mm Diameter" -> "1500mm dia".
   const selectedSize = product.sizes.find((s) => s.id === selectedSizeId) ?? product.sizes[0];
@@ -455,9 +455,15 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
                   ) : (
                     <img
                       src={selectedView}
-                      alt={product.name}
+                      alt={`${product.name} shown in a dining room (AI visualisation)`}
                       className="w-full h-full object-cover transition-opacity duration-300"
                     />
+                  )}
+                  {/* The room views are AI visualisations of our own 3D designs; say so on the image itself, in the same spot and style as the 3D hint */}
+                  {selectedView !== "model" && (
+                    <span className="absolute top-3 left-3 bg-black/50 text-white/80 text-xs tracking-wide px-3 py-1 rounded-full pointer-events-none">
+                      AI visualisation
+                    </span>
                   )}
                   {views.length > 1 && (
                     <div role="group" aria-label="Product views" className="absolute bottom-3 left-3 z-10 flex gap-2">
@@ -549,7 +555,7 @@ export default function StudioProductDetailClient({ product, tables }: Props) {
                     ))}
                   </div>
                   <p className="text-sm text-[#3d4f47] mt-3">{selectedSize.dimensions}</p>
-                  <p className="text-xs text-[#8a9b94] mt-1">Sizes in mm, drawn to scale from above. The 3D view and room photo show the largest size ({largestSize.label.replace(/mm/g, "").replace(" Diameter", " dia")}) and are renders — real timber varies in grain and colour.</p>
+                  <p className="text-xs text-[#8a9b94] mt-1">Sizes in mm, drawn to scale from above. The 3D view is our design model and the room view is an AI visualisation of it. Both show the largest size ({largestSize.label.replace(/mm/g, "").replace(" Diameter", " dia")}); real timber varies in grain and colour.</p>
                 </div>
 
                 {/* Price + CTA */}
