@@ -1,8 +1,8 @@
 import Stripe from "stripe";
-import { createHash, timingSafeEqual } from "node:crypto";
 import { studioProducts } from "../../src/data/studio-products";
 import { isValidPostcode } from "../../src/data/delivery-zones";
 import { isRequestId, requestStore, type QuoteRequest } from "./lib/quote-requests";
+import { checkPassphrase } from "./lib/admin-auth";
 
 /**
  * Private tool behind /admin/quote/: emails the customer their delivery quote and payment link, in Level Design's own words,
@@ -17,8 +17,6 @@ import { isRequestId, requestStore, type QuoteRequest } from "./lib/quote-reques
 
 const json = (statusCode: number, body: Record<string, unknown>) => ({ statusCode, body: JSON.stringify(body) });
 
-const sameSecret = (given: string, expected: string) =>
-  timingSafeEqual(createHash("sha256").update(given).digest(), createHash("sha256").update(expected).digest());
 
 const money = (cents: number) => new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD" }).format(cents / 100);
 const esc = (value: string) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -156,10 +154,8 @@ export async function handler(event: { httpMethod: string; body: string | null; 
     return json(400, { error: "Invalid request." });
   }
 
-  if (!input.key || !sameSecret(String(input.key), adminKey)) {
-    await new Promise((resolve) => setTimeout(resolve, 800)); // slows down guessing
-    return json(401, { error: "Wrong passphrase." });
-  }
+  const denied = await checkPassphrase(event, input.key, adminKey);
+  if (denied) return denied;
 
   const product = input.productId ? studioProducts[input.productId] : undefined;
   const size = product?.sizes.find((s) => s.id === input.sizeId);

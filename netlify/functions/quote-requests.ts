@@ -1,4 +1,5 @@
-import { isRequestId, json, requestStore, sameSecret, type QuoteRequest } from "./lib/quote-requests";
+import { isRequestId, json, requestStore, type QuoteRequest } from "./lib/quote-requests";
+import { checkPassphrase } from "./lib/admin-auth";
 
 /**
  * Private, for /admin/quote/: look at delivery quote requests (one by id, or the open ones), mark them done, or delete them.
@@ -18,10 +19,8 @@ export async function handler(event: { httpMethod: string; body: string | null; 
     return json(400, { error: "Invalid request." });
   }
 
-  if (!input.key || !sameSecret(String(input.key), adminKey)) {
-    await new Promise((resolve) => setTimeout(resolve, 800)); // slows down guessing
-    return json(401, { error: "Wrong passphrase." });
-  }
+  const denied = await checkPassphrase(event, input.key, adminKey);
+  if (denied) return denied;
 
   const store = requestStore(event);
 

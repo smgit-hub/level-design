@@ -1,6 +1,6 @@
 import Stripe from "stripe";
-import { createHash, timingSafeEqual } from "node:crypto";
 import { siteOrigin } from "./lib/site";
+import { checkPassphrase } from "./lib/admin-auth";
 
 /**
  * Private: starts a A$1 "TEST ORDER" checkout, so the whole path (Stripe Checkout, the order webhook, both emails) can be tried once on
@@ -15,8 +15,6 @@ const TEST_ORDER_LOOKUP_KEY = "studio_test_order";
 const TEST_ORDER_CENTS = 100;
 
 const json = (statusCode: number, body: Record<string, unknown>) => ({ statusCode, body: JSON.stringify(body) });
-const sameSecret = (given: string, expected: string) =>
-  timingSafeEqual(createHash("sha256").update(given).digest(), createHash("sha256").update(expected).digest());
 
 export async function handler(event: { httpMethod: string; body: string | null; headers: Record<string, string | undefined> }) {
   if (event.httpMethod !== "POST") return json(405, { error: "Method Not Allowed" });
@@ -31,10 +29,8 @@ export async function handler(event: { httpMethod: string; body: string | null; 
   } catch {
     return json(400, { error: "Invalid request." });
   }
-  if (!input.key || !sameSecret(String(input.key), adminKey)) {
-    await new Promise((resolve) => setTimeout(resolve, 800)); // slows down guessing
-    return json(401, { error: "Wrong passphrase." });
-  }
+  const denied = await checkPassphrase(event, input.key, adminKey);
+  if (denied) return denied;
 
   const stripe = new Stripe(stripeSecretKey);
   const origin = siteOrigin(event.headers);
