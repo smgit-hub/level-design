@@ -39,4 +39,16 @@ export const clientProjects: ClientProject[] = [
       },
     ],
   },
+  {
+    slug: "meusz-interiors-2ba801e3",
+    clientName: "Meusz Interiors",
+    pieces: [
+      {
+        name: "Gilbert Table",
+        model: "/models/clients/meusz-interiors-2ba801e3/gilbert.glb",
+        drawing: "/models/clients/meusz-interiors-2ba801e3/gilbert-drawing.svg",
+        drawingPdf: "/models/clients/meusz-interiors-2ba801e3/gilbert-drawing.pdf",
+      },
+    ],
+  },
 ];
