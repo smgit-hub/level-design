@@ -19,6 +19,10 @@ export type ClientProject = {
   clientName: string;
   /** Page heading. Defaults to "Your Proposed Designs". */
   heading?: string;
+  /** Closing line under "Questions or changes?". Defaults to "Let us know what you'd like adjusted and we'll update the designs." */
+  closingText?: string;
+  /** Set false to leave off the "Get in Touch" button (e.g. when the client already has direct contact details). Defaults to true. */
+  contactButton?: boolean;
   pieces: ClientPiece[];
 };
 
@@ -47,13 +51,16 @@ export const clientProjects: ClientProject[] = [
     slug: "meusz-interiors-2ba801e3",
     clientName: "Meusz Interiors",
     heading: "Gilbert Table",
+    closingText: "Contact us with any changes and we'll update the design.",
+    contactButton: false,
     pieces: [
       {
         model: "/models/clients/meusz-interiors-2ba801e3/gilbert.glb",
         startDistance: "80%",
-        drawing: "/models/clients/meusz-interiors-2ba801e3/gilbert-drawing-v3.svg",
-        drawingPdf: "/models/clients/meusz-interiors-2ba801e3/gilbert-drawing-v3.pdf",
+        drawing: "/models/clients/meusz-interiors-2ba801e3/gilbert-drawing-v4.svg",
+        drawingPdf: "/models/clients/meusz-interiors-2ba801e3/gilbert-drawing-v4.pdf",
         details: {
+          Size: "2000 × 1300mm, 750mm high",
           Timber: "American Oak",
           Finish: "Clear natural matte hard wax oil",
           "End overhang": "400mm, can be adjusted to suit",
