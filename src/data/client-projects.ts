@@ -54,7 +54,7 @@ export const clientProjects: ClientProject[] = [
           Timber: "American Oak",
           Finish: "Clear natural matte hard wax oil",
           "End overhang": "400mm, can be adjusted to suit",
-          "Side overhang": "Approx. 428mm, set by the base width needed for stability",
+          "Side overhang": "Approx. 428mm, set by the minimum base width needed for stability. The base can be made wider if needed",
           "Top radii": "150mm on the corners and 25mm on the underside edge, both can be adjusted to suit",
           "Leg edges": "25mm radius",
         },
