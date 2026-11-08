@@ -1,7 +1,7 @@
 export type ClientPiece = {
   /** Optimised .glb in public/models/clients/<slug>/. */
   model: string;
-  /** Heading for this piece. Defaults to "Piece 1", "Piece 2"… when left out. */
+  /** Heading for this piece. Defaults to "Piece 1", "Piece 2"… when left out; a project with a single unnamed piece shows no piece heading. */
   name?: string;
   /** Shown as label/value rows under the viewer, e.g. { "Timber": "American Oak", "Finish": "Raw Matte", "Size": "2400mm × 1100mm" }. */
   details?: Record<string, string>;
@@ -44,20 +44,19 @@ export const clientProjects: ClientProject[] = [
   {
     slug: "meusz-interiors-2ba801e3",
     clientName: "Meusz Interiors",
-    heading: "Your Dining Table Design",
+    heading: "Gilbert Table",
     pieces: [
       {
-        name: "Gilbert Table",
         model: "/models/clients/meusz-interiors-2ba801e3/gilbert.glb",
-        drawing: "/models/clients/meusz-interiors-2ba801e3/gilbert-drawing-v2.svg",
-        drawingPdf: "/models/clients/meusz-interiors-2ba801e3/gilbert-drawing-v2.pdf",
+        drawing: "/models/clients/meusz-interiors-2ba801e3/gilbert-drawing-v3.svg",
+        drawingPdf: "/models/clients/meusz-interiors-2ba801e3/gilbert-drawing-v3.pdf",
         details: {
           Timber: "American Oak",
           Finish: "Clear natural matte hard wax oil",
-          Overhang: "Approx. 400mm all round",
+          "End overhang": "400mm, can be adjusted to suit",
+          "Side overhang": "Approx. 428mm, set by the base width needed for stability",
           "Top corners": "150mm radius",
-          "Top underside edge": "25mm radius",
-          "Leg edges": "25mm radius",
+          "Edge radius": "25mm on the underside of the top and the leg edges",
         },
       },
     ],

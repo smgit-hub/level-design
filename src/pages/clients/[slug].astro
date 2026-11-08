@@ -38,18 +38,22 @@ const { project } = Astro.props;
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
         {project.pieces.map((piece, i) => {
           const details = Object.entries(piece.details ?? {});
+          const title = piece.name ?? (project.pieces.length > 1 ? `Piece ${i + 1}` : undefined);
           return (
             <div class="reveal">
-              <h2 class="text-2xl md:text-3xl font-serif text-[#3d4f47] mb-4">{piece.name ?? `Piece ${i + 1}`}</h2>
+              {title && <h2 class="text-2xl md:text-3xl font-serif text-[#3d4f47] mb-4">{title}</h2>}
               <ModelViewer src={piece.model} studio autoRotate={false} textureToggle touchLock />
               {details.length > 0 && (
-                <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {details.map(([key, value]) => (
-                    <div class="flex justify-between items-start gap-4 p-4 bg-white rounded-xl">
-                      <span class="font-medium text-[#3d4f47]">{key}</span>
-                      <span class="text-[#5a6b64] text-right">{value}</span>
-                    </div>
-                  ))}
+                <div class="mt-4 p-4 md:p-6 bg-white rounded-xl">
+                  <h3 class="font-medium text-[#3d4f47] mb-5">Details</h3>
+                  <dl class="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-6">
+                    {details.map(([key, value]) => (
+                      <div class="border-t border-[#3d4f47]/15 pt-3">
+                        <dt class="text-xs font-medium tracking-wider uppercase text-[#c8956a] mb-1">{key}</dt>
+                        <dd class="text-lg font-serif text-[#3d4f47] leading-snug">{value}</dd>
+                      </div>
+                    ))}
+                  </dl>
                 </div>
               )}
               {piece.drawing && (
@@ -61,7 +65,7 @@ const { project } = Astro.props;
                     )}
                   </div>
                   <a href={piece.drawingPdf ?? piece.drawing} target="_blank" rel="noopener">
-                    <img src={piece.drawing} alt={`Dimension drawing of the ${(piece.name ?? `piece ${i + 1}`).toLowerCase()}`} width="1191" height="842" loading="lazy" class="w-full h-auto" />
+                    <img src={piece.drawing} alt={`Dimension drawing of the ${(title ?? project.heading ?? 'piece').toLowerCase()}`} width="1191" height="842" loading="lazy" class="w-full h-auto" />
                   </a>
                 </div>
               )}
