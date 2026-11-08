@@ -46,8 +46,8 @@ export const clientProjects: ClientProject[] = [
       {
         name: "Gilbert Table",
         model: "/models/clients/meusz-interiors-2ba801e3/gilbert.glb",
-        drawing: "/models/clients/meusz-interiors-2ba801e3/gilbert-drawing.svg",
-        drawingPdf: "/models/clients/meusz-interiors-2ba801e3/gilbert-drawing.pdf",
+        drawing: "/models/clients/meusz-interiors-2ba801e3/gilbert-drawing-v2.svg",
+        drawingPdf: "/models/clients/meusz-interiors-2ba801e3/gilbert-drawing-v2.pdf",
       },
     ],
   },
