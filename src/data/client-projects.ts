@@ -15,6 +15,8 @@ export type ClientProject = {
   /** Becomes the URL (/clients/<slug>/). Include a random suffix — it's the only thing keeping the page unlisted. */
   slug: string;
   clientName: string;
+  /** Page heading. Defaults to "Your Proposed Designs". */
+  heading?: string;
   pieces: ClientPiece[];
 };
 
@@ -42,12 +44,21 @@ export const clientProjects: ClientProject[] = [
   {
     slug: "meusz-interiors-2ba801e3",
     clientName: "Meusz Interiors",
+    heading: "Your Dining Table Design",
     pieces: [
       {
         name: "Gilbert Table",
         model: "/models/clients/meusz-interiors-2ba801e3/gilbert.glb",
         drawing: "/models/clients/meusz-interiors-2ba801e3/gilbert-drawing-v2.svg",
         drawingPdf: "/models/clients/meusz-interiors-2ba801e3/gilbert-drawing-v2.pdf",
+        details: {
+          Timber: "American Oak",
+          Finish: "Clear natural matte hard wax oil",
+          Overhang: "Approx. 400mm all round",
+          "Top corners": "150mm radius",
+          "Top underside edge": "25mm radius",
+          "Leg edges": "25mm radius",
+        },
       },
     ],
   },

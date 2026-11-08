@@ -29,7 +29,7 @@ const { project } = Astro.props;
       <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl">
           <p class="hero-in text-[#c8956a] font-medium mb-4 tracking-wider uppercase text-sm" style="--delay: 0.2s">Prepared for {project.clientName}</p>
-          <h1 class="hero-in text-4xl md:text-6xl font-serif" style="--delay: 0.4s">Your Proposed Designs</h1>
+          <h1 class="hero-in text-4xl md:text-6xl font-serif" style="--delay: 0.4s">{project.heading ?? 'Your Proposed Designs'}</h1>
         </div>
       </div>
     </section>
