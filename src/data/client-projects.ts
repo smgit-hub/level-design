@@ -5,6 +5,8 @@ export type ClientPiece = {
   name?: string;
   /** Shown as label/value rows under the viewer, e.g. { "Timber": "American Oak", "Finish": "Raw Matte", "Size": "2400mm × 1100mm" }. */
   details?: Record<string, string>;
+  /** Starting camera distance as a percentage of the automatic fit, e.g. "80%" opens a bit closer. Left out = automatic. */
+  startDistance?: string;
   /** Dimension drawing shown under the details, e.g. an SVG exported from the PDF with `pdftocairo -svg`. */
   drawing?: string;
   /** PDF of the drawing, offered as a download. */
@@ -48,6 +50,7 @@ export const clientProjects: ClientProject[] = [
     pieces: [
       {
         model: "/models/clients/meusz-interiors-2ba801e3/gilbert.glb",
+        startDistance: "80%",
         drawing: "/models/clients/meusz-interiors-2ba801e3/gilbert-drawing-v3.svg",
         drawingPdf: "/models/clients/meusz-interiors-2ba801e3/gilbert-drawing-v3.pdf",
         details: {
